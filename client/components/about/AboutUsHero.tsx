@@ -31,7 +31,7 @@ export default function AboutUsHero() {
               </div>
             </div>
             <div className="absolute -top-4 -left-4 bg-avatar-dark text-white rounded-xl shadow-lg px-5 py-3 hidden md:block">
-              <p className="font-display font-bold text-lg">Since 2020</p>
+              <p className="font-display font-bold text-lg">Since 2026</p>
               <p className="text-xs text-avatar-silver">Building AI Future</p>
             </div>
           </div>

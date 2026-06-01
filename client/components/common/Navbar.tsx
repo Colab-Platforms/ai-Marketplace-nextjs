@@ -44,7 +44,7 @@ export default function Navbar() {
             <Link href="/" className="hover:text-avatar-dark transition">Home</Link>
             <Link href="#divisions" className="hover:text-avatar-dark transition">Solutions</Link>
             <Link href="#learning" className="hover:text-avatar-dark transition">Learning</Link>
-            <Link href="#marketplace" className="hover:text-avatar-dark transition">Marketplace</Link>
+            <Link href="/marketplace" className="hover:text-avatar-dark transition">Marketplace</Link>
             <Link href="/about" className="hover:text-avatar-dark transition">About</Link>
           </nav>
 
