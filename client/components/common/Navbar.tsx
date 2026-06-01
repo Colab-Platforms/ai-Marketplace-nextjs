@@ -1,0 +1,111 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+
+
+
+export default function Navbar() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 30);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+    document.body.style.overflow = !isMobileMenuOpen ? 'hidden' : '';
+  };
+
+  return (
+    <>
+      <header className="sticky top-5 z-50">
+        <div
+          id="nav-wrapper"
+          className={`mx-auto px-4 sm:px-6 py-3 flex items-center justify-between bg-white border-b border-navy-100 transition-all duration-300 ${
+            isScrolled
+              ? 'top-[14px] max-w-[1100px] bg-white/92 backdrop-blur-[14px] border border-[rgba(30,58,95,0.08)] rounded-full shadow-[0_10px_30px_-10px_rgba(15,31,52,0.15)] px-[22px] md:pr-2'
+              : 'max-w-full '
+          }`}
+        >
+          <Link href="/" className="flex items-center gap-2.5 no-select">
+            <Image src="/Aavtat logo.svg" alt="Avatar logo" width={120} height={34} className="logo-mark" />
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-avatar-slate">
+            <Link href="#divisions" className="hover:text-avatar-dark transition">Solutions</Link>
+            <Link href="#learning" className="hover:text-avatar-dark transition">Learning</Link>
+            <Link href="#marketplace" className="hover:text-avatar-dark transition">Marketplace</Link>
+            <Link href="#enterprise" className="hover:text-avatar-dark transition">Enterprise</Link>
+            <Link href="#about" className="hover:text-avatar-dark transition">About</Link>
+          </nav>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="#enroll"
+              className="hidden md:inline-flex items-center gap-2 bg-avatar-navy hover:bg-avatar-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition"
+            >
+              Consult Now
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </Link>
+
+            {/* Hamburger button */}
+            <button
+              onClick={toggleMobileMenu}
+              className="md:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-[6px] z-[60]"
+              aria-label="Toggle menu"
+            >
+              <span className="block w-6 h-[2px] bg-avatar-dark rounded-full"></span>
+              <span className="block w-6 h-[2px] bg-avatar-dark rounded-full"></span>
+              <span className="block w-6 h-[2px] bg-avatar-dark rounded-full"></span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Menu */}
+      <div
+        className={`mobile-menu fixed inset-y-0 right-0 w-80 max-w-full bg-white shadow-2xl z-[10000] p-8 transition-transform duration-300 ${
+          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="flex justify-between items-center mb-10">
+          <span className="font-display font-bold text-lg text-avatar-dark">AVATAR</span>
+          <button onClick={toggleMobileMenu} className="p-2 text-avatar-slate hover:text-avatar-dark" aria-label="Close menu">
+            <i className="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        <div className="flex flex-col gap-5">
+          <Link href="#divisions" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Solutions</Link>
+          <Link href="#learning" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Learning</Link>
+          <Link href="#marketplace" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Marketplace</Link>
+          <Link href="#enterprise" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Enterprise</Link>
+          <Link href="#about" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">About</Link>
+        </div>
+        <div className="mt-10 flex flex-col gap-3">
+          <Link href="#" className="text-center text-sm font-medium text-avatar-slate border border-avatar-silver rounded-full py-2.5 hover:bg-avatar-ice transition-colors">Sign In</Link>
+          <Link href="#cta" onClick={toggleMobileMenu} className="text-center text-sm font-semibold bg-avatar-dark text-white rounded-full py-2.5 hover:bg-avatar-navy transition-colors">Get Started</Link>
+        </div>
+      </div>
+      
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 z-[9999]"
+          onClick={toggleMobileMenu}
+        ></div>
+      )}
+    </>
+  );
+}

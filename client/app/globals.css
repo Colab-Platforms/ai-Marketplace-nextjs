@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --color-avatar-navy: #2C3E5A;
+  --color-avatar-dark: #1E2D42;
+  --color-avatar-slate: #3A4F6E;
+  --color-avatar-steel: #8A9BB5;
+  --color-avatar-silver: #B8C4D4;
+  --color-avatar-light: #E8ECF2;
+  --color-avatar-ice: #F4F6F9;
+  --color-avatar-white: #FFFFFF;
+  --color-avatar-accent: #4A6FA5;
+  --color-avatar-deep: #172536;
+  
+  --font-display: var(--font-space-grotesk);
+  --font-body: var(--font-inter);
+  
+  --transition-duration-350: 350ms;
+  --transition-duration-800: 800ms;
+  --transition-duration-1200: 1200ms;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-inter), sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+html {
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+/* Animations */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+.animate-blink {
+  animation: blink 1s infinite;
+}
+
+.pause-animation:hover {
+  animation-play-state: paused;
+}
+
+
