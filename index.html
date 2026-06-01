@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVATAR — The Operating System for the AI Era</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        avatar: {
+                            navy: '#2C3E5A',
+                            dark: '#1E2D42',
+                            slate: '#3A4F6E',
+                            steel: '#8A9BB5',
+                            silver: '#B8C4D4',
+                            light: '#E8ECF2',
+                            ice: '#F4F6F9',
+                            white: '#FFFFFF',
+                            accent: '#4A6FA5',
+                            deep: '#172536',
+                        }
+                    },
+                    fontFamily: {
+                        'display': ['Space Grotesk', 'sans-serif'],
+                        'body': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif;  }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+
+        html {
+  overflow-y: scroll;
+}
+
+
+        /* Announcement Bar */
+        .announcement-bar {
+            background: #2C3E5A;
+            transition: transform 0.3s ease;
+        }
+        .announcement-bar.hidden-bar { transform: translateY(-100%); height: 0; padding: 0; overflow: hidden; }
+
+        /* Navbar */
+        #nav-wrapper { 
+            transition: all .35s ease; 
+        }
+        #nav-wrapper.scrolled {
+            top: 14px;
+            max-width: 1100px;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(30,58,95,0.08);
+            border-radius: 9999px;
+            box-shadow: 0 10px 30px -10px rgba(15,31,52,0.15);
+            padding-left: 22px; 
+            padding-right: 8px;
+        }
+        /* Mobile: enable pill shape when scrolled */
+        @media (max-width: 767px) {
+            #nav-wrapper.scrolled {
+                top: 14px;
+                max-width: calc(100% - 32px);
+                border-radius: 9999px;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+        }
+
+        /* Hero Slider */
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+        }
+        .hero-slide.active { opacity: 1; }
+
+        /* Typewriter */
+        .typewriter-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background: #4A6FA5;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+            vertical-align: text-bottom;
+        }
+        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+        /* Parallax */
+        .parallax-section {
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+        @media (max-width: 768px) {
+            .parallax-section { background-attachment: scroll; }
+        }
+
+        /* Fade In Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .fade-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .fade-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .scale-in {
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .scale-in.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Stagger children */
+        .stagger-children > * {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .stagger-children.visible > *:nth-child(1) { transition-delay: 0.05s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(2) { transition-delay: 0.12s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(3) { transition-delay: 0.19s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(4) { transition-delay: 0.26s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(5) { transition-delay: 0.33s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(6) { transition-delay: 0.40s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(7) { transition-delay: 0.47s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(8) { transition-delay: 0.54s; opacity: 1; transform: translateY(0); }
+
+        /* Marquee */
+        .marquee-track {
+            display: flex;
+            animation: marquee 40s linear infinite;
+            width: max-content;
+        }
+        .marquee-track:hover { animation-play-state: paused; }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Cards hover */
+        .division-card {
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+        .division-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(44, 62, 90, 0.12);
+        }
+
+        /* Video play button */
+        .play-btn {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 16px rgba(74, 111, 165, 0.15);
+        }
+
+        /* Accordion */
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+        .faq-answer.open {
+            max-height: 300px;
+            padding-bottom: 20px;
+        }
+        .faq-icon { transition: transform 0.3s ease; }
+        .faq-item.active .faq-icon { transform: rotate(45deg); }
+
+        /* Counter */
+        .stat-number {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mobile-menu.open { transform: translateX(0); }
+
+        /* Smooth scroll */
+        html { scroll-behavior: smooth; }
+
+        /* Hero slide indicators */
+        .slide-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            transition: all 0.3s ease;
+        }
+        .slide-dot.active {
+            background: #fff;
+            width: 28px;
+            border-radius: 4px;
+        }
+
+        /* Z-section images */
+        .z-image {
+            transition: transform 0.6s ease;
+        }
+        .z-image:hover {
+            transform: scale(1.03);
+        }
+
+        /* Grid image stagger */
+        .grid-stagger img {
+            transition: transform 0.5s ease;
+        }
+        .grid-stagger img:hover { transform: scale(1.04); }
+
+        /* Loading animation for page */
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            background: #1E2D42;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease;
+        }
+        .page-loader.done {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader-logo {
+            animation: pulse-logo 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse-logo {
+            0%, 100% { opacity: 0.5; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Navbar link underline */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #2C3E5A;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        /* Scroll progress bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #2C3E5A, #4A6FA5);
+            z-index: 10001;
+            transition: width 0.1s linear;
+        }
+    </style>
+</head>
+<body class="bg-white text-avatar-dark antialiased">
+
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-logo">
+            <img src="Aavtat logo.svg" alt="Avatar logo" class="logo-mark" style="width: 1000px; height: 50px;">
+        </div>
+    </div>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scrollProgress" style="width: 0%;"></div>
+
+    <!-- 1. ANNOUNCEMENT BAR -->
+    <div class="announcement-bar py-2.5 px-4 text-center relative" id="announcementBar">
+        <div class="max-w-7xl mx-auto flex items-center justify-center gap-3">
+            <span class="inline-block w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+            <p class="text-sm text-avatar-silver font-body">
+                <span class="font-semibold text-white">New:</span> AI Agent Marketplace is now live — deploy AI agents in minutes.
+                <a href="#marketplace" class="underline text-white hover:text-avatar-light ml-1 transition-colors">Explore now →</a>
+            </p>
+        </div>
+        
+    </div>
+
+    <!-- 2. NAVBAR -->
+    <header class="sticky top-5 z-50 w-full">
+        <div id="nav-wrapper" class="mx-auto px-4 sm:px-6 py-3 flex items-center justify-between bg-white border-b border-navy-100 max-w-full">
+            <a href="#" class="flex items-center gap-2.5 no-select">
+                <img src="Aavtat logo.svg" alt="Avatar logo" class="logo-mark" style="width: 120px; height: 34px;">
+            </a>
+            
+            <!-- Desktop nav -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-navy-700">
+                <a href="#divisions" class="hover:text-navy-900 transition">Solutions</a>
+                <a href="#learning" class="hover:text-navy-900 transition">Learning</a>
+                <a href="#marketplace" class="hover:text-navy-900 transition">Marketplace</a>
+                <a href="#enterprise" class="hover:text-navy-900 transition">Enterprise</a>
+                <a href="#about" class="hover:text-navy-900 transition">About</a>
+            </nav>
+            
+            <div class="flex items-center gap-3">
+                <a href="#enroll" class="hidden md:inline-flex items-center gap-2 bg-avatar-navy hover:bg-avatar-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition">
+                    Consult Now
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+                
+                <!-- Hamburger button (mobile) -->
+                <button id="hamburger-btn" class="hamburger md:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-[6px] z-[60]" aria-label="Toggle menu">
+                    <span class="hamburger-line block w-6 h-[2px] bg-avatar-dark rounded-full origin-center"></span>
+                    <span class="hamburger-line block w-6 h-[2px] bg-avatar-dark rounded-full origin-center"></span>
+                    <span class="hamburger-line block w-6 h-[2px] bg-avatar-dark rounded-full origin-center"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu fixed inset-y-0 right-0 w-80 max-w-full bg-white shadow-2xl z-[10000] p-8" id="mobileMenu">
+        <div class="flex justify-between items-center mb-10">
+            <span class="font-display font-bold text-lg text-avatar-dark">AVATAR</span>
+            <button onclick="toggleMobileMenu()" class="p-2 text-avatar-slate hover:text-avatar-dark" aria-label="Close menu">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="flex flex-col gap-5">
+            <a href="#divisions" onclick="toggleMobileMenu()" class="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Solutions</a>
+            <a href="#learning" onclick="toggleMobileMenu()" class="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Learning</a>
+            <a href="#marketplace" onclick="toggleMobileMenu()" class="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Marketplace</a>
+            <a href="#enterprise" onclick="toggleMobileMenu()" class="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Enterprise</a>
+            <a href="#about" onclick="toggleMobileMenu()" class="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">About</a>
+        </div>
+        <div class="mt-10 flex flex-col gap-3">
+            <a href="#" class="text-center text-sm font-medium text-avatar-slate border border-avatar-silver rounded-full py-2.5 hover:bg-avatar-ice transition-colors">Sign In</a>
+            <a href="#cta" onclick="toggleMobileMenu()" class="text-center text-sm font-semibold bg-avatar-dark text-white rounded-full py-2.5 hover:bg-avatar-navy transition-colors">Get Started</a>
+        </div>
+    </div>
+    <div class="fixed inset-0 bg-black/30 z-[9999] hidden" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
+
+    <!-- 2. HERO — Auto Sliding Banners with Typewriter -->
+    <section class="relative h-screen min-h-[640px] max-h-[900px] overflow-hidden" id="hero">
+        <!-- Slides -->
+        <div class="hero-slide active" data-slide="0">
+            <img src="/bannerimages/Banner 3.png" alt="India Tech Hub" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-avatar-deep/90 via-avatar-dark/70 to-transparent"></div>
+        </div>
+        <div class="hero-slide" data-slide="1">
+            <img src="/bannerimages/ai-robot-interacting-with-futuristic-data-interface.png" alt="Digital India" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-avatar-deep/90 via-avatar-dark/70 to-transparent"></div>
+        </div>
+        <div class="hero-slide" data-slide="2">
+            <img src="/bannerimages/computer-generated-image-flag-with-logo-sun-middle.png" alt="AI Innovation India" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-avatar-deep/90 via-avatar-dark/70 to-transparent"></div>
+        </div>
+        <div class="hero-slide" data-slide="3">
+            <img src="/bannerimages/WhatsApp Image 2026-05-27 at 1.18.52 PM.jpeg" alt="Tech Growth India" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-avatar-deep/90 via-avatar-dark/70 to-transparent"></div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="absolute inset-0 flex items-center z-10">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full">
+                <div class="max-w-2xl">
+                    <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 rounded-full px-4 py-1.5 mb-6">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
+                        <span class="text-xs font-medium text-avatar-silver tracking-wide uppercase">The Operating System for the AI Era</span>
+                    </div>
+                    <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
+                        <span id="heroStaticText">One Ecosystem for</span><br>
+                        <span id="typewriterText" class="text-avatar-steel"></span><span class="typewriter-cursor"></span>
+                    </h1>
+                    <p class="text-base md:text-lg text-avatar-silver/90 leading-relaxed mb-8 max-w-lg">
+                        From AI education and automation to enterprise infrastructure — Avatar is the centralized platform powering AI transformation for individuals and businesses worldwide.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="#cta" class="inline-flex items-center justify-center gap-2 bg-white text-avatar-dark font-semibold px-7 py-3.5 rounded-full hover:bg-avatar-ice transition-colors text-sm">
+                            Start Your AI Journey
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                        <a href="#about" class="inline-flex items-center justify-center gap-2 border border-white/25 text-white font-medium px-7 py-3.5 rounded-full hover:bg-white/10 transition-colors text-sm">
+                            <i class="fas fa-play text-xs"></i>
+                            Watch Overview
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide Indicators -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+            <button class="slide-dot active" data-target="0" onclick="goToSlide(0)"></button>
+            <button class="slide-dot" data-target="1" onclick="goToSlide(1)"></button>
+            <button class="slide-dot" data-target="2" onclick="goToSlide(2)"></button>
+            <button class="slide-dot" data-target="3" onclick="goToSlide(3)"></button>
+        </div>
+    </section>
+
+    <!-- 3. GRID IMAGE + TEXT — About / What is Avatar -->
+    <section class="py-20 lg:py-28 bg-white" id="about">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                <!-- Staggered Image Grid -->
+                <div class="grid-stagger grid grid-cols-2 gap-4 fade-up">
+                    <div class="space-y-4">
+                        <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80" alt="AI Robot" class="rounded-2xl w-full h-48 object-cover shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=600&q=80" alt="AI Code" class="rounded-2xl w-full h-64 object-cover shadow-lg">
+                    </div>
+                    <div class="space-y-4 pt-8">
+                        <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&q=80" alt="AI Team" class="rounded-2xl w-full h-64 object-cover shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80" alt="AI Technology" class="rounded-2xl w-full h-48 object-cover shadow-lg">
+                    </div>
+                </div>
+                <!-- Text Content -->
+                <div class="fade-right">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-avatar-accent mb-4 inline-block">About Avatar</span>
+                    <h2 class="font-display text-3xl lg:text-4xl font-bold text-avatar-dark mb-5 leading-tight">
+                        The Complete AI Infrastructure for a New Era
+                    </h2>
+                    <p class="text-avatar-slate leading-relaxed mb-6">
+                        Avatar is building the world's most comprehensive AI ecosystem — a single platform where anyone can learn, build, deploy, and scale AI solutions. Whether you're an individual looking to upskill, a startup automating workflows, or an enterprise transforming operations, Avatar is your centralized AI transformation partner.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="flex items-start gap-3">
+                            <div class="w-9 h-9 bg-avatar-ice rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fas fa-graduation-cap text-avatar-accent text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-sm text-avatar-dark">Education</p>
+                                <p class="text-xs text-avatar-steel">Learn AI end-to-end</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-9 h-9 bg-avatar-ice rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fas fa-cogs text-avatar-accent text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-sm text-avatar-dark">Automation</p>
+                                <p class="text-xs text-avatar-steel">Streamline everything</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-9 h-9 bg-avatar-ice rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fas fa-robot text-avatar-accent text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-sm text-avatar-dark">AI Agents</p>
+                                <p class="text-xs text-avatar-steel">Deploy in minutes</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-9 h-9 bg-avatar-ice rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fas fa-building text-avatar-accent text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-sm text-avatar-dark">Enterprise</p>
+                                <p class="text-xs text-avatar-steel">Scale with confidence</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#divisions" class="inline-flex items-center gap-2 text-avatar-accent font-semibold text-sm hover:gap-3 transition-all">
+                        Explore Our Divisions <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. GRID CARDS + CTA — Main Divisions -->
+    <section class="py-20 lg:py-28 bg-avatar-ice" id="divisions">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-14 fade-up">
+                <span class="text-xs font-semibold uppercase tracking-widest text-avatar-accent mb-4 inline-block">Our Ecosystem</span>
+                <h2 class="font-display text-3xl lg:text-4xl font-bold text-avatar-dark mb-4">
+                    Eight Divisions. One Unified Ecosystem.
+                </h2>
+                <p class="text-avatar-slate leading-relaxed">
+                    Every layer of AI adoption — covered. From learning to deployment to intelligence.
+                </p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 stagger-children" id="divisionsGrid">
+                <!-- Card 1 -->
+                <div class="division-card bg-white rounded-2xl p-6 border border-avatar-light/60">
+                    <div class="w-12 h-12 bg-avatar-ice rounded-xl flex items-center justify-center mb-5">
+                        <i class="fas fa-book-open text-avatar-accent text-lg"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-avatar-dark mb-2">AI Learning</h3>
+                    <p class="text-sm text-avatar-steel leading-relaxed mb-4">Workshops, certifications, bootcamps, and enterprise training for students, professionals, and businesses.</p>
+                    <a href="#learning" class="text-xs font-semibold text-avatar-accent hover:underline">Learn more →</a>
+                </div>
+                <!-- Card 2 -->
+                <div class="division-card bg-white rounded-2xl p-6 border border-avatar-light/60">
+                    <div class="w-12 h-12 bg-avatar-ice rounded-xl flex items-center justify-center mb-5">
+                        <i class="fas fa-puzzle-piece text-avatar-accent text-lg"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-avatar-dark mb-2">AI Solutions</h3>
+                    <p class="text-sm text-avatar-steel leading-relaxed mb-4">Automation, chatbots, workflow AI, sales & support systems, integrations and analytics for businesses.</p>
+                    <a href="#" class="text-xs font-semibold text-avatar-accent hover:underline">Learn more →</a>
+                </div>
+                <!-- Card 3 -->
+                <div class="division-card bg-white rounded-2xl p-6 border border-avatar-light/60">
+                    <div class="w-12 h-12 bg-avatar-ice rounded-xl flex items-center justify-center mb-5">
+                        <i class="fas fa-store text-avatar-accent text-lg"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-avatar-dark mb-2">Agent Marketplace</h3>
+                    <p class="text-sm text-avatar-steel leading-relaxed mb-4">Buy, deploy & customize AI agents — HR AI, Sales AI, Support AI, Marketing AI — plug-and-play for any business.</p>
+                    <a href="#marketplace" class="text-xs font-semibold text-avatar-accent hover:underline">Learn more →</a>
+                </div>
+                <!-- Card 4 -->
+                <div class="division-card bg-white rounded-2xl p-6 border border-avatar-light/60">
+                    <div class="w-12 h-12 bg-avatar-ice rounded-xl flex items-center justify-center mb-5">
+                        <i class="fas fa-layer-group text-avatar-accent text-lg"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-avatar-dark mb-2">AI SaaS Products</h3>
+                    <p class="text-sm text-avatar-steel leading-relaxed mb-4">AI CRM, marketing platform, content engine, analytics tools, assistant platform, and workflow builder.</p>
+                    <a href="#" class="text-xs font-semibold text-avatar-accent hover:underline">Learn more →</a>
+                </div>
+                <!-- Card 5 -->
+                <div class="division-card bg-white rounded-2xl p-6 border border-avatar-light/60">
+                    <div class="w-12 h-12 bg-avatar-ice rounded-xl flex items-center justify-center mb-5">
+                        <i class="fas fa-cloud text-avatar-accent text-lg"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-avatar-dark mb-2">AI Cloud Workspace</h3>
+                    <p class="text-sm text-avatar-steel leading-relaxed mb-4">Unified dashboard to manage employees, AI agents, workflows, automations, and business data in one place.</p>
+                    <a href="#" class="text-xs font-semibold text-avatar-accent hover:underline">Learn more →</a>
+                </div>
+                <!-- Card 6 -->
+                <div class="division-card bg-white rounded-2xl p-6 border border-avatar-light/60">
+                    <div class="w-12 h-12 bg-avatar-ice rounded-xl flex items-center justify-center mb-5">
+                        <i class="fas fa-users text-avatar-accent text-lg"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-avatar-dark mb-2">AI Talent Network</h3>
+                    <p class="text-sm text-avatar-steel leading-relaxed mb-4">Connecting companies with certified AI talent. Freelancers offer AI services. Certified users get hired.</p>
+                    <a href="#" class="text-xs font-semibold text-avatar-accent hover:underline">Learn more →</a>
+                </div>
+                <!-- Card 7 -->
+                <div class="division-card bg-white rounded-2xl p-6 border border-avatar-light/60">
+                    <div class="w-12 h-12 bg-avatar-ice rounded-xl flex items-center justify-center mb-5">
+                        <i class="fas fa-flask text-avatar-accent text-lg"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-avatar-dark mb-2">AI Research & Innovation</h3>
+                    <p class="text-sm text-avatar-steel leading-relaxed mb-4">Fine-tuned models, local AI systems, enterprise AI, voice AI, and multilingual AI — long-term R&D.</p>
+                    <a href="#" class="text-xs font-semibold text-avatar-accent hover:underline">Learn more →</a>
+                </div>
+                <!-- Card 8 -->
+                <div class="division-card bg-white rounded-2xl p-6 border border-avatar-light/60">
+                    <div class="w-12 h-12 bg-avatar-ice rounded-xl flex items-center justify-center mb-5">
+                        <i class="fas fa-database text-avatar-accent text-lg"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-avatar-dark mb-2">AI Data & Intelligence</h3>
+                    <p class="text-sm text-avatar-steel leading-relaxed mb-4">Workflow patterns, user behavior, and industry intelligence — the data layer that powers the ecosystem moat.</p>
+                    <a href="#" class="text-xs font-semibold text-avatar-accent hover:underline">Learn more →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. IMAGE + TEXT — AI Learning Division -->
+    <section class="py-20 lg:py-28 bg-white" id="learning">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="fade-left">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-avatar-accent mb-4 inline-block">AI Learning Division</span>
+                    <h2 class="font-display text-3xl lg:text-4xl font-bold text-avatar-dark mb-5 leading-tight">
+                        Master AI — From Fundamentals to Enterprise Implementation
+                    </h2>
+                    <p class="text-avatar-slate leading-relaxed mb-6">
+                        Our AI Learning division offers a structured path from beginner to expert. Whether you're a student exploring AI for the first time, a professional adding AI skills, or a business training teams — we have programs designed for every level.
+                    </p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center gap-3 text-sm text-avatar-slate">
+                            <span class="w-5 h-5 bg-avatar-accent/10 rounded-full flex items-center justify-center shrink-0">
+                                <i class="fas fa-check text-avatar-accent text-[10px]"></i>
+                            </span>
+                            Hands-on workshops & intensive bootcamps
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-avatar-slate">
+                            <span class="w-5 h-5 bg-avatar-accent/10 rounded-full flex items-center justify-center shrink-0">
+                                <i class="fas fa-check text-avatar-accent text-[10px]"></i>
+                            </span>
+                            Industry-recognized AI certifications
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-avatar-slate">
+                            <span class="w-5 h-5 bg-avatar-accent/10 rounded-full flex items-center justify-center shrink-0">
+                                <i class="fas fa-check text-avatar-accent text-[10px]"></i>
+                            </span>
+                            Enterprise training & AI University programs
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-avatar-slate">
+                            <span class="w-5 h-5 bg-avatar-accent/10 rounded-full flex items-center justify-center shrink-0">
+                                <i class="fas fa-check text-avatar-accent text-[10px]"></i>
+                            </span>
+                            AI Labs for hands-on experimentation & research
+                        </li>
+                    </ul>
+                    <a href="#cta" class="inline-flex items-center justify-center gap-2 bg-avatar-dark text-white font-semibold px-7 py-3 rounded-full hover:bg-avatar-navy transition-colors text-sm">
+                        Explore Programs <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+                <div class="fade-right relative">
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80" alt="AI Learning Workshop" class="rounded-2xl shadow-xl w-full object-cover h-[480px]">
+                    <div class="absolute -bottom-5 -left-5 bg-white rounded-xl shadow-lg p-4 border border-avatar-light/60 hidden md:block">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-avatar-accent rounded-lg flex items-center justify-center">
+                                <i class="fas fa-trophy text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-sm text-avatar-dark">12,000+</p>
+                                <p class="text-xs text-avatar-steel">Certified Graduates</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. VIDEO BOX + TEXT — AI Solutions -->
+    <section class="py-20 lg:py-28 bg-avatar-ice" id="solutions">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                <!-- Video Box -->
+                <div class="relative rounded-2xl overflow-hidden shadow-xl scale-in group cursor-pointer order-2 lg:order-1" onclick="playVideo(this)">
+                    <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&q=80" alt="AI Solutions Demo" class="w-full h-[380px] object-cover">
+                    <div class="absolute inset-0 bg-avatar-dark/40 flex items-center justify-center group-hover:bg-avatar-dark/50 transition-colors">
+                        <div class="play-btn w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
+                            <i class="fas fa-play text-avatar-dark ml-1"></i>
+                        </div>
+                    </div>
+                    <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2">
+                        <p class="text-xs font-medium text-avatar-dark">See Avatar in Action — 3 min overview</p>
+                    </div>
+                </div>
+                <!-- Text -->
+                <div class="fade-right order-1 lg:order-2">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-avatar-accent mb-4 inline-block">AI Solutions Division</span>
+                    <h2 class="font-display text-3xl lg:text-4xl font-bold text-avatar-dark mb-5 leading-tight">
+                        AI-Powered Solutions Built for Business Growth
+                    </h2>
+                    <p class="text-avatar-slate leading-relaxed mb-6">
+                        Our solutions division delivers custom AI implementations — from intelligent chatbots and sales automation to workflow optimization and predictive analytics. Every solution is tailored to your industry and scale.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="bg-white rounded-xl p-4 border border-avatar-light/60">
+                            <i class="fas fa-comments text-avatar-accent mb-2"></i>
+                            <p class="font-semibold text-sm text-avatar-dark">AI Chatbots</p>
+                            <p class="text-xs text-avatar-steel mt-1">24/7 intelligent support</p>
+                        </div>
+                        <div class="bg-white rounded-xl p-4 border border-avatar-light/60">
+                            <i class="fas fa-chart-line text-avatar-accent mb-2"></i>
+                            <p class="font-semibold text-sm text-avatar-dark">Sales AI</p>
+                            <p class="text-xs text-avatar-steel mt-1">Predict & convert leads</p>
+                        </div>
+                        <div class="bg-white rounded-xl p-4 border border-avatar-light/60">
+                            <i class="fas fa-project-diagram text-avatar-accent mb-2"></i>
+                            <p class="font-semibold text-sm text-avatar-dark">Workflow AI</p>
+                            <p class="text-xs text-avatar-steel mt-1">Automate operations</p>
+                        </div>
+                        <div class="bg-white rounded-xl p-4 border border-avatar-light/60">
+                            <i class="fas fa-chart-pie text-avatar-accent mb-2"></i>
+                            <p class="font-semibold text-sm text-avatar-dark">Analytics</p>
+                            <p class="text-xs text-avatar-steel mt-1">Data-driven insights</p>
+                        </div>
+                    </div>
+                    <a href="#cta" class="inline-flex items-center gap-2 text-avatar-accent font-semibold text-sm hover:gap-3 transition-all">
+                        Request a Solution Demo <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6b. IMAGE + TEXT — Agent Marketplace (Parallax) -->
+    <section class="parallax-section relative py-24 lg:py-32" id="marketplace" style="background-image: url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1920&q=80');">
+        <div class="absolute inset-0 bg-avatar-deep/85"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="fade-left">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-avatar-steel mb-4 inline-block">AI Agent Marketplace</span>
+                    <h2 class="font-display text-3xl lg:text-4xl font-bold text-white mb-5 leading-tight">
+                        Deploy AI Agents in Minutes — Not Months
+                    </h2>
+                    <p class="text-avatar-silver leading-relaxed mb-6">
+                        Browse our marketplace of pre-built, customizable AI agents. From HR screening to sales outreach, support tickets to content generation — find the agent your business needs and deploy it instantly.
+                    </p>
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        <span class="bg-white/10 backdrop-blur-sm text-white text-xs font-medium px-4 py-2 rounded-full border border-white/15">HR AI Agent</span>
+                        <span class="bg-white/10 backdrop-blur-sm text-white text-xs font-medium px-4 py-2 rounded-full border border-white/15">Sales AI Agent</span>
+                        <span class="bg-white/10 backdrop-blur-sm text-white text-xs font-medium px-4 py-2 rounded-full border border-white/15">Support AI Agent</span>
+                        <span class="bg-white/10 backdrop-blur-sm text-white text-xs font-medium px-4 py-2 rounded-full border border-white/15">Marketing AI Agent</span>
+                        <span class="bg-white/10 backdrop-blur-sm text-white text-xs font-medium px-4 py-2 rounded-full border border-white/15">Content AI Agent</span>
+                        <span class="bg-white/10 backdrop-blur-sm text-white text-xs font-medium px-4 py-2 rounded-full border border-white/15">Analytics AI Agent</span>
+                    </div>
+                    <a href="#cta" class="inline-flex items-center justify-center gap-2 bg-white text-avatar-dark font-semibold px-7 py-3 rounded-full hover:bg-avatar-ice transition-colors text-sm">
+                        Browse Marketplace <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+                <div class="fade-right">
+                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80" alt="AI Marketplace Dashboard" class="rounded-2xl shadow-2xl w-full object-cover h-[420px] border border-white/10">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Z-SHAPED IMAGE + TEXT — Enterprise & Segments -->
+    <section class="py-20 lg:py-28 bg-white" id="enterprise">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16 fade-up">
+                <span class="text-xs font-semibold uppercase tracking-widest text-avatar-accent mb-4 inline-block">A-to-Z Solutions</span>
+                <h2 class="font-display text-3xl lg:text-4xl font-bold text-avatar-dark mb-4">
+                    AI Adoption for Everyone
+                </h2>
+                <p class="text-avatar-slate leading-relaxed">
+                    Whether you're an individual, a growing business, or a global enterprise — Avatar has solutions tailored to your needs.
+                </p>
+            </div>
+
+            <!-- Z-Row 1: Image Left, Text Right -->
+            <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-20">
+                <div class="fade-left">
+                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80" alt="Individual AI Learning" class="z-image rounded-2xl shadow-lg w-full h-[340px] object-cover">
+                </div>
+                <div class="fade-right">
+                    <div class="inline-flex items-center gap-2 bg-avatar-ice rounded-full px-4 py-1.5 mb-4">
+                        <i class="fas fa-user text-avatar-accent text-xs"></i>
+                        <span class="text-xs font-semibold text-avatar-accent">For Individuals</span>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold text-avatar-dark mb-3">Upskill, Build & Earn with AI</h3>
+                    <p class="text-avatar-slate leading-relaxed mb-5">
+                        Access world-class AI learning, earn certifications, build your AI-powered resume, boost productivity, and freelance your AI skills on the Avatar Talent Network.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">Learning & Certifications</span>
+                        <span class="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">AI Assistant</span>
+                        <span class="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">Resume AI</span>
+                        <span class="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">Productivity AI</span>
+                        <span class="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">Freelancing Tools</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Z-Row 2: Text Left, Image Right -->
+            <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-20">
+                <div class="fade-left order-2 lg:order-1">
+                    <div class="inline-flex items-center gap-2 bg-avatar-ice rounded-full px-4 py-1.5 mb-4">
+                        <i class="fas fa-briefcase text-avatar-accent text-xs"></i>
+                        <span class="text-xs font-semibold text-avatar-accent">For Businesses</span>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold text-avatar-dark mb-3">Automate, Optimize & Scale</h3>
+                    <p class="text-avatar-slate leading-relaxed mb-5">
+                        From AI customer support and CRM to marketing automation and analytics — equip your business with intelligent systems that work around the clock and grow with you.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">AI Customer Support</span>
+                        <span class="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">AI Automation</span>
+                        <span class="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">AI CRM</span>
+                        <span class="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">AI Marketing</span>
+                        <span class="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">AI Analytics</span>
+                    </div>
+                </div>
+                <div class="fade-right order-1 lg:order-2">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80" alt="Business AI Solutions" class="z-image rounded-2xl shadow-lg w-full h-[340px] object-cover">
+                </div>
+            </div>
+
+            <!-- Z-Row 3: Image Left, Text Right -->
+            <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                <div class="fade-left">
+                    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80" alt="Enterprise AI Infrastructure" class="z-image rounded-2xl shadow-lg w-full h-[340px] object-cover">
+                </div>
+                <div class="fade-right">
+                    <div class="inline-flex items-center gap-2 bg-avatar-ice rounded-full px-4 py-1.5 mb-4">
+                        <i class="fas fa-building text-avatar-accent text-xs"></i>
+                        <span class="text-xs font-semibold text-avatar-accent">For Enterprises</span>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold text-avatar-dark mb-3">Transform Operations at Scale</h3>
+                    <p class="text-avatar-slate leading-relaxed mb-5">
+                        Deploy custom AI systems, internal copilots, security AI, and full AI infrastructure across your organization. Long-term contracts, dedicated support, and enterprise-grade security.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">AI Operations</span>
+                        <span class="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">Custom AI Systems</span>
+                        <span class="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">Internal Copilots</span>
+                        <span class="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">Security AI</span>
+                        <span class="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">AI Infrastructure</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. STATISTICS — Increasing Number Values -->
+    <section class="py-20 lg:py-24 bg-avatar-dark">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-14 fade-up">
+                <h2 class="font-display text-3xl lg:text-4xl font-bold text-white mb-3">
+                    The Numbers Speak
+                </h2>
+                <p class="text-avatar-steel">Building the future of AI adoption — globally.</p>
+            </div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-4" id="statsSection">
+                <div class="text-center">
+                    <p class="stat-number font-display text-4xl lg:text-5xl font-bold text-white mb-2" data-target="12000" data-suffix="+">0</p>
+                    <p class="text-sm text-avatar-steel">AI Professionals Trained</p>
+                </div>
+                <div class="text-center">
+                    <p class="stat-number font-display text-4xl lg:text-5xl font-bold text-white mb-2" data-target="500" data-suffix="+">0</p>
+                    <p class="text-sm text-avatar-steel">Businesses Transformed</p>
+                </div>
+                <div class="text-center">
+                    <p class="stat-number font-display text-4xl lg:text-5xl font-bold text-white mb-2" data-target="150" data-suffix="+">0</p>
+                    <p class="text-sm text-avatar-steel">AI Agents Deployed</p>
+                </div>
+                <div class="text-center">
+                    <p class="stat-number font-display text-4xl lg:text-5xl font-bold text-white mb-2" data-target="35" data-suffix="">0</p>
+                    <p class="text-sm text-avatar-steel">Countries Reached</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. TESTIMONIALS — Auto Sliding Marquee -->
+    <section class="py-20 lg:py-24 bg-avatar-ice overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 mb-12 fade-up">
+            <div class="text-center max-w-xl mx-auto">
+                <span class="text-xs font-semibold uppercase tracking-widest text-avatar-accent mb-4 inline-block">Testimonials</span>
+                <h2 class="font-display text-3xl lg:text-4xl font-bold text-avatar-dark mb-3">
+                    Trusted by Leaders & Learners
+                </h2>
+                <p class="text-avatar-slate">Hear from individuals and businesses who've transformed with Avatar.</p>
+            </div>
+        </div>
+
+        <!-- Marquee Row 1 -->
+        <div class="overflow-hidden mb-5">
+            <div class="marquee-track">
+                <!-- 6 cards duplicated for seamless loop -->
+                <div class="bg-white rounded-2xl p-6 mx-3 w-[360px] shrink-0 border border-avatar-light/60">
+                    <div class="flex items-center gap-1 mb-3">
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                    </div>
+                    <p class="text-sm text-avatar-slate leading-relaxed mb-4">"Avatar's AI bootcamp completely changed my career trajectory. Within 3 months, I went from knowing nothing about AI to deploying chatbots for clients."</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=80" alt="Testimonial" class="w-10 h-10 rounded-full object-cover">
+                        <div>
+                            <p class="font-semibold text-sm text-avatar-dark">Rahul Mehta</p>
+                            <p class="text-xs text-avatar-steel">AI Consultant, Freelancer</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 mx-3 w-[360px] shrink-0 border border-avatar-light/60">
+                    <div class="flex items-center gap-1 mb-3">
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                    </div>
+                    <p class="text-sm text-avatar-slate leading-relaxed mb-4">"We deployed Avatar's Sales AI agent and saw a 40% increase in qualified leads within the first month. The marketplace is incredible for plug-and-play AI."</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&q=80" alt="Testimonial" class="w-10 h-10 rounded-full object-cover">
+                        <div>
+                            <p class="font-semibold text-sm text-avatar-dark">Sarah Chen</p>
+                            <p class="text-xs text-avatar-steel">VP Sales, TechScale Inc.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 mx-3 w-[360px] shrink-0 border border-avatar-light/60">
+                    <div class="flex items-center gap-1 mb-3">
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                    </div>
+                    <p class="text-sm text-avatar-slate leading-relaxed mb-4">"Avatar's enterprise training transformed how our team approaches AI. 200+ employees certified in under 6 weeks. The structured curriculum is unmatched."</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&q=80" alt="Testimonial" class="w-10 h-10 rounded-full object-cover">
+                        <div>
+                            <p class="font-semibold text-sm text-avatar-dark">Marcus Reynolds</p>
+                            <p class="text-xs text-avatar-steel">CTO, FinServe Global</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 mx-3 w-[360px] shrink-0 border border-avatar-light/60">
+                    <div class="flex items-center gap-1 mb-3">
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                    </div>
+                    <p class="text-sm text-avatar-slate leading-relaxed mb-4">"The AI Cloud Workspace brought all our tools, agents, and data into one dashboard. It's like having a command center for our entire AI operations."</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&q=80" alt="Testimonial" class="w-10 h-10 rounded-full object-cover">
+                        <div>
+                            <p class="font-semibold text-sm text-avatar-dark">Priya Sharma</p>
+                            <p class="text-xs text-avatar-steel">COO, NexGen Retail</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 mx-3 w-[360px] shrink-0 border border-avatar-light/60">
+                    <div class="flex items-center gap-1 mb-3">
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                    </div>
+                    <p class="text-sm text-avatar-slate leading-relaxed mb-4">"I earned my Avatar AI certification, listed myself on the Talent Network, and got hired within two weeks. The ecosystem truly connects learning with opportunity."</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&q=80" alt="Testimonial" class="w-10 h-10 rounded-full object-cover">
+                        <div>
+                            <p class="font-semibold text-sm text-avatar-dark">David Kim</p>
+                            <p class="text-xs text-avatar-steel">AI Developer, Freelancer</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 mx-3 w-[360px] shrink-0 border border-avatar-light/60">
+                    <div class="flex items-center gap-1 mb-3">
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                    </div>
+                    <p class="text-sm text-avatar-slate leading-relaxed mb-4">"Avatar's AI SaaS platform replaced three separate tools for us. The AI CRM alone paid for itself in the first quarter with improved conversion rates."</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=80&q=80" alt="Testimonial" class="w-10 h-10 rounded-full object-cover">
+                        <div>
+                            <p class="font-semibold text-sm text-avatar-dark">Elena Torres</p>
+                            <p class="text-xs text-avatar-steel">Marketing Director, BrightPath</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Duplicate for seamless loop -->
+                <div class="bg-white rounded-2xl p-6 mx-3 w-[360px] shrink-0 border border-avatar-light/60">
+                    <div class="flex items-center gap-1 mb-3">
+                        <i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i>
+                    </div>
+                    <p class="text-sm text-avatar-slate leading-relaxed mb-4">"Avatar's AI bootcamp completely changed my career trajectory. Within 3 months, I went from knowing nothing about AI to deploying chatbots for clients."</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=80" alt="" class="w-10 h-10 rounded-full object-cover">
+                        <div><p class="font-semibold text-sm text-avatar-dark">Rahul Mehta</p><p class="text-xs text-avatar-steel">AI Consultant, Freelancer</p></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 mx-3 w-[360px] shrink-0 border border-avatar-light/60">
+                    <div class="flex items-center gap-1 mb-3">
+                        <i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i>
+                    </div>
+                    <p class="text-sm text-avatar-slate leading-relaxed mb-4">"We deployed Avatar's Sales AI agent and saw a 40% increase in qualified leads within the first month. The marketplace is incredible for plug-and-play AI."</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&q=80" alt="" class="w-10 h-10 rounded-full object-cover">
+                        <div><p class="font-semibold text-sm text-avatar-dark">Sarah Chen</p><p class="text-xs text-avatar-steel">VP Sales, TechScale Inc.</p></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 mx-3 w-[360px] shrink-0 border border-avatar-light/60">
+                    <div class="flex items-center gap-1 mb-3">
+                        <i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i>
+                    </div>
+                    <p class="text-sm text-avatar-slate leading-relaxed mb-4">"Avatar's enterprise training transformed how our team approaches AI. 200+ employees certified in under 6 weeks. The structured curriculum is unmatched."</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&q=80" alt="" class="w-10 h-10 rounded-full object-cover">
+                        <div><p class="font-semibold text-sm text-avatar-dark">Marcus Reynolds</p><p class="text-xs text-avatar-steel">CTO, FinServe Global</p></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 mx-3 w-[360px] shrink-0 border border-avatar-light/60">
+                    <div class="flex items-center gap-1 mb-3">
+                        <i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i>
+                    </div>
+                    <p class="text-sm text-avatar-slate leading-relaxed mb-4">"The AI Cloud Workspace brought all our tools, agents, and data into one dashboard. It's like having a command center for our entire AI operations."</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&q=80" alt="" class="w-10 h-10 rounded-full object-cover">
+                        <div><p class="font-semibold text-sm text-avatar-dark">Priya Sharma</p><p class="text-xs text-avatar-steel">COO, NexGen Retail</p></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 mx-3 w-[360px] shrink-0 border border-avatar-light/60">
+                    <div class="flex items-center gap-1 mb-3">
+                        <i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i>
+                    </div>
+                    <p class="text-sm text-avatar-slate leading-relaxed mb-4">"I earned my Avatar AI certification, listed myself on the Talent Network, and got hired within two weeks. The ecosystem truly connects learning with opportunity."</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&q=80" alt="" class="w-10 h-10 rounded-full object-cover">
+                        <div><p class="font-semibold text-sm text-avatar-dark">David Kim</p><p class="text-xs text-avatar-steel">AI Developer, Freelancer</p></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 mx-3 w-[360px] shrink-0 border border-avatar-light/60">
+                    <div class="flex items-center gap-1 mb-3">
+                        <i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i>
+                    </div>
+                    <p class="text-sm text-avatar-slate leading-relaxed mb-4">"Avatar's AI SaaS platform replaced three separate tools for us. The AI CRM alone paid for itself in the first quarter with improved conversion rates."</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=80&q=80" alt="" class="w-10 h-10 rounded-full object-cover">
+                        <div><p class="font-semibold text-sm text-avatar-dark">Elena Torres</p><p class="text-xs text-avatar-steel">Marketing Director, BrightPath</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. FAQ — Image Grid + Accordion -->
+    <section class="py-20 lg:py-28 bg-white" id="faq">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16">
+                <!-- Image Grid -->
+                <div class="fade-left hidden lg:block">
+                    <div class="grid grid-cols-2 gap-4 sticky top-32">
+                        <img src="https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=500&q=80" alt="FAQ AI" class="rounded-2xl w-full h-48 object-cover shadow-md">
+                        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&q=80" alt="FAQ AI" class="rounded-2xl w-full h-48 object-cover shadow-md mt-6">
+                        <img src="https://images.unsplash.com/photo-1488229297570-58520851e868?w=500&q=80" alt="FAQ AI" class="rounded-2xl w-full h-48 object-cover shadow-md -mt-2">
+                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&q=80" alt="FAQ AI" class="rounded-2xl w-full h-48 object-cover shadow-md mt-4">
+                    </div>
+                </div>
+                <!-- Accordion -->
+                <div class="fade-right">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-avatar-accent mb-4 inline-block">FAQ</span>
+                    <h2 class="font-display text-3xl lg:text-4xl font-bold text-avatar-dark mb-8">
+                        Frequently Asked Questions
+                    </h2>
+                    <div class="space-y-3">
+                        <div class="faq-item border border-avatar-light/80 rounded-xl overflow-hidden bg-white active">
+                            <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" onclick="toggleFaq(this)">
+                                <span class="font-semibold text-sm text-avatar-dark pr-4">What is Avatar and how is it different from other AI platforms?</span>
+                                <span class="faq-icon text-avatar-accent text-lg shrink-0">+</span>
+                            </button>
+                            <div class="faq-answer px-5 open">
+                                <p class="text-sm text-avatar-slate leading-relaxed">Avatar is a complete AI ecosystem — not just a tool or course platform. We combine AI education, SaaS products, an agent marketplace, cloud workspace, talent network, and R&D under one roof. Think of it as the operating system for the AI era, designed for individuals, businesses, and enterprises alike.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item border border-avatar-light/80 rounded-xl overflow-hidden bg-white">
+                            <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" onclick="toggleFaq(this)">
+                                <span class="font-semibold text-sm text-avatar-dark pr-4">Who can benefit from Avatar?</span>
+                                <span class="faq-icon text-avatar-accent text-lg shrink-0">+</span>
+                            </button>
+                            <div class="faq-answer px-5">
+                                <p class="text-sm text-avatar-slate leading-relaxed">Everyone — from students and professionals looking to learn AI, to businesses needing automation and AI-powered tools, to enterprises requiring custom AI infrastructure. Our ecosystem serves all levels and scales.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item border border-avatar-light/80 rounded-xl overflow-hidden bg-white">
+                            <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" onclick="toggleFaq(this)">
+                                <span class="font-semibold text-sm text-avatar-dark pr-4">How does the AI Agent Marketplace work?</span>
+                                <span class="faq-icon text-avatar-accent text-lg shrink-0">+</span>
+                            </button>
+                            <div class="faq-answer px-5">
+                                <p class="text-sm text-avatar-slate leading-relaxed">Browse our library of pre-built AI agents designed for specific business functions — HR screening, sales outreach, customer support, content creation, and more. Select an agent, customize it for your needs, and deploy it within minutes. No coding required.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item border border-avatar-light/80 rounded-xl overflow-hidden bg-white">
+                            <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" onclick="toggleFaq(this)">
+                                <span class="font-semibold text-sm text-avatar-dark pr-4">What certifications does Avatar offer?</span>
+                                <span class="faq-icon text-avatar-accent text-lg shrink-0">+</span>
+                            </button>
+                            <div class="faq-answer px-5">
+                                <p class="text-sm text-avatar-slate leading-relaxed">We offer industry-recognized certifications across AI fundamentals, prompt engineering, AI automation, AI for business, and advanced AI implementation. Certified graduates also gain access to our Talent Network for job opportunities and freelance projects.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item border border-avatar-light/80 rounded-xl overflow-hidden bg-white">
+                            <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" onclick="toggleFaq(this)">
+                                <span class="font-semibold text-sm text-avatar-dark pr-4">Can Avatar handle enterprise-scale implementations?</span>
+                                <span class="faq-icon text-avatar-accent text-lg shrink-0">+</span>
+                            </button>
+                            <div class="faq-answer px-5">
+                                <p class="text-sm text-avatar-slate leading-relaxed">Absolutely. Our enterprise division provides custom AI systems, internal copilots, security AI, dedicated infrastructure, and long-term contracts with priority support. We work with organizations of all sizes to deploy AI at scale with enterprise-grade security and compliance.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item border border-avatar-light/80 rounded-xl overflow-hidden bg-white">
+                            <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" onclick="toggleFaq(this)">
+                                <span class="font-semibold text-sm text-avatar-dark pr-4">How do I get started with Avatar?</span>
+                                <span class="faq-icon text-avatar-accent text-lg shrink-0">+</span>
+                            </button>
+                            <div class="faq-answer px-5">
+                                <p class="text-sm text-avatar-slate leading-relaxed">Simply sign up on our platform, choose your path — whether it's learning, deploying AI agents, using our SaaS tools, or consulting with our solutions team. Our onboarding process guides you through the ecosystem based on your goals and needs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 11. FINAL CTA — Marketing Image + Text -->
+    <section class="py-20 lg:py-28 bg-avatar-ice" id="cta">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="relative bg-avatar-dark rounded-3xl overflow-hidden">
+                <!-- Background Image -->
+                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80" alt="CTA Background" class="absolute inset-0 w-full h-full object-cover opacity-20">
+                <div class="absolute inset-0 bg-gradient-to-r from-avatar-deep/95 via-avatar-dark/85 to-avatar-dark/70"></div>
+                
+                <div class="relative z-10 grid lg:grid-cols-2 gap-10 items-center p-10 lg:p-16">
+                    <div class="fade-left">
+                        <span class="text-xs font-semibold uppercase tracking-widest text-avatar-steel mb-4 inline-block">Start Today</span>
+                        <h2 class="font-display text-3xl lg:text-4xl font-bold text-white mb-5 leading-tight">
+                            Ready to Transform with AI?
+                        </h2>
+                        <p class="text-avatar-silver leading-relaxed mb-8">
+                            Whether you want to learn AI, automate your business, deploy AI agents, or build enterprise AI infrastructure — Avatar is your one-stop platform. Join thousands of individuals and businesses already building their AI future.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <a href="#" class="inline-flex items-center justify-center gap-2 bg-white text-avatar-dark font-semibold px-8 py-3.5 rounded-full hover:bg-avatar-ice transition-colors text-sm">
+                                Get Started Free
+                                <i class="fas fa-arrow-right text-xs"></i>
+                            </a>
+                            <a href="#" class="inline-flex items-center justify-center gap-2 border border-white/25 text-white font-medium px-8 py-3.5 rounded-full hover:bg-white/10 transition-colors text-sm">
+                                Talk to Our Team
+                            </a>
+                        </div>
+                        <p class="text-xs text-avatar-steel mt-5">No credit card required · Free tier available · Cancel anytime</p>
+                    </div>
+                    <div class="fade-right hidden lg:block">
+                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80" alt="Team using AI" class="rounded-2xl shadow-2xl w-full h-[360px] object-cover border border-white/10">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 12. FOOTER -->
+    <footer class="bg-avatar-deep pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+                <!-- Brand -->
+                <div class="col-span-2 md:col-span-4 lg:col-span-1 mb-4 lg:mb-0">
+                    <a href="#" class="flex items-center gap-2.5 mb-4">
+                        <svg width="32" height="32" viewBox="0 0 60 60" fill="none">
+                            <polygon points="30,4 56,52 4,52" fill="none" stroke="#8A9BB5" stroke-width="2.5"/>
+                            <polygon points="30,17 46,52 14,52" fill="#4A6FA5" opacity="0.6"/>
+                            <polygon points="30,28 40,52 20,52" fill="#8A9BB5" opacity="0.5"/>
+                        </svg>
+                        <span class="font-display font-bold text-lg text-white tracking-wide">AVATAR</span>
+                    </a>
+                    <p class="text-sm text-avatar-steel leading-relaxed mb-5">
+                        The Operating System for the AI Era. Education, solutions, infrastructure — all in one ecosystem.
+                    </p>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in text-sm"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="Twitter">
+                            <i class="fab fa-x-twitter text-sm"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="YouTube">
+                            <i class="fab fa-youtube text-sm"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="Instagram">
+                            <i class="fab fa-instagram text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Ecosystem -->
+                <div>
+                    <h4 class="font-display font-semibold text-sm text-white mb-4">Ecosystem</h4>
+                    <ul class="space-y-2.5">
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">AI Learning</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">AI Solutions</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Agent Marketplace</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">SaaS Products</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Cloud Workspace</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div>
+                    <h4 class="font-display font-semibold text-sm text-white mb-4">Resources</h4>
+                    <ul class="space-y-2.5">
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Documentation</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Case Studies</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">AI Research</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Help Center</a></li>
+                    </ul>
+                </div>
+
+                <!-- Company -->
+                <div>
+                    <h4 class="font-display font-semibold text-sm text-white mb-4">Company</h4>
+                    <ul class="space-y-2.5">
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Careers</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Partners</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Press</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal -->
+                <div>
+                    <h4 class="font-display font-semibold text-sm text-white mb-4">Legal</h4>
+                    <ul class="space-y-2.5">
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Cookie Policy</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-avatar-steel">© 2025 Avatar AI Ecosystem. All rights reserved.</p>
+                <p class="text-xs text-avatar-steel">AI Adoption for Everyone — Confidential</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // Page Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('pageLoader').classList.add('done');
+            }, 600);
+        });
+
+        // Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('scrollProgress').style.width = scrollPercent + '%';
+        });
+
+
+        // Navbar Scroll Behavior with Smooth Pill Animation
+        let lastScrollY = 0;
+        // Navbar scroll effect
+        const navWrapper = document.getElementById('nav-wrapper');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 30) navWrapper.classList.add('scrolled');
+            else navWrapper.classList.remove('scrolled');
+        });
+
+        // Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const overlay = document.getElementById('mobileOverlay');
+            menu.classList.toggle('open');
+            overlay.classList.toggle('hidden');
+            document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+        }
+
+        // Hero Slider
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.slide-dot');
+        
+        function goToSlide(index) {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+        
+        setInterval(() => {
+            goToSlide((currentSlide + 1) % slides.length);
+        }, 5000);
+
+        // Typewriter Effect
+        const typewriterPhrases = [
+            'AI Education.',
+            'Business Automation.',
+            'AI Agents.',
+            'Enterprise Solutions.',
+            'Cloud Workspace.',
+            'AI Talent.',
+            'Your AI Future.'
+        ];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typewriterEl = document.getElementById('typewriterText');
+
+        function typewrite() {
+            const currentPhrase = typewriterPhrases[phraseIndex];
+            
+            if (isDeleting) {
+                typewriterEl.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typewriterEl.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let delay = isDeleting ? 40 : 80;
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                delay = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % typewriterPhrases.length;
+                delay = 300;
+            }
+
+            setTimeout(typewrite, delay);
+        }
+        typewrite();
+
+        // Intersection Observer for Animations
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Don't unobserve to allow re-triggering if needed, but for perf:
+                    // observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-up, .fade-left, .fade-right, .scale-in, .stagger-children').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Counter Animation
+        let statsAnimated = false;
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !statsAnimated) {
+                    statsAnimated = true;
+                    animateCounters();
+                }
+            });
+        }, { threshold: 0.3 });
+        
+        statsObserver.observe(document.getElementById('statsSection'));
+
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = parseInt(counter.dataset.target);
+                const suffix = counter.dataset.suffix || '';
+                const duration = 2000;
+                const step = target / (duration / 16);
+                let current = 0;
+
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    counter.textContent = Math.floor(current).toLocaleString() + suffix;
+                }, 16);
+            });
+        }
+
+        // FAQ Accordion
+        function toggleFaq(btn) {
+            const item = btn.parentElement;
+            const answer = item.querySelector('.faq-answer');
+            const wasActive = item.classList.contains('active');
+
+            // Close all
+            document.querySelectorAll('.faq-item').forEach(faq => {
+                faq.classList.remove('active');
+                faq.querySelector('.faq-answer').classList.remove('open');
+            });
+
+            // Open clicked (if wasn't already open)
+            if (!wasActive) {
+                item.classList.add('active');
+                answer.classList.add('open');
+            }
+        }
+
+        // Hamburger button event listener
+        document.getElementById('hamburger-btn').addEventListener('click', toggleMobileMenu);
+
+        // Video Play (placeholder)
+        function playVideo(el) {
+            // In production, this would open a modal with video
+            alert('Video player would open here — integrate with your video hosting platform.');
+        }
+    </script>
+</body>
+</html>
