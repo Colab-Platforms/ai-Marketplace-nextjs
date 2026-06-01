@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVATAR — About Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        avatar: {
+                            navy: '#2C3E5A',
+                            dark: '#1E2D42',
+                            slate: '#3A4F6E',
+                            steel: '#8A9BB5',
+                            silver: '#B8C4D4',
+                            light: '#E8ECF2',
+                            ice: '#F4F6F9',
+                            white: '#FFFFFF',
+                            accent: '#4A6FA5',
+                            deep: '#172536',
+                        }
+                    },
+                    fontFamily: {
+                        'display': ['Space Grotesk', 'sans-serif'],
+                        'body': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif;  }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+
+        html {
+          overflow-y: scroll;
+        }
+
+        /* Announcement Bar */
+        .announcement-bar {
+            background: #2C3E5A;
+            transition: transform 0.3s ease;
+        }
+        .announcement-bar.hidden-bar { transform: translateY(-100%); height: 0; padding: 0; overflow: hidden; }
+
+        /* Navbar */
+        #nav-wrapper { 
+            transition: all .35s ease; 
+        }
+        #nav-wrapper.scrolled {
+            top: 14px;
+            max-width: 1100px;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(30,58,95,0.08);
+            border-radius: 9999px;
+            box-shadow: 0 10px 30px -10px rgba(15,31,52,0.15);
+            padding-left: 22px; 
+            padding-right: 8px;
+        }
+        /* Mobile: enable pill shape when scrolled */
+        @media (max-width: 767px) {
+            #nav-wrapper.scrolled {
+                top: 14px;
+                max-width: calc(100% - 32px);
+                border-radius: 9999px;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+        }
+
+        /* Fade In Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .fade-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .fade-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .scale-in {
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .scale-in.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Stagger children */
+        .stagger-children > * {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .stagger-children.visible > *:nth-child(1) { transition-delay: 0.05s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(2) { transition-delay: 0.12s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(3) { transition-delay: 0.19s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(4) { transition-delay: 0.26s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(5) { transition-delay: 0.33s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(6) { transition-delay: 0.40s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(7) { transition-delay: 0.47s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(8) { transition-delay: 0.54s; opacity: 1; transform: translateY(0); }
+
+        /* Cards hover */
+        .division-card {
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+        .division-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(44, 62, 90, 0.12);
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mobile-menu.open { transform: translateX(0); }
+
+        /* Smooth scroll */
+        html { scroll-behavior: smooth; }
+
+        /* Navbar link underline */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #2C3E5A;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        /* Scroll progress bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #2C3E5A, #4A6FA5);
+            z-index: 10001;
+            transition: width 0.1s linear;
+        }
+
+        /* Page Loader */
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            background: #1E2D42;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease;
+        }
+        .page-loader.done {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader-logo {
+            animation: pulse-logo 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse-logo {
+            0%, 100% { opacity: 0.5; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Breadcrumb */
+        .breadcrumb-link {
+            position: relative;
+            color: #8A9BB5;
+            transition: color 0.2s ease;
+        }
+        .breadcrumb-link:hover {
+            color: #4A6FA5;
+        }
+        .breadcrumb-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #4A6FA5;
+            transition: width 0.3s ease;
+        }
+        .breadcrumb-link:hover::after {
+            width: 100%;
+        }
+
+        /* Partner logo grayscale filter */
+        .partner-logo {
+            filter: grayscale(100%);
+            opacity: 0.55;
+            transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+        }
+        .partner-logo:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        /* Vision/Mission card */
+        .vm-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .vm-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #2C3E5A, #4A6FA5);
+            border-radius: 4px 0 0 4px;
+        }
+    </style>
+</head>
+<body class="bg-white text-avatar-dark antialiased">
+
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-logo">
+            <img src="Aavtat logo.svg" alt="Avatar logo" class="logo-mark" style="width: 1000px; height: 50px;">
+        </div>
+    </div>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scrollProgress" style="width: 0%;"></div>
+
+    <!-- 1. ANNOUNCEMENT BAR -->
+    <div class="announcement-bar py-2.5 px-4 text-center relative" id="announcementBar">
+        <div class="max-w-7xl mx-auto flex items-center justify-center gap-3">
+            <span class="inline-block w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+            <p class="text-sm text-avatar-silver font-body">
+                <span class="font-semibold text-white">New:</span> AI Agent Marketplace is now live — deploy AI agents in minutes.
+                <a href="#marketplace" class="underline text-white hover:text-avatar-light ml-1 transition-colors">Explore now →</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- 2. NAVBAR -->
+    <header class="sticky top-5 z-50 w-full">
+        <div id="nav-wrapper" class="mx-auto px-4 sm:px-6 py-3 flex items-center justify-between bg-white border-b border-navy-100 max-w-full">
+            <a href="index.html" class="flex items-center gap-2.5 no-select">
+                <img src="Aavtat logo.svg" alt="Avatar logo" class="logo-mark" style="width: 120px; height: 34px;">
+            </a>
+            
+            <!-- Desktop nav -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-navy-700">
+                <a href="index.html#divisions" class="hover:text-navy-900 transition">Solutions</a>
+                <a href="index.html#learning" class="hover:text-navy-900 transition">Learning</a>
+                <a href="index.html#marketplace" class="hover:text-navy-900 transition">Marketplace</a>
+                <a href="index.html#enterprise" class="hover:text-navy-900 transition">Enterprise</a>
+                <a href="aboutus.html" class="nav-link text-avatar-accent">About</a>
+            </nav>
+            
+            <div class="flex items-center gap-3">
+                <a href="index.html#enroll" class="hidden md:inline-flex items-center gap-2 bg-avatar-navy hover:bg-avatar-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition">
+                    Consult Now
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+                
+                <!-- Hamburger button (mobile) -->
+                <button id="hamburger-btn" class="hamburger md:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-[6px] z-[60]" aria-label="Toggle menu">
+                    <span class="hamburger-line block w-6 h-[2px] bg-avatar-dark rounded-full origin-center"></span>
+                    <span class="hamburger-line block w-6 h-[2px] bg-avatar-dark rounded-full origin-center"></span>
+                    <span class="hamburger-line block w-6 h-[2px] bg-avatar-dark rounded-full origin-center"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu fixed inset-y-0 right-0 w-80 max-w-full bg-white shadow-2xl z-[10000] p-8" id="mobileMenu">
+        <div class="flex justify-between items-center mb-10">
+            <span class="font-display font-bold text-lg text-avatar-dark">AVATAR</span>
+            <button onclick="toggleMobileMenu()" class="p-2 text-avatar-slate hover:text-avatar-dark" aria-label="Close menu">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="flex flex-col gap-5">
+            <a href="index.html#divisions" onclick="toggleMobileMenu()" class="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Solutions</a>
+            <a href="index.html#learning" onclick="toggleMobileMenu()" class="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Learning</a>
+            <a href="index.html#marketplace" onclick="toggleMobileMenu()" class="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Marketplace</a>
+            <a href="index.html#enterprise" onclick="toggleMobileMenu()" class="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Enterprise</a>
+            <a href="aboutus.html" class="text-base font-medium text-avatar-accent py-2 border-b border-avatar-ice">About</a>
+        </div>
+        <div class="mt-10 flex flex-col gap-3">
+            <a href="#" class="text-center text-sm font-medium text-avatar-slate border border-avatar-silver rounded-full py-2.5 hover:bg-avatar-ice transition-colors">Sign In</a>
+            <a href="index.html#cta" onclick="toggleMobileMenu()" class="text-center text-sm font-semibold bg-avatar-dark text-white rounded-full py-2.5 hover:bg-avatar-navy transition-colors">Get Started</a>
+        </div>
+    </div>
+    <div class="fixed inset-0 bg-black/30 z-[9999] hidden" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
+
+    <!-- ===== BREADCRUMB SECTION ===== -->
+    <section class="bg-avatar-ice border-b border-avatar-light/60">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-4">
+            <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-sm">
+                <a href="index.html" class="breadcrumb-link flex items-center gap-1.5">
+                    <i class="fas fa-home text-xs"></i>
+                    Home
+                </a>
+                <i class="fas fa-chevron-right text-[10px] text-avatar-steel"></i>
+                <span class="text-avatar-accent font-medium">About Us</span>
+            </nav>
+        </div>
+    </section>
+
+    <!-- ===== ABOUT US HERO SECTION ===== -->
+    <section class="py-20 lg:py-28 bg-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                <!-- Hero Image -->
+                <div class="fade-left relative">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="Avatar Team" class="rounded-2xl shadow-xl w-full object-cover h-[480px]">
+                    <div class="absolute -bottom-5 -right-5 bg-white rounded-xl shadow-lg p-5 border border-avatar-light/60 hidden md:block">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 bg-avatar-accent rounded-xl flex items-center justify-center">
+                                <i class="fas fa-globe text-white text-lg"></i>
+                            </div>
+                            <div>
+                                <p class="font-display font-bold text-xl text-avatar-dark">35+</p>
+                                <p class="text-xs text-avatar-steel">Countries Reached</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -top-4 -left-4 bg-avatar-dark text-white rounded-xl shadow-lg px-5 py-3 hidden md:block">
+                        <p class="font-display font-bold text-lg">Since 2020</p>
+                        <p class="text-xs text-avatar-silver">Building AI Future</p>
+                    </div>
+                </div>
+
+                <!-- Hero Text Content -->
+                <div class="fade-right">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-avatar-accent mb-4 inline-block">Who We Are</span>
+                    <h1 class="font-display text-3xl lg:text-5xl font-bold text-avatar-dark mb-6 leading-tight">
+                        Powering the AI Revolution — <span class="text-avatar-accent">For Everyone</span>
+                    </h1>
+                    <p class="text-avatar-slate leading-relaxed mb-5 text-base">
+                        Avatar is a next-generation AI ecosystem built to democratize artificial intelligence for individuals, businesses, and enterprises worldwide. We believe AI is not just a tool — it's a fundamental shift in how humans work, learn, and innovate.
+                    </p>
+                    <p class="text-avatar-slate leading-relaxed mb-5 text-base">
+                        Founded with the vision of making AI accessible to all, Avatar brings together education, automation, SaaS products, talent networks, and cutting-edge research under one unified platform. From students taking their first AI course to Fortune 500 companies deploying enterprise-grade AI infrastructure, we serve every level of the AI adoption journey.
+                    </p>
+                    <p class="text-avatar-slate leading-relaxed mb-8 text-base">
+                        Our team of AI researchers, engineers, educators, and industry experts work tirelessly to build solutions that are practical, scalable, and transformative. We don't just talk about the future of AI — we build it, every single day.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="index.html#cta" class="inline-flex items-center justify-center gap-2 bg-avatar-dark text-white font-semibold px-7 py-3 rounded-full hover:bg-avatar-navy transition-colors text-sm">
+                            Get Started
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                        <a href="#vision-mission" class="inline-flex items-center justify-center gap-2 border border-avatar-silver text-avatar-dark font-medium px-7 py-3 rounded-full hover:bg-avatar-ice transition-colors text-sm">
+                            Our Vision
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== OUR STORY ===== -->
+    <section class="py-20 lg:py-24 bg-avatar-ice">
+        <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center fade-up">
+            <span class="text-xs font-semibold uppercase tracking-widest text-avatar-accent mb-4 inline-block">Our Story</span>
+            <h2 class="font-display text-3xl lg:text-4xl font-bold text-avatar-dark mb-6 leading-tight">
+                From a Simple Idea to a Global AI Ecosystem
+            </h2>
+            <p class="text-avatar-slate leading-relaxed mb-6 text-base">
+                Avatar started with a simple but powerful question: <strong class="text-avatar-dark">What if anyone — regardless of background, budget, or technical expertise — could harness the power of AI?</strong> That question sparked a journey to build the most comprehensive AI platform in the world.
+            </p>
+            <p class="text-avatar-slate leading-relaxed text-base">
+                Today, Avatar serves thousands of individuals, hundreds of businesses, and dozens of enterprise clients across 35+ countries. Our ecosystem spans AI education, intelligent automation, a marketplace of deployable AI agents, SaaS products, cloud workspaces, talent networks, and ongoing research & innovation. And we're just getting started.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== VISION AND MISSION ===== -->
+    <section class="py-20 lg:py-28 bg-white" id="vision-mission">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="text-center max-w-2xl mx-auto mb-16 fade-up">
+                <span class="text-xs font-semibold uppercase tracking-widest text-avatar-accent mb-4 inline-block">What Drives Us</span>
+                <h2 class="font-display text-3xl lg:text-4xl font-bold text-avatar-dark mb-4">
+                    Vision & Mission
+                </h2>
+                <p class="text-avatar-slate leading-relaxed">
+                    The principles that guide every product we build, every course we design, and every partnership we forge.
+                </p>
+            </div>
+
+            <!-- Two Column Layout -->
+            <div class="grid lg:grid-cols-2 gap-8 lg:gap-12">
+                <!-- Vision Column -->
+                <div class="vm-card bg-avatar-ice rounded-2xl p-8 lg:p-10 fade-left border border-avatar-light/60">
+                    <div class="w-14 h-14 bg-avatar-accent/10 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-eye text-avatar-accent text-xl"></i>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold text-avatar-dark mb-4">Our Vision</h3>
+                    <p class="text-avatar-slate leading-relaxed mb-6">
+                        To become the world's most trusted and comprehensive AI ecosystem — a single platform where anyone, anywhere can learn, build, deploy, and scale artificial intelligence solutions that transform lives and businesses.
+                    </p>
+                    <p class="text-avatar-slate leading-relaxed mb-6">
+                        We envision a future where AI is not reserved for tech giants and researchers alone, but is accessible to freelancers, small businesses, students, and enterprises equally. A future where every individual has an AI co-pilot, and every organization runs on intelligent systems.
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-3 text-sm text-avatar-slate">
+                            <span class="w-5 h-5 bg-avatar-accent/10 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fas fa-check text-avatar-accent text-[10px]"></i>
+                            </span>
+                            Democratize AI access for everyone globally
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-avatar-slate">
+                            <span class="w-5 h-5 bg-avatar-accent/10 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fas fa-check text-avatar-accent text-[10px]"></i>
+                            </span>
+                            Build an AI-powered world where humans and machines collaborate seamlessly
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-avatar-slate">
+                            <span class="w-5 h-5 bg-avatar-accent/10 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fas fa-check text-avatar-accent text-[10px]"></i>
+                            </span>
+                            Pioneer responsible and ethical AI development
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Mission Column -->
+                <div class="vm-card bg-avatar-ice rounded-2xl p-8 lg:p-10 fade-right border border-avatar-light/60">
+                    <div class="w-14 h-14 bg-avatar-accent/10 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-bullseye text-avatar-accent text-xl"></i>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold text-avatar-dark mb-4">Our Mission</h3>
+                    <p class="text-avatar-slate leading-relaxed mb-6">
+                        To empower individuals and organizations with practical, scalable AI tools and education — bridging the gap between AI innovation and real-world adoption. We build solutions that solve actual problems, not just theoretical ones.
+                    </p>
+                    <p class="text-avatar-slate leading-relaxed mb-6">
+                        Through our eight interconnected divisions — from AI Learning and Agent Marketplace to Enterprise Solutions and Talent Network — we provide end-to-end AI capabilities that grow with our users. Our mission is to make AI adoption frictionless, affordable, and impactful for all.
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-3 text-sm text-avatar-slate">
+                            <span class="w-5 h-5 bg-avatar-accent/10 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fas fa-check text-avatar-accent text-[10px]"></i>
+                            </span>
+                            Deliver world-class AI education and certifications
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-avatar-slate">
+                            <span class="w-5 h-5 bg-avatar-accent/10 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fas fa-check text-avatar-accent text-[10px]"></i>
+                            </span>
+                            Build plug-and-play AI agents and SaaS products for businesses
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-avatar-slate">
+                            <span class="w-5 h-5 bg-avatar-accent/10 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fas fa-check text-avatar-accent text-[10px]"></i>
+                            </span>
+                            Connect AI talent with opportunities through our Talent Network
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-avatar-slate">
+                            <span class="w-5 h-5 bg-avatar-accent/10 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fas fa-check text-avatar-accent text-[10px]"></i>
+                            </span>
+                            Advance AI research for local, multilingual, and enterprise systems
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== OUR PARTNERS ===== -->
+    <section class="py-20 lg:py-28 bg-avatar-ice">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="text-center max-w-2xl mx-auto mb-14 fade-up">
+                <span class="text-xs font-semibold uppercase tracking-widest text-avatar-accent mb-4 inline-block">Our Partners</span>
+                <h2 class="font-display text-3xl lg:text-4xl font-bold text-avatar-dark mb-4">
+                    Trusted by Industry Leaders
+                </h2>
+                <p class="text-avatar-slate leading-relaxed">
+                    We collaborate with world-class organizations to deliver cutting-edge AI solutions, research, and education.
+                </p>
+            </div>
+
+            <!-- Partner Logos Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 lg:gap-8 stagger-children" id="partnersGrid">
+                <!-- Partner 1 -->
+                <div class="partner-logo bg-white rounded-2xl p-6 flex items-center justify-center border border-avatar-light/60 h-28">
+                    <div class="text-center">
+                        <i class="fab fa-google text-3xl text-avatar-slate mb-2"></i>
+                        <p class="text-xs font-medium text-avatar-steel">Google Cloud</p>
+                    </div>
+                </div>
+                <!-- Partner 2 -->
+                <div class="partner-logo bg-white rounded-2xl p-6 flex items-center justify-center border border-avatar-light/60 h-28">
+                    <div class="text-center">
+                        <i class="fab fa-microsoft text-3xl text-avatar-slate mb-2"></i>
+                        <p class="text-xs font-medium text-avatar-steel">Microsoft Azure</p>
+                    </div>
+                </div>
+                <!-- Partner 3 -->
+                <div class="partner-logo bg-white rounded-2xl p-6 flex items-center justify-center border border-avatar-light/60 h-28">
+                    <div class="text-center">
+                        <i class="fab fa-aws text-3xl text-avatar-slate mb-2"></i>
+                        <p class="text-xs font-medium text-avatar-steel">AWS</p>
+                    </div>
+                </div>
+                <!-- Partner 4 -->
+                <div class="partner-logo bg-white rounded-2xl p-6 flex items-center justify-center border border-avatar-light/60 h-28">
+                    <div class="text-center">
+                        <i class="fas fa-brain text-3xl text-avatar-slate mb-2"></i>
+                        <p class="text-xs font-medium text-avatar-steel">NVIDIA</p>
+                    </div>
+                </div>
+                <!-- Partner 5 -->
+                <div class="partner-logo bg-white rounded-2xl p-6 flex items-center justify-center border border-avatar-light/60 h-28">
+                    <div class="text-center">
+                        <i class="fas fa-microchip text-3xl text-avatar-slate mb-2"></i>
+                        <p class="text-xs font-medium text-avatar-steel">Intel</p>
+                    </div>
+                </div>
+                <!-- Partner 6 -->
+                <div class="partner-logo bg-white rounded-2xl p-6 flex items-center justify-center border border-avatar-light/60 h-28">
+                    <div class="text-center">
+                        <i class="fab fa-ibm text-3xl text-avatar-slate mb-2"></i>
+                        <p class="text-xs font-medium text-avatar-steel">IBM Watson</p>
+                    </div>
+                </div>
+                <!-- Partner 7 -->
+                <div class="partner-logo bg-white rounded-2xl p-6 flex items-center justify-center border border-avatar-light/60 h-28">
+                    <div class="text-center">
+                        <i class="fas fa-database text-3xl text-avatar-slate mb-2"></i>
+                        <p class="text-xs font-medium text-avatar-steel">Snowflake</p>
+                    </div>
+                </div>
+                <!-- Partner 8 -->
+                <div class="partner-logo bg-white rounded-2xl p-6 flex items-center justify-center border border-avatar-light/60 h-28">
+                    <div class="text-center">
+                        <i class="fas fa-cloud text-3xl text-avatar-slate mb-2"></i>
+                        <p class="text-xs font-medium text-avatar-steel">Salesforce</p>
+                    </div>
+                </div>
+                <!-- Partner 9 -->
+                <div class="partner-logo bg-white rounded-2xl p-6 flex items-center justify-center border border-avatar-light/60 h-28">
+                    <div class="text-center">
+                        <i class="fas fa-robot text-3xl text-avatar-slate mb-2"></i>
+                        <p class="text-xs font-medium text-avatar-steel">UiPath</p>
+                    </div>
+                </div>
+                <!-- Partner 10 -->
+                <div class="partner-logo bg-white rounded-2xl p-6 flex items-center justify-center border border-avatar-light/60 h-28">
+                    <div class="text-center">
+                        <i class="fas fa-code text-3xl text-avatar-slate mb-2"></i>
+                        <p class="text-xs font-medium text-avatar-steel">GitHub</p>
+                    </div>
+                </div>
+                <!-- Partner 11 -->
+                <div class="partner-logo bg-white rounded-2xl p-6 flex items-center justify-center border border-avatar-light/60 h-28">
+                    <div class="text-center">
+                        <i class="fas fa-network-wired text-3xl text-avatar-slate mb-2"></i>
+                        <p class="text-xs font-medium text-avatar-steel">Cisco</p>
+                    </div>
+                </div>
+                <!-- Partner 12 -->
+                <div class="partner-logo bg-white rounded-2xl p-6 flex items-center justify-center border border-avatar-light/60 h-28">
+                    <div class="text-center">
+                        <i class="fas fa-shield-alt text-3xl text-avatar-slate mb-2"></i>
+                        <p class="text-xs font-medium text-avatar-steel">Palo Alto</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Partner CTA -->
+            <div class="text-center mt-12 fade-up">
+                <p class="text-sm text-avatar-slate mb-4">Interested in partnering with Avatar?</p>
+                <a href="index.html#cta" class="inline-flex items-center justify-center gap-2 bg-avatar-dark text-white font-semibold px-7 py-3 rounded-full hover:bg-avatar-navy transition-colors text-sm">
+                    Become a Partner
+                    <i class="fas fa-arrow-right text-xs"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA SECTION ===== -->
+    <section class="py-20 lg:py-28 bg-avatar-ice">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="relative bg-avatar-dark rounded-3xl overflow-hidden">
+                <!-- Background Image -->
+                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80" alt="CTA Background" class="absolute inset-0 w-full h-full object-cover opacity-20">
+                <div class="absolute inset-0 bg-gradient-to-r from-avatar-deep/95 via-avatar-dark/85 to-avatar-dark/70"></div>
+                
+                <div class="relative z-10 grid lg:grid-cols-2 gap-10 items-center p-10 lg:p-16">
+                    <div class="fade-left">
+                        <span class="text-xs font-semibold uppercase tracking-widest text-avatar-steel mb-4 inline-block">Join Us</span>
+                        <h2 class="font-display text-3xl lg:text-4xl font-bold text-white mb-5 leading-tight">
+                            Ready to Build Your AI Future?
+                        </h2>
+                        <p class="text-avatar-silver leading-relaxed mb-8">
+                            Whether you want to learn AI, automate your business, deploy AI agents, or build enterprise AI infrastructure — Avatar is your one-stop platform. Join thousands of individuals and businesses already building their AI future.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <a href="index.html#cta" class="inline-flex items-center justify-center gap-2 bg-white text-avatar-dark font-semibold px-8 py-3.5 rounded-full hover:bg-avatar-ice transition-colors text-sm">
+                                Get Started Free
+                                <i class="fas fa-arrow-right text-xs"></i>
+                            </a>
+                            <a href="#" class="inline-flex items-center justify-center gap-2 border border-white/25 text-white font-medium px-8 py-3.5 rounded-full hover:bg-white/10 transition-colors text-sm">
+                                Talk to Our Team
+                            </a>
+                        </div>
+                        <p class="text-xs text-avatar-steel mt-5">No credit card required · Free tier available · Cancel anytime</p>
+                    </div>
+                    <div class="fade-right hidden lg:block">
+                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80" alt="Team using AI" class="rounded-2xl shadow-2xl w-full h-[360px] object-cover border border-white/10">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 12. FOOTER -->
+    <footer class="bg-avatar-deep pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+                <!-- Brand -->
+                <div class="col-span-2 md:col-span-4 lg:col-span-1 mb-4 lg:mb-0">
+                    <div class="pb-8">
+                        <img src="Aavtat logo.svg" alt="Avatar logo" class="logo-mark" style="width: 700px; height: 50px;">
+                    </div>
+                    <p class="text-sm text-avatar-steel leading-relaxed mb-5">
+                        The Operating System for the AI Era. Education, solutions, infrastructure — all in one ecosystem.
+                    </p>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in text-sm"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="Twitter">
+                            <i class="fab fa-x-twitter text-sm"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="YouTube">
+                            <i class="fab fa-youtube text-sm"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="Instagram">
+                            <i class="fab fa-instagram text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Ecosystem -->
+                <div>
+                    <h4 class="font-display font-semibold text-sm text-white mb-4">Ecosystem</h4>
+                    <ul class="space-y-2.5">
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">AI Learning</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">AI Solutions</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Agent Marketplace</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">SaaS Products</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Cloud Workspace</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div>
+                    <h4 class="font-display font-semibold text-sm text-white mb-4">Resources</h4>
+                    <ul class="space-y-2.5">
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Documentation</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Case Studies</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">AI Research</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Help Center</a></li>
+                    </ul>
+                </div>
+
+                <!-- Company -->
+                <div>
+                    <h4 class="font-display font-semibold text-sm text-white mb-4">Company</h4>
+                    <ul class="space-y-2.5">
+                        <li><a href="aboutus.html" class="text-sm text-white transition-colors">About Us</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Careers</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Partners</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Press</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal -->
+                <div>
+                    <h4 class="font-display font-semibold text-sm text-white mb-4">Legal</h4>
+                    <ul class="space-y-2.5">
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Cookie Policy</a></li>
+                        <li><a href="#" class="text-sm text-avatar-steel hover:text-white transition-colors">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-avatar-steel">© 2025 Avatar AI Ecosystem. All rights reserved.</p>
+                <p class="text-xs text-avatar-steel">AI Adoption for Everyone — Confidential</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // Page Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('pageLoader').classList.add('done');
+            }, 600);
+        });
+
+        // Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('scrollProgress').style.width = scrollPercent + '%';
+        });
+
+        // Navbar Scroll Behavior with Smooth Pill Animation
+        let lastScrollY = 0;
+        const navWrapper = document.getElementById('nav-wrapper');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 30) navWrapper.classList.add('scrolled');
+            else navWrapper.classList.remove('scrolled');
+        });
+
+        // Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const overlay = document.getElementById('mobileOverlay');
+            menu.classList.toggle('open');
+            overlay.classList.toggle('hidden');
+            document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+        }
+
+        // Intersection Observer for Animations
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-up, .fade-left, .fade-right, .scale-in, .stagger-children').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Hamburger button event listener
+        document.getElementById('hamburger-btn').addEventListener('click', toggleMobileMenu);
+    </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>

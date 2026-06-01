@@ -29,9 +29,9 @@ export default function Navbar() {
       <header className="sticky top-5 z-50">
         <div
           id="nav-wrapper"
-          className={`mx-auto px-4 sm:px-6 py-3 flex items-center justify-between bg-white border-b border-navy-100 transition-all duration-300 ${
+          className={`mx-auto px-4 sm:px-6 py-3 flex items-center justify-between bg-white transition-all duration-300 ${
             isScrolled
-              ? 'top-[14px] max-w-[1100px] bg-white/92 backdrop-blur-[14px] border border-[rgba(30,58,95,0.08)] rounded-full shadow-[0_10px_30px_-10px_rgba(15,31,52,0.15)] px-[22px] md:pr-2'
+              ? 'top-[14px] max-w-[1100px] bg-white/92 backdrop-blur-[14px] rounded-full shadow-[0_10px_30px_-10px_rgba(15,31,52,0.15)] px-[22px] md:pr-2'
               : 'max-w-full '
           }`}
         >
@@ -41,11 +41,11 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-avatar-slate">
+            <Link href="/" className="hover:text-avatar-dark transition">Home</Link>
             <Link href="#divisions" className="hover:text-avatar-dark transition">Solutions</Link>
             <Link href="#learning" className="hover:text-avatar-dark transition">Learning</Link>
             <Link href="#marketplace" className="hover:text-avatar-dark transition">Marketplace</Link>
-            <Link href="#enterprise" className="hover:text-avatar-dark transition">Enterprise</Link>
-            <Link href="#about" className="hover:text-avatar-dark transition">About</Link>
+            <Link href="/about" className="hover:text-avatar-dark transition">About</Link>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -87,11 +87,12 @@ export default function Navbar() {
           </button>
         </div>
         <div className="flex flex-col gap-5">
+          <Link href="/" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Home</Link>
           <Link href="#divisions" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Solutions</Link>
           <Link href="#learning" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Learning</Link>
           <Link href="#marketplace" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Marketplace</Link>
-          <Link href="#enterprise" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Enterprise</Link>
-          <Link href="#about" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">About</Link>
+          
+          <Link href="/about" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">About</Link>
         </div>
         <div className="mt-10 flex flex-col gap-3">
           <Link href="#" className="text-center text-sm font-medium text-avatar-slate border border-avatar-silver rounded-full py-2.5 hover:bg-avatar-ice transition-colors">Sign In</Link>
