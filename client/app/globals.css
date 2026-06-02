@@ -12,8 +12,16 @@
   --color-avatar-accent: #4A6FA5;
   --color-avatar-deep: #172536;
   
+  /* Preloader Colors */
+  --color-navy-deep: #0c2540;
+  --color-navy: #153c66;
+  --color-slate-custom: #809db1;
+  --color-slate-light: #b3c8d8;
+  --color-white-custom: #f0f4f8;
+  
   --font-display: var(--font-space-grotesk);
   --font-body: var(--font-inter);
+  --font-syne: "Syne", sans-serif;
   
   --transition-duration-350: 350ms;
   --transition-duration-800: 800ms;
@@ -32,12 +40,16 @@ body {
   font-family: var(--font-space-grotesk), sans-serif;
 }
 
+.font-syne {
+  font-family: var(--font-syne), sans-serif;
+}
+
 html {
   overflow-y: scroll;
   scroll-behavior: smooth;
 }
 
-/* Animations */
+/* General Animations */
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
@@ -48,6 +60,62 @@ html {
   51%, 100% { opacity: 0; }
 }
 
+/* Preloader Keyframe Animations */
+@keyframes aav-gridFade {
+  to { opacity: 1; }
+}
+
+@keyframes aav-glowPulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+@keyframes aav-tagReveal {
+  from { opacity: 0; letter-spacing: 0.6em; }
+  to { opacity: 0.6; letter-spacing: 0.35em; }
+}
+
+@keyframes aav-fadeIn {
+  to { opacity: 1; }
+}
+
+@keyframes aav-barFill {
+  to { width: 100%; }
+}
+
+@keyframes aav-loaderOut {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.04); }
+}
+
+@keyframes aav-partReveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Logo SVG Animations */
+.aav-logo-svg polygon,
+.aav-logo-svg path {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: aav-partReveal 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.aav-logo-svg polygon:nth-child(1) { animation-delay: 0.15s; }
+.aav-logo-svg polygon:nth-child(2) { animation-delay: 0.25s; }
+.aav-logo-svg polygon:nth-child(3) { animation-delay: 0.35s; }
+.aav-logo-svg polygon:nth-child(4) { animation-delay: 0.45s; }
+.aav-logo-svg polygon:nth-child(5) { animation-delay: 0.55s; }
+.aav-logo-svg polygon:nth-child(6) { animation-delay: 0.65s; }
+.aav-logo-svg polygon:nth-child(7) { animation-delay: 0.75s; }
+.aav-logo-svg polygon:nth-child(8) { animation-delay: 0.85s; }
+.aav-logo-svg polygon:nth-child(9) { animation-delay: 0.95s; }
+.aav-logo-svg polygon:nth-child(10) { animation-delay: 1.05s; }
+.aav-logo-svg polygon:nth-child(11) { animation-delay: 1.15s; }
+.aav-logo-svg polygon:nth-child(12) { animation-delay: 1.25s; }
+.aav-logo-svg polygon:nth-child(13) { animation-delay: 1.35s; }
+.aav-logo-svg path:nth-child(14) { animation-delay: 1.45s; }
+
+/* Utility Classes */
 .animate-marquee {
   animation: marquee 40s linear infinite;
 }
@@ -56,8 +124,49 @@ html {
   animation: blink 1s infinite;
 }
 
+.animate-aav-loader-exit {
+  animation: aav-loaderOut 0.7s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+.animate-aav-grid-fade {
+  animation: aav-gridFade 0.8s ease forwards;
+}
+
+.animate-aav-glow-pulse {
+  animation: aav-glowPulse 3s ease-in-out infinite;
+}
+
+.animate-aav-progress-fade {
+  animation: aav-fadeIn 0.4s ease forwards 2.2s;
+}
+
+.animate-aav-tagline-reveal {
+  animation: aav-tagReveal 0.6s ease forwards 2.4s;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .animate-aav-glow-pulse {
+    animation: aav-glowPulse 3.5s ease-in-out infinite;
+  }
+  
+  .aav-logo-svg polygon,
+  .aav-logo-svg path {
+    animation-duration: 0.35s;
+  }
+}
+
 .pause-animation:hover {
   animation-play-state: paused;
+}
+
+/* Custom CSS Variables for preloader */
+:root {
+  --color-navy-deep-custom: #0c2540;
+  --color-navy-custom: #153c66;
+  --color-slate-custom: #809db1;
+  --color-slate-light-custom: #b3c8d8;
+  --color-white-custom: #f0f4f8;
 }
 
 

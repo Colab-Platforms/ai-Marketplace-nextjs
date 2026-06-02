@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk } from 'next/font/google';
+import { Inter, Space_Grotesk, Syne } from 'next/font/google';
 import Script from "next/script";
 import "./globals.css";
 import PageLoader from "@/components/common/PageLoader";
@@ -20,6 +20,13 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 });
 
+const syne = Syne({
+  subsets: ['latin'],
+  variable: '--font-syne',
+  weight: ['400', '700', '800'],
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
   title: "AVATAR — The Operating System for the AI Era",
   description: "From AI education and automation to enterprise infrastructure — Avatar is the centralized platform powering AI transformation for individuals and businesses worldwide.",
@@ -31,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} scroll-smooth`}>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${syne.variable} scroll-smooth`}>
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
       </head>
