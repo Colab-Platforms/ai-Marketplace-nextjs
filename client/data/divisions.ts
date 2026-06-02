@@ -12,28 +12,28 @@ export const divisions: Division[] = [
     icon: 'fa-book-open',
     title: 'AI Learning',
     description: 'Workshops, certifications, bootcamps, and enterprise training for students, professionals, and businesses.',
-    link: '#learning'
+    link: '/learning'
   },
   {
     id: 'solutions',
     icon: 'fa-puzzle-piece',
     title: 'AI Solutions',
     description: 'Automation, chatbots, workflow AI, sales & support systems, integrations and analytics for businesses.',
-    link: '#'
+    link: '/solutions'
   },
   {
     id: 'marketplace',
     icon: 'fa-store',
     title: 'Agent Marketplace',
     description: 'Buy, deploy & customize AI agents — HR AI, Sales AI, Support AI, Marketing AI — plug-and-play for any business.',
-    link: '#marketplace'
+    link: '/marketplace'
   },
   {
     id: 'saas',
     icon: 'fa-layer-group',
     title: 'AI SaaS Products',
     description: 'AI CRM, marketing platform, content engine, analytics tools, assistant platform, and workflow builder.',
-    link: '#'
+    link: '/saas-products'
   },
   {
     id: 'cloud',
@@ -61,6 +61,6 @@ export const divisions: Division[] = [
     icon: 'fa-database',
     title: 'AI Data & Intelligence',
     description: 'Workflow patterns, user behavior, and industry intelligence — the data layer that powers the ecosystem moat.',
-    link: '#'
+    link: '/ai-data-intelligence'
   }
 ];

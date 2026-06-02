@@ -42,8 +42,8 @@ export default function Navbar() {
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-avatar-slate">
             <Link href="/" className="hover:text-avatar-dark transition">Home</Link>
-            <Link href="#divisions" className="hover:text-avatar-dark transition">Solutions</Link>
-            <Link href="#learning" className="hover:text-avatar-dark transition">Learning</Link>
+            <Link href="/solutions" className="hover:text-avatar-dark transition">Solutions</Link>
+            <Link href="/learning" className="hover:text-avatar-dark transition">Learning</Link>
             <Link href="/marketplace" className="hover:text-avatar-dark transition">Marketplace</Link>
             <Link href="/about" className="hover:text-avatar-dark transition">About</Link>
           </nav>
@@ -88,9 +88,9 @@ export default function Navbar() {
         </div>
         <div className="flex flex-col gap-5">
           <Link href="/" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Home</Link>
-          <Link href="#divisions" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Solutions</Link>
-          <Link href="#learning" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Learning</Link>
-          <Link href="#marketplace" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Marketplace</Link>
+          <Link href="/solutions" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Solutions</Link>
+          <Link href="/learning" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Learning</Link>
+          <Link href="/marketplace" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Marketplace</Link>
           
           <Link href="/about" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">About</Link>
         </div>

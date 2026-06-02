@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, Syne } from 'next/font/google';
+import { Inter, Space_Grotesk ,Syne} from 'next/font/google';
+import Script from "next/script";
 import "./globals.css";
 import PageLoader from "@/components/common/PageLoader";
 import ScrollProgress from "@/components/common/ScrollProgress";
@@ -42,6 +43,26 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
       </head>
       <body className="font-body bg-white text-avatar-dark antialiased">
+        <Script id="meta-pixel" strategy="afterInteractive">
+          {`
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '1593452955528348');
+            fbq('track', 'PageView');
+          `}
+        </Script>
+        <noscript>
+          <img height="1" width="1" style={{display: "none"}}
+            src="https://www.facebook.com/tr?id=1593452955528348&ev=PageView&noscript=1"
+            alt=""
+          />
+        </noscript>
         <PageLoader />
         <ScrollProgress />
         <AnnouncementBar />
