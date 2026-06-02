@@ -153,9 +153,9 @@ export default function MarketplaceToolsGallery({ selectedCategory, searchQuery 
                   </span>
                   <Link
                     href="#"
-                    className="inline-flex items-center gap-1.5 bg-avatar-accent text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-avatar-navy transition-colors"
+                    className="inline-flex items-center gap-1.5 bg-[#91959b] text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-[#4e5053] transition-colors"
                   >
-                    Get Started <i className="fas fa-arrow-right text-xs"></i>
+                    Coming Soon <i className="fas fa-arrow-right text-xs"></i>
                   </Link>
                 </div>
               </div>
