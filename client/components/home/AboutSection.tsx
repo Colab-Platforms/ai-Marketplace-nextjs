@@ -42,7 +42,7 @@ export default function AboutSection() {
             <div className="grid grid-cols-2 gap-4 mb-8">
               {features.map((feature, index) => (
                 <div key={index} className="flex items-start gap-3">
-                  <div className="w-9 h-9 bg-avatar-ice rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-9 h-2 bg-avatar-ice rounded-lg flex items-center justify-center shrink-0 mt-0.5">
                     <i className={`fas ${feature.icon} text-avatar-accent text-sm`}></i>
                   </div>
                   <div>

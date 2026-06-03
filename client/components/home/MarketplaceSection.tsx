@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useInView } from '@/hooks/useInView';
-
+import Img from "@/public/bannerimages/ai-workflow-web.jpeg";
 const agents = [
   'HR AI Agent',
   'Sales AI Agent',
@@ -51,7 +51,7 @@ export default function MarketplaceSection() {
               alt="AI Marketplace Dashboard"
               width={800}
               height={420}
-              className="rounded-2xl shadow-2xl w-full object-cover h-[420px] border border-white/10"
+              className="rounded-2xl shadow-2xl w-full object-cover bg-transparent h-[420px] border border-white/10"
             />
           </div>
         </div>
