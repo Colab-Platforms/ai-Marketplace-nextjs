@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk ,Syne} from 'next/font/google';
+import { Inter, Space_Grotesk, Syne } from 'next/font/google';
 import Script from "next/script";
 import "./globals.css";
 import PageLoader from "@/components/common/PageLoader";
