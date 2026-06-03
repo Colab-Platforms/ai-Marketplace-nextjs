@@ -20,7 +20,7 @@ export default function FAQSection() {
           {/* Image Grid */}
           <div className={`hidden lg:block transition-all duration-800 ${isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
             <div className="grid grid-cols-2 gap-4 sticky top-32">
-              <Image src="https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=500&q=80" alt="FAQ AI" width={500} height={300} className="rounded-2xl w-full h-48 object-cover shadow-md" />
+              <Image src="/landingimage/ai-drone.jpeg" alt="FAQ AI" width={500} height={300} className="rounded-2xl w-full h-48 object-cover shadow-md" />
               <Image src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&q=80" alt="FAQ AI" width={500} height={300} className="rounded-2xl w-full h-48 object-cover shadow-md mt-6" />
               <Image src="https://images.unsplash.com/photo-1488229297570-58520851e868?w=500&q=80" alt="FAQ AI" width={500} height={300} className="rounded-2xl w-full h-48 object-cover shadow-md -mt-2" />
               <Image src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&q=80" alt="FAQ AI" width={500} height={300} className="rounded-2xl w-full h-48 object-cover shadow-md mt-4" />

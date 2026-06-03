@@ -47,7 +47,7 @@ export default function MarketplaceSection() {
           </div>
           <div className={`transition-all duration-800 delay-200 ${isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
             <Image
-              src={Img}
+              src="/landingimage/ai-workflow-web.jpeg"
               alt="AI Marketplace Dashboard"
               width={800}
               height={420}

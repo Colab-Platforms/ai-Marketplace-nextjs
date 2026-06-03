@@ -89,7 +89,7 @@ export default function HeroSection() {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 rounded-full px-4 py-1.5 mb-6">
               <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
-              <span className="text-xs font-medium text-avatar-silver tracking-wide uppercase">The Operating System for the AI Era</span>
+              <span className="text-xs font-medium text-avatar-silver tracking-wide uppercase">Your Partners for the AI Era</span>
             </div>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
               <span>One Ecosystem for</span><br />
