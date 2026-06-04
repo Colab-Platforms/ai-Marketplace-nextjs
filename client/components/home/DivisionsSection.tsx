@@ -13,14 +13,14 @@ export default function DivisionsSection() {
         <div className={`text-center max-w-2xl mx-auto mb-14 transition-all duration-800 ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <span className="text-xs font-semibold uppercase tracking-widest text-avatar-accent mb-4 inline-block">Our Ecosystem</span>
           <h2 className="font-display text-3xl lg:text-4xl font-bold text-avatar-dark mb-4">
-            Eight Divisions. One Unified Ecosystem.
+            Four Divisions. One Unified Ecosystem.
           </h2>
           <p className="text-avatar-slate leading-relaxed">
             Every layer of AI adoption — covered. From learning to deployment to intelligence.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 grid-rows-1  gap-5">
           {divisions.map((division, index) => (
             <div
               key={division.id}

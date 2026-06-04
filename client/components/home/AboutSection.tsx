@@ -21,7 +21,7 @@ export default function AboutSection() {
           {/* Staggered Image Grid */}
           <div className={`grid grid-cols-2 gap-4 transition-all duration-800 ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <div className="space-y-4">
-              <Image src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80" alt="AI Robot" width={600} height={400} className="rounded-2xl w-full h-48 object-cover shadow-lg" />
+              <Image src="/landingimage/section1.jpeg" alt="AI Robot" width={600} height={400} className="rounded-2xl w-full h-48 object-cover shadow-lg" />
               <Image src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=600&q=80" alt="AI Code" width={600} height={400} className="rounded-2xl w-full h-64 object-cover shadow-lg" />
             </div>
             <div className="space-y-4 pt-8">
@@ -42,7 +42,7 @@ export default function AboutSection() {
             <div className="grid grid-cols-2 gap-4 mb-8">
               {features.map((feature, index) => (
                 <div key={index} className="flex items-start gap-3">
-                  <div className="w-9 h-9 bg-avatar-ice rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-9 h-2 bg-avatar-ice rounded-lg flex items-center justify-center shrink-0 mt-0.5">
                     <i className={`fas ${feature.icon} text-avatar-accent text-sm`}></i>
                   </div>
                   <div>

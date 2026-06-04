@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useInView } from '@/hooks/useInView';
-
+import Img from "@/public/bannerimages/ai-workflow-web.jpeg";
 const agents = [
   'HR AI Agent',
   'Sales AI Agent',
@@ -47,11 +47,11 @@ export default function MarketplaceSection() {
           </div>
           <div className={`transition-all duration-800 delay-200 ${isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
             <Image
-              src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80"
+              src="/landingimage/ai-workflow-web.jpeg"
               alt="AI Marketplace Dashboard"
               width={800}
               height={420}
-              className="rounded-2xl shadow-2xl w-full object-cover h-[420px] border border-white/10"
+              className="rounded-2xl shadow-2xl w-full object-cover bg-transparent h-[420px] border border-white/10"
             />
           </div>
         </div>
