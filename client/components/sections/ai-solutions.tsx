@@ -111,7 +111,7 @@ export default function AISolutionsPage() {
             <p className="text-sm leading-7 text-slate-600 max-w-3xl">Avatar AI Solutions is a comprehensive suite of intelligent tools built to automate, optimize, and scale every facet of your business operations.</p>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 mb-10">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-2 mb-10">
             {features.map((item) => (
               <div key={item.title} className="rounded-[1.75rem] border border-slate-300 bg-slate-50 p-6 shadow-md hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
                 <div className="mb-3 h-10 w-10 rounded-2xl bg-slate-100" />
@@ -175,7 +175,7 @@ export default function AISolutionsPage() {
               <p className="text-xs uppercase tracking-[0.3em] text-sky-600 mb-3">Explore more</p>
               <h2 className="text-3xl font-semibold text-slate-950">See other Avatar divisions</h2>
             </div>
-            <div className="grid gap-5 md:grid-cols-3">
+            <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3">
               {relatedDivisions.map((item) => (
                 <a key={item.title} href={item.href} className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-6 transition hover:border-slate-300 hover:bg-white">
                   <p className="text-sm font-semibold text-slate-900 mb-3">{item.title}</p>

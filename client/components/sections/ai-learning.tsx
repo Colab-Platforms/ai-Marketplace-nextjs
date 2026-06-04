@@ -85,7 +85,7 @@ export default function AILearningPage() {
             <p className="text-sm leading-7 text-slate-600 max-w-3xl">Fast-track your team or organisation with premium AI programs, certifications and 100% Job placements that deliver confidence and practical outcomes.</p>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3 mb-10">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 mb-10">
             {programs.map((item) => (
               <div key={item.title} className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5 hover:shadow-sm transition">
                 <h3 className="font-semibold text-slate-950 mb-2">{item.title}</h3>
@@ -146,7 +146,7 @@ export default function AILearningPage() {
             ))}
           </div> */}
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-2">
               <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
                 <p className="text-xs uppercase tracking-[0.3em] text-sky-600 mb-2">For individuals</p>
                 <h3 className="text-xl font-semibold text-slate-950 mb-3">Master AI skills</h3>

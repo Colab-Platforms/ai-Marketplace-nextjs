@@ -125,7 +125,7 @@ export default function AISaaSProductsPage() {
             <p className="text-sm leading-7 text-slate-600 max-w-3xl">Everything your team needs to manage growth, campaigns, operations, and customer experience from a single unified platform.</p>
           </div>
 
-          <div id="products" className="grid gap-5 md:grid-cols-2">
+          <div id="products" className="grid gap-5 sm:grid-cols-2 md:grid-cols-2">
             {products.map((product) => (
               <div key={product.title} className="rounded-[1.75rem] border border-slate-300 bg-slate-50 p-6 shadow-md hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
                 <div className="mb-4 h-2 w-11 rounded-2xl bg-slate-100" />
