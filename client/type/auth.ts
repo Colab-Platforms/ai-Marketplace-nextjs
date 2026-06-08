@@ -27,7 +27,9 @@ export interface RegisterPayload {
   lastName: string;
   email: string;
   password: string;
-  role: AuthUserRole;
+  confirmPassword: string;
+  phone_number?: string;
+  type: 'Buyer' | 'Vendor';
 }
 export interface AuthState {
   user: AuthUser | null;

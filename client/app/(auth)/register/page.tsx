@@ -34,7 +34,7 @@ export default function RegisterPage() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [localError, setLocalError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -62,7 +62,7 @@ export default function RegisterPage() {
 
     try {
       await dispatch(
-        registerUser({ firstName, lastName, email, password, role }),
+        registerUser({ firstName, lastName, email, phone_number: phoneNumber, password, confirmPassword, type: role }),
       ).unwrap();
       setSuccessMessage(`Account created successfully! Welcome to Avatar, ${firstName || 'User'}! Redirecting…`);
       setTimeout(() => router.push('/login'), 1500);
@@ -92,7 +92,7 @@ export default function RegisterPage() {
         <div className="absolute top-2/3 right-1/4 w-48 h-48 rounded-full bg-avatar-accent/10 blur-[60px] pointer-events-none" />
 
         <div className="relative z-10 flex flex-col h-full p-10 xl:p-14">
-          <div className="flex-1 flex flex-col justify-center py-10">
+          <div className="flex-1 flex flex-col justify-center">
             <div className="inline-flex items-center gap-2 bg-white/6 border border-white/10 rounded-full px-4 py-2 mb-7 w-fit">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-[10px] font-semibold tracking-widest uppercase text-avatar-steel">
@@ -296,8 +296,8 @@ export default function RegisterPage() {
                   type="tel"
                   required
                   placeholder="Enter your mobile number"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
                   className="flex-1 px-4 py-3 rounded-xl border border-avatar-light bg-avatar-ice/50 text-sm text-avatar-dark placeholder:text-avatar-silver outline-none transition-all duration-200 focus:border-avatar-accent focus:bg-white focus:ring-4 focus:ring-avatar-accent/8"
                 />
               </div>

@@ -61,7 +61,7 @@ export default function LoginPage() {
         <div className="absolute top-1/2 left-1/3 w-48 h-48 rounded-full bg-avatar-accent/10 blur-[60px] pointer-events-none" />
 
         <div className="relative z-10 flex flex-col h-full p-10 xl:p-14">
-          <div className="flex-1 flex flex-col justify-center py-10">
+          <div className="flex-1 flex flex-col justify-center">
             <div className="inline-flex items-center gap-2 bg-white/6 border border-white/10 rounded-full px-4 py-2 mb-7 w-fit">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-[10px] font-semibold tracking-widest uppercase text-avatar-steel">
