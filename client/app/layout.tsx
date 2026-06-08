@@ -7,6 +7,7 @@ import ScrollProgress from "@/components/common/ScrollProgress";
 import AnnouncementBar from "@/components/common/AnnouncementBar";
 import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
+import Providers from './providers';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -63,12 +64,14 @@ export default function RootLayout({
             alt=""
           />
         </noscript>
-        <PageLoader />
-        <ScrollProgress />
-        <AnnouncementBar />
-        <Navbar />
-        {children}
-        <Footer />
+        <Providers>
+          <PageLoader />
+          <ScrollProgress />
+          <AnnouncementBar />
+          <Navbar />
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

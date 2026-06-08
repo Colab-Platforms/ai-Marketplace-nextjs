@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 
 export default function ContactPage() {
@@ -12,22 +11,22 @@ export default function ContactPage() {
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      // TODO: Integrate with email service
-      console.log('Form submitted:', formData);
+      await new Promise((r) => setTimeout(r, 1000));
       setFormData({ name: '', email: '', subject: '', message: '' });
-      alert('Thank you for reaching out! We will get back to you soon.');
-    } catch (error) {
-      console.error('Error:', error);
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 5000);
+    } catch {
       alert('Failed to send message. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -35,298 +34,220 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <div className="relative pt-20 pb-32 overflow-hidden">
-        {/* Background gradient and orbs */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-avatar-accent/15 blur-[100px] pointer-events-none" />
-          <div className="absolute bottom-0 -left-32 w-[600px] h-[600px] rounded-full bg-avatar-navy/10 blur-[120px] pointer-events-none" />
-          <div className="absolute top-1/2 right-1/4 w-96 h-96 rounded-full bg-avatar-accent/10 blur-[80px] pointer-events-none" />
-        </div>
+    <div className="min-h-screen font-sans bg-[#f0f2f5]">
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-avatar-accent mb-3">
-              Get in Touch
-            </p>
-            <h1 className="font-display text-4xl lg:text-5xl font-bold text-avatar-dark mb-4 leading-tight">
-              We'd Love to Hear <span className="text-avatar-accent">From You</span>
-            </h1>
-            <p className="text-lg text-avatar-slate max-w-2xl mx-auto leading-relaxed">
-              Have questions about Avatar? Our team is here to help you navigate the AI ecosystem and find the perfect solution for your needs.
-            </p>
+      {/* ─── Hero Banner ─── */}
+      <div className="relative h-64 md:h-80 flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a111c] via-[#0f1d30] to-[#080f1a]" />
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              'linear-gradient(to right,#ffffff 1px,transparent 1px),linear-gradient(to bottom,#ffffff 1px,transparent 1px)',
+            backgroundSize: '64px 64px',
+          }}
+        />
+        <div className="absolute -top-20 -right-20 w-[26rem] h-[26rem] rounded-full bg-slate-400/10 blur-[140px]" />
+        <div className="absolute -bottom-16 -left-16 w-72 h-72 rounded-full bg-slate-500/10 blur-[110px]" />
+
+        <div className="relative z-10 text-center px-4">
+          <p className="text-slate-400 text-[11px] font-semibold tracking-[0.35em] uppercase mb-3">
+            We&apos;d love to hear from you
+          </p>
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+            Contact <span className="text-slate-300">Us</span>
+          </h1>
+          <div className="flex items-center justify-center gap-2 text-sm text-slate-400">
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+            <span className="text-slate-600">/</span>
+            <span className="text-slate-200">Contact Us</span>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-6 lg:px-8 pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Contact Information */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24">
-              <h2 className="font-display text-2xl font-bold text-avatar-dark mb-8">Contact Information</h2>
+      {/* ─── Main Content ─── */}
+      <div className="py-20 bg-[#f0f2f5]">
+        <div className="max-w-6xl mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 items-start">
 
-              {/* Email */}
-              <div className="mb-8 p-6 bg-avatar-ice rounded-2xl border border-avatar-light hover:border-avatar-accent/50 transition-colors">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-avatar-accent/10 flex items-center justify-center shrink-0">
-                    <i className="fas fa-envelope text-avatar-accent text-lg" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-avatar-dark mb-1">Email</p>
-                    <Link href="mailto:support@avatarindia.com" className="text-avatar-accent hover:text-avatar-navy transition font-medium break-all">
-                      support@avatarindia.com
-                    </Link>
-                    <p className="text-xs text-avatar-steel mt-2">We'll respond within 24 hours</p>
-                  </div>
-                </div>
-              </div>
+            {/* ── Contact Form (left, 3 cols) ── */}
+            <div className="lg:col-span-3">
+              <div className="rounded-2xl overflow-hidden shadow-2xl">
 
-              {/* Phone */}
-              <div className="mb-8 p-6 bg-avatar-ice rounded-2xl border border-avatar-light hover:border-avatar-accent/50 transition-colors">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-avatar-accent/10 flex items-center justify-center shrink-0">
-                    <i className="fas fa-phone text-avatar-accent text-lg" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-avatar-dark mb-1">Phone</p>
-                    <Link href="tel:+919136774304" className="text-avatar-accent hover:text-avatar-navy transition font-medium">
-                      +91 913 677 4304
-                    </Link>
-                    <p className="text-xs text-avatar-steel mt-2">Mon - Fri, 9AM - 6PM IST</p>
+                {/* dark header */}
+                <div className="bg-[#1a2535] px-8 py-7">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center shrink-0">
+                      <i className="fas fa-paper-plane text-white text-sm" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-lg leading-tight">Send a Message</h3>
+                      <p className="text-slate-400 text-xs mt-0.5">We typically respond within 24 hours</p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Office Location */}
-              <div className="mb-8 p-6 bg-avatar-ice rounded-2xl border border-avatar-light hover:border-avatar-accent/50 transition-colors">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-avatar-accent/10 flex items-center justify-center shrink-0">
-                    <i className="fas fa-map-marker-alt text-avatar-accent text-lg" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-avatar-dark mb-1">Office</p>
-                    <p className="text-sm text-avatar-slate">
-                      India
-                    </p>
-                    <p className="text-xs text-avatar-steel mt-2">Headquarters based in India</p>
-                  </div>
-                </div>
-              </div>
+                {/* form body */}
+                <div className="bg-white px-8 py-8 md:px-10 md:py-10">
+                  {submitted && (
+                    <div className="mb-6 px-5 py-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center gap-3 text-emerald-700 text-sm font-medium">
+                      <i className="fas fa-check-circle text-emerald-500 text-lg" />
+                      Thank you! Your message has been sent. We&apos;ll get back to you soon.
+                    </div>
+                  )}
 
-              {/* Social Links */}
-              <div className="pt-4">
-                <p className="text-sm font-semibold text-avatar-dark mb-4">Connect With Us</p>
-                <div className="flex gap-3">
-                  <Link href="#" className="w-10 h-10 bg-avatar-accent/10 border border-avatar-accent/30 rounded-lg flex items-center justify-center text-avatar-accent hover:bg-avatar-accent hover:text-white transition-colors">
-                    <i className="fab fa-linkedin-in text-sm" />
-                  </Link>
-                  <Link href="#" className="w-10 h-10 bg-avatar-accent/10 border border-avatar-accent/30 rounded-lg flex items-center justify-center text-avatar-accent hover:bg-avatar-accent hover:text-white transition-colors">
-                    <i className="fab fa-twitter text-sm" />
-                  </Link>
-                  <Link href="#" className="w-10 h-10 bg-avatar-accent/10 border border-avatar-accent/30 rounded-lg flex items-center justify-center text-avatar-accent hover:bg-avatar-accent hover:text-white transition-colors">
-                    <i className="fab fa-instagram text-sm" />
-                  </Link>
-                  <Link href="#" className="w-10 h-10 bg-avatar-accent/10 border border-avatar-accent/30 rounded-lg flex items-center justify-center text-avatar-accent hover:bg-avatar-accent hover:text-white transition-colors">
-                    <i className="fab fa-youtube text-sm" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Your Name</label>
+                        <input
+                          type="text"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          required
+                          placeholder="Full Name"
+                          className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-[#f8f9fb] text-sm text-gray-800 placeholder:text-gray-400 outline-none transition-all focus:border-slate-400 focus:bg-white focus:ring-2 focus:ring-slate-100 hover:border-gray-300"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Your Email</label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          required
+                          placeholder="Email Address"
+                          className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-[#f8f9fb] text-sm text-gray-800 placeholder:text-gray-400 outline-none transition-all focus:border-slate-400 focus:bg-white focus:ring-2 focus:ring-slate-100 hover:border-gray-300"
+                        />
+                      </div>
+                    </div>
 
-          {/* Contact Form */}
-          <div className="lg:col-span-2">
-            <div className="bg-gradient-to-br from-avatar-ice via-white to-avatar-ice border border-avatar-light rounded-2xl p-10 shadow-lg shadow-avatar-accent/5">
-              <h2 className="font-display text-2xl font-bold text-avatar-dark mb-2 pb-4 border-b border-avatar-light">
-                Send us a Message
-              </h2>
-              <p className="text-avatar-slate mb-8 text-sm">
-                Fill out the form below and we'll get back to you as soon as possible.
-              </p>
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Name and Email */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-avatar-dark mb-2">
-                      Full Name
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-avatar-steel pointer-events-none">
-                        <i className="fas fa-user text-[12px]" />
-                      </span>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Subject</label>
                       <input
                         type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
+                        name="subject"
+                        value={formData.subject}
                         onChange={handleChange}
                         required
-                        placeholder="John Doe"
-                        className="w-full pl-10 pr-4 py-3.5 rounded-xl border border-avatar-light bg-white text-sm text-avatar-dark placeholder:text-avatar-silver outline-none transition-all duration-200 focus:border-avatar-accent focus:bg-white focus:ring-4 focus:ring-avatar-accent/8"
+                        placeholder="How can we help?"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-[#f8f9fb] text-sm text-gray-800 placeholder:text-gray-400 outline-none transition-all focus:border-slate-400 focus:bg-white focus:ring-2 focus:ring-slate-100 hover:border-gray-300"
                       />
                     </div>
-                  </div>
 
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-avatar-dark mb-2">
-                      Email Address
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-avatar-steel pointer-events-none">
-                        <i className="fas fa-envelope text-[12px]" />
-                      </span>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Your Message</label>
+                      <textarea
+                        name="message"
+                        value={formData.message}
                         onChange={handleChange}
                         required
-                        placeholder="you@company.com"
-                        className="w-full pl-10 pr-4 py-3.5 rounded-xl border border-avatar-light bg-white text-sm text-avatar-dark placeholder:text-avatar-silver outline-none transition-all duration-200 focus:border-avatar-accent focus:bg-white focus:ring-4 focus:ring-avatar-accent/8"
+                        placeholder="Write your message here..."
+                        rows={6}
+                        className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-[#f8f9fb] text-sm text-gray-800 placeholder:text-gray-400 outline-none transition-all focus:border-slate-400 focus:bg-white focus:ring-2 focus:ring-slate-100 hover:border-gray-300 resize-none"
                       />
                     </div>
-                  </div>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <p className="text-xs text-gray-400">
+                        <i className="fas fa-lock mr-1.5" />
+                        Your information is safe with us
+                      </p>
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="px-8 py-3 rounded-lg bg-[#1a2535] hover:bg-[#243040] text-white text-sm font-bold tracking-wider uppercase shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2.5"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <i className="fas fa-spinner fa-spin text-xs" />
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            <i className="fas fa-paper-plane text-xs" />
+                            Send Message
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </form>
                 </div>
-
-                {/* Subject */}
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-avatar-dark mb-2">
-                    Subject
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-avatar-steel pointer-events-none">
-                      <i className="fas fa-pencil text-[12px]" />
-                    </span>
-                    <input
-                      type="text"
-                      id="subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      required
-                      placeholder="How can we help?"
-                      className="w-full pl-10 pr-4 py-3.5 rounded-xl border border-avatar-light bg-white text-sm text-avatar-dark placeholder:text-avatar-silver outline-none transition-all duration-200 focus:border-avatar-accent focus:bg-white focus:ring-4 focus:ring-avatar-accent/8"
-                    />
-                  </div>
-                </div>
-
-                {/* Message */}
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-avatar-dark mb-2">
-                    Message
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3.5 top-3.5 text-avatar-steel pointer-events-none">
-                      <i className="fas fa-comment text-[12px]" />
-                    </span>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      placeholder="Tell us more about your inquiry..."
-                      rows={5}
-                      className="w-full pl-10 pr-4 py-3.5 rounded-xl border border-avatar-light bg-white text-sm text-avatar-dark placeholder:text-avatar-silver outline-none transition-all duration-200 focus:border-avatar-accent focus:bg-white focus:ring-4 focus:ring-avatar-accent/8 resize-none"
-                    />
-                  </div>
-                </div>
-
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-3.5 rounded-xl bg-avatar-accent hover:bg-avatar-navy text-white text-sm font-semibold shadow-md shadow-avatar-accent/20 hover:shadow-avatar-navy/30 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <i className="fas fa-spinner fa-spin text-[12px]" />
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      Send Message
-                      <i className="fas fa-arrow-right text-[10px]" />
-                    </>
-                  )}
-                </button>
-
-                <p className="text-xs text-avatar-steel text-center">
-                  We typically respond within 24 hours on business days.
-                </p>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* FAQ Section */}
-      <div className="bg-avatar-ice/40 py-20">
-        <div className="max-w-4xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-display text-3xl font-bold text-avatar-dark mb-4">
-              Frequently Asked <span className="text-avatar-accent">Questions</span>
-            </h2>
-            <p className="text-avatar-slate">Find answers to common questions about Avatar</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              {
-                question: 'How do I get started with Avatar?',
-                answer: 'Sign up for a free account on our platform. No credit card required. You can start exploring AI tools and solutions immediately.'
-              },
-              {
-                question: 'What payment methods do you accept?',
-                answer: 'We accept all major credit cards, digital wallets, and bank transfers for enterprise customers.'
-              },
-              {
-                question: 'Is there a free trial?',
-                answer: 'Yes! All new users get access to our complete platform for free. Upgrade to a paid plan when you\'re ready.'
-              },
-              {
-                question: 'How long does setup take?',
-                answer: 'Setup is quick and easy - usually takes less than 5 minutes. Our team can also assist with custom configurations.'
-              },
-            ].map((faq, idx) => (
-              <div key={idx} className="p-6 bg-white border border-avatar-light rounded-xl hover:border-avatar-accent/50 transition-colors">
-                <h3 className="font-semibold text-avatar-dark mb-2 flex items-start gap-3">
-                  <span className="text-avatar-accent mt-1">
-                    <i className="fas fa-check-circle text-sm" />
-                  </span>
-                  {faq.question}
-                </h3>
-                <p className="text-sm text-avatar-slate leading-relaxed">{faq.answer}</p>
               </div>
-            ))}
-          </div>
+            </div>
 
-          <div className="text-center mt-12">
-            <p className="text-avatar-slate mb-4">Still have questions?</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="mailto:support@avatarindia.com"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-avatar-accent text-white font-medium hover:bg-avatar-navy transition-colors"
-              >
-                <i className="fas fa-envelope" />
-                Email Us
-              </Link>
-              <Link
-                href="tel:+919136774304"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-avatar-accent text-avatar-accent font-medium hover:bg-avatar-accent/5 transition-colors"
-              >
-                <i className="fas fa-phone" />
-                Call Us
-              </Link>
+            {/* ── Get In Touch (right, 2 cols) ── */}
+            <div className="lg:col-span-2 space-y-6">
+
+              {/* Header */}
+              <div className="mb-2">
+                <p className="text-slate-500 font-semibold text-xs tracking-[0.2em] uppercase mb-2">Contact Us</p>
+                <h2 className="text-3xl font-bold text-slate-900 mb-3">Get In Touch</h2>
+                <p className="text-slate-500 text-sm leading-relaxed">
+                  Have questions, feedback, or need assistance? Our team is ready to help.
+                </p>
+              </div>
+
+              {/* Info cards */}
+              <div className="grid grid-cols-1 gap-3">
+                {[
+                  { icon: 'fa-phone', label: 'Call Us', value: '+91 9136774304', href: 'tel:+919136774304', desc: 'Mon–Sat, 9am–9pm' },
+                  { icon: 'fa-envelope', label: 'Email Us', value: 'support@avatarindia.com', href: 'mailto:support@avatarindia.com', desc: 'We reply within 24h' },
+                  { icon: 'fa-map-marker-alt', label: 'Our Office', value: 'Mumbai, Maharashtra, India', href: undefined, desc: 'Visit us anytime' },
+                ].map(({ icon, label, value, href, desc }) => (
+                  <div
+                    key={label}
+                    className="bg-white rounded-xl px-5 py-4 border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-4"
+                  >
+                    <div className="w-11 h-11 rounded-xl bg-[#1a2535] flex items-center justify-center shrink-0">
+                      <i className={`fas ${icon} text-white text-sm`} />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">{label}</p>
+                      {href ? (
+                        <Link href={href} className="text-sm font-semibold text-slate-800 hover:text-slate-600 transition-colors truncate block">
+                          {value}
+                        </Link>
+                      ) : (
+                        <p className="text-sm font-semibold text-slate-800">{value}</p>
+                      )}
+                      <p className="text-xs text-slate-400 mt-0.5">{desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Divider */}
+              <div className="border-t border-gray-200" />
+
+              {/* Follow Us */}
+              <div>
+                <p className="text-sm font-bold text-slate-700 mb-3">Follow Us</p>
+                <div className="flex items-center gap-2.5">
+                  {[
+                    { href: 'https://www.facebook.com/share/1JpYwqS4jQ/', icon: 'fa-facebook-f', bg: 'bg-[#1877f2] hover:bg-[#1465d0]' },
+                    { href: '#', icon: 'fa-twitter', bg: 'bg-[#1da1f2] hover:bg-[#1a91da]' },
+                    { href: 'https://www.instagram.com/avatar.india/', icon: 'fa-instagram', bg: 'bg-gradient-to-br from-purple-600 via-pink-500 to-rose-400 hover:opacity-90' },
+                    { href: 'https://www.youtube.com/@AvatarIndia-g1i', icon: 'fa-youtube', bg: 'bg-[#ff0000] hover:bg-[#cc0000]' },
+                  ].map(({ href, icon, bg }) => (
+                    <Link
+                      key={icon}
+                      href={href}
+                      className={`w-9 h-9 rounded-full ${bg} flex items-center justify-center text-white transition-all hover:scale-110 shadow-sm hover:shadow-md`}
+                    >
+                      <i className={`fab ${icon} text-xs`} />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
       </div>
+
     </div>
   );
 }

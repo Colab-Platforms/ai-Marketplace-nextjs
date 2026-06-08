@@ -87,7 +87,7 @@ export default function Footer() {
                 </a>
               </li>
               <li><Link href="/contact" className="text-sm text-avatar-steel hover:text-white transition-colors flex items-center gap-2">
-                <i className="fas fa-question-circle text-xs" />
+                <i className="fas fa-paper-plane text-xs" />
                 Contact Form
               </Link></li>
             </ul>
