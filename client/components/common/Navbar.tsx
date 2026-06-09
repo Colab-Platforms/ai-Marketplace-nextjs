@@ -3,12 +3,23 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-
+import { useRouter } from 'next/navigation';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { logout } from '@/redux/slices/authSlice';
 
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
+  const isLoggedIn = mounted && !!user;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,6 +33,11 @@ export default function Navbar() {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
     document.body.style.overflow = !isMobileMenuOpen ? 'hidden' : '';
+  };
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+    router.push('/');
   };
 
   return (
@@ -50,13 +66,32 @@ export default function Navbar() {
           </nav>
 
           <div className="hidden md:flex items-center gap-3">
-            <Link href="/login" className="text-sm font-medium text-avatar-slate hover:text-avatar-dark transition">Login</Link>
-            <Link
-              href="/register"
-              className="inline-flex items-center gap-2 bg-avatar-navy hover:bg-avatar-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition"
-            >
-              Register
-            </Link>
+            {isLoggedIn ? (
+              <>
+                <Link
+                  href={user?.role === 'VENDOR' ? '/dashboard' : '/marketplace'}
+                  className="text-sm font-medium text-avatar-slate hover:text-avatar-dark transition"
+                >
+                  {user?.firstName ?? user?.name ?? 'Account'}
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="inline-flex items-center gap-2 bg-avatar-navy hover:bg-avatar-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="text-sm font-medium text-avatar-slate hover:text-avatar-dark transition">Login</Link>
+                <Link
+                  href="/register"
+                  className="inline-flex items-center gap-2 bg-avatar-navy hover:bg-avatar-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition"
+                >
+                  Register
+                </Link>
+              </>
+            )}
             <Link
               href="#enroll"
               className="hidden xl:inline-flex items-center gap-2 bg-avatar-navy hover:bg-avatar-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition"
@@ -98,15 +133,34 @@ export default function Navbar() {
           <Link href="/#divisions" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Solutions</Link>
           <Link href="/learning" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Learning</Link>
           <Link href="/marketplace" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">Marketplace</Link>
-          
           <Link href="/about" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">About</Link>
         </div>
         <div className="mt-10 flex flex-col gap-3">
-          <Link href="/login" onClick={toggleMobileMenu} className="text-center text-sm font-medium text-avatar-slate border border-avatar-silver rounded-full py-2.5 hover:bg-avatar-ice transition-colors">Login</Link>
-          <Link href="/register" onClick={toggleMobileMenu} className="text-center text-sm font-semibold bg-avatar-dark text-white rounded-full py-2.5 hover:bg-avatar-navy transition-colors">Register</Link>
+          {isLoggedIn ? (
+            <>
+              <Link
+                href={user?.role === 'VENDOR' ? '/dashboard' : '/marketplace'}
+                onClick={toggleMobileMenu}
+                className="text-center text-sm font-medium text-avatar-slate border border-avatar-silver rounded-full py-2.5 hover:bg-avatar-ice transition-colors"
+              >
+                {user?.firstName ?? user?.name ?? 'My Account'}
+              </Link>
+              <button
+                onClick={() => { toggleMobileMenu(); handleLogout(); }}
+                className="text-center text-sm font-semibold bg-avatar-dark text-white rounded-full py-2.5 hover:bg-avatar-navy transition-colors"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" onClick={toggleMobileMenu} className="text-center text-sm font-medium text-avatar-slate border border-avatar-silver rounded-full py-2.5 hover:bg-avatar-ice transition-colors">Login</Link>
+              <Link href="/register" onClick={toggleMobileMenu} className="text-center text-sm font-semibold bg-avatar-dark text-white rounded-full py-2.5 hover:bg-avatar-navy transition-colors">Register</Link>
+            </>
+          )}
         </div>
       </div>
-      
+
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div
