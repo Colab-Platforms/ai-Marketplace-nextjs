@@ -46,12 +46,20 @@ export default function Navbar() {
             <Link href="/learning" className="hover:text-avatar-dark transition">Learning</Link>
             <Link href="/marketplace" className="hover:text-avatar-dark transition">Marketplace</Link>
             <Link href="/about" className="hover:text-avatar-dark transition">About</Link>
+            <Link href="/contact" className="hover:text-avatar-dark transition">Contact</Link>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3">
+            <Link href="/login" className="text-sm font-medium text-avatar-slate hover:text-avatar-dark transition">Login</Link>
+            <Link
+              href="/register"
+              className="inline-flex items-center gap-2 bg-avatar-navy hover:bg-avatar-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition"
+            >
+              Register
+            </Link>
             <Link
               href="#enroll"
-              className="hidden md:inline-flex items-center gap-2 bg-avatar-navy hover:bg-avatar-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition"
+              className="hidden xl:inline-flex items-center gap-2 bg-avatar-navy hover:bg-avatar-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition"
             >
               Consult Now
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -59,18 +67,17 @@ export default function Navbar() {
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
             </Link>
-
-            {/* Hamburger button */}
-            <button
-              onClick={toggleMobileMenu}
-              className="md:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-[6px] z-[60]"
-              aria-label="Toggle menu"
-            >
-              <span className="block w-6 h-[2px] bg-avatar-dark rounded-full"></span>
-              <span className="block w-6 h-[2px] bg-avatar-dark rounded-full"></span>
-              <span className="block w-6 h-[2px] bg-avatar-dark rounded-full"></span>
-            </button>
           </div>
+
+          <button
+            onClick={toggleMobileMenu}
+            className="md:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-[6px] z-[60]"
+            aria-label="Toggle menu"
+          >
+            <span className="block w-6 h-[2px] bg-avatar-dark rounded-full"></span>
+            <span className="block w-6 h-[2px] bg-avatar-dark rounded-full"></span>
+            <span className="block w-6 h-[2px] bg-avatar-dark rounded-full"></span>
+          </button>
         </div>
       </header>
 
@@ -95,8 +102,8 @@ export default function Navbar() {
           <Link href="/about" onClick={toggleMobileMenu} className="text-base font-medium text-avatar-slate hover:text-avatar-dark transition-colors py-2 border-b border-avatar-ice">About</Link>
         </div>
         <div className="mt-10 flex flex-col gap-3">
-          <Link href="#" className="text-center text-sm font-medium text-avatar-slate border border-avatar-silver rounded-full py-2.5 hover:bg-avatar-ice transition-colors">Sign In</Link>
-          <Link href="#cta" onClick={toggleMobileMenu} className="text-center text-sm font-semibold bg-avatar-dark text-white rounded-full py-2.5 hover:bg-avatar-navy transition-colors">Get Started</Link>
+          <Link href="/login" onClick={toggleMobileMenu} className="text-center text-sm font-medium text-avatar-slate border border-avatar-silver rounded-full py-2.5 hover:bg-avatar-ice transition-colors">Login</Link>
+          <Link href="/register" onClick={toggleMobileMenu} className="text-center text-sm font-semibold bg-avatar-dark text-white rounded-full py-2.5 hover:bg-avatar-navy transition-colors">Register</Link>
         </div>
       </div>
       

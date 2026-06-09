@@ -64,20 +64,32 @@ export default function Footer() {
             <ul className="space-y-2.5">
               <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">About Us</Link></li>
               <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Careers</Link></li>
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Contact</Link></li>
+              <li><Link href="/contact" className="text-sm text-avatar-steel hover:text-white transition-colors">Contact</Link></li>
               <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Partners</Link></li>
               <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Press</Link></li>
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* Support */}
           <div>
-            <h4 className="font-display font-semibold text-sm text-white mb-4">Legal</h4>
+            <h4 className="font-display font-semibold text-sm text-white mb-4">Support</h4>
             <ul className="space-y-2.5">
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Privacy Policy</Link></li>
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Terms of Service</Link></li>
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Cookie Policy</Link></li>
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Security</Link></li>
+              <li>
+                <a href="mailto:support@avatarindia.com" className="text-sm text-avatar-steel hover:text-white transition-colors flex items-center gap-2">
+                  <i className="fas fa-envelope text-xs" />
+                  support@avatarindia.com
+                </a>
+              </li>
+              <li>
+                <a href="tel:+919136774304" className="text-sm text-avatar-steel hover:text-white transition-colors flex items-center gap-2">
+                  <i className="fas fa-phone text-xs" />
+                  +91 913 677 4304
+                </a>
+              </li>
+              <li><Link href="/contact" className="text-sm text-avatar-steel hover:text-white transition-colors flex items-center gap-2">
+                <i className="fas fa-paper-plane text-xs" />
+                Contact Form
+              </Link></li>
             </ul>
           </div>
         </div>

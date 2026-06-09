@@ -3,10 +3,8 @@ import { Inter, Space_Grotesk, Syne } from 'next/font/google';
 import Script from "next/script";
 import "./globals.css";
 import PageLoader from "@/components/common/PageLoader";
-import ScrollProgress from "@/components/common/ScrollProgress";
-import AnnouncementBar from "@/components/common/AnnouncementBar";
-import Navbar from "@/components/common/Navbar";
-import Footer from "@/components/common/Footer";
+import RootChrome from "@/components/common/RootChrome";
+import Providers from './providers';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -63,12 +61,12 @@ export default function RootLayout({
             alt=""
           />
         </noscript>
-        <PageLoader />
-        <ScrollProgress />
-        <AnnouncementBar />
-        <Navbar />
-        {children}
-        <Footer />
+        <Providers>
+          <PageLoader />
+          <RootChrome>
+            {children}
+          </RootChrome>
+        </Providers>
       </body>
     </html>
   );
