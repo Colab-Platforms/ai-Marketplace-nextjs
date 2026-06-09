@@ -10,7 +10,7 @@ const AUTH_ROUTES = ['/login', '/register'];
 
 export default function RootChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isAuthRoute = AUTH_ROUTES.includes(pathname);
+  const isAuthRoute = AUTH_ROUTES.includes(pathname) || pathname.startsWith('/dashboard');
 
   return (
     <>

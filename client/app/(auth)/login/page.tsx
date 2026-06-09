@@ -33,7 +33,7 @@ export default function LoginPage() {
       const result = await dispatch(loginUser({ email, password, type: role })).unwrap();
       setSuccessMessage(`Welcome back, ${result.user.firstName ?? result.user.name ?? 'User'}! Redirecting…`);
       setTimeout(() => {
-        router.push(result.user.role === 'VENDOR' ? '/dashboard' : '/marketplace');
+        router.push(result.user.role === 'VENDOR' ? '/vendor-onboarding' : '/marketplace');
       }, 1200);
     } catch (error) {
       console.error('Login failed:', error);
