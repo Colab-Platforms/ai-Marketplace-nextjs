@@ -20,6 +20,7 @@ export interface AuthUser {
 export interface LoginPayload {
   email: string;
   password: string;
+  type: 'Buyer' | 'Vendor';
 }
 
 export interface RegisterPayload {

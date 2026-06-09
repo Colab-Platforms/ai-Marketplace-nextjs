@@ -46,6 +46,7 @@ export default function Navbar() {
             <Link href="/learning" className="hover:text-avatar-dark transition">Learning</Link>
             <Link href="/marketplace" className="hover:text-avatar-dark transition">Marketplace</Link>
             <Link href="/about" className="hover:text-avatar-dark transition">About</Link>
+            <Link href="/contact" className="hover:text-avatar-dark transition">Contact</Link>
           </nav>
 
           <div className="hidden md:flex items-center gap-3">
