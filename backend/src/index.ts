@@ -14,6 +14,9 @@ const app = express();
 
 const allowedOrigins = [
     "https://ai-marketplace-nextjs-mu.vercel.app/",
+    "https://www.avatarindia.com",
+    "https://ai-marketplace-nextjs-mu.vercel.app",
+    "https://ai-marketplace-nextjs-git-main-colab-platforms-projects.vercel.app",
     "https://avatarindia.com",
     "http://localhost:3000",
     "http://localhost:5173",
