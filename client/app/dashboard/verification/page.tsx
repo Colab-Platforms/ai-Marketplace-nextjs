@@ -2,14 +2,30 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { getVendorProfile, updateVendorStatus, VendorProfile } from '@/lib/verification';
+import {
+  getVendorProfile,
+  updateVendorStatus,
+  uploadDocumentFile,
+  addVendorDocument,
+  submitVendorVerification,
+  VendorProfile,
+} from '@/lib/verification';
 
 interface UploadState {
   file: File | null;
   progress: number;
   uploaded: boolean;
   error: string | null;
+  url: string | null;
 }
+
+const INITIAL_UPLOAD_STATE: UploadState = {
+  file: null,
+  progress: 0,
+  uploaded: false,
+  error: null,
+  url: null,
+};
 
 export default function VerificationPage() {
   const router = useRouter();
@@ -18,9 +34,9 @@ export default function VerificationPage() {
   const [submitting, setSubmitting] = useState(false);
 
   // Document Upload states
-  const [gst, setGst] = useState<UploadState>({ file: null, progress: 0, uploaded: false, error: null });
-  const [pan, setPan] = useState<UploadState>({ file: null, progress: 0, uploaded: false, error: null });
-  const [cin, setCin] = useState<UploadState>({ file: null, progress: 0, uploaded: false, error: null });
+  const [gst, setGst] = useState<UploadState>(INITIAL_UPLOAD_STATE);
+  const [pan, setPan] = useState<UploadState>(INITIAL_UPLOAD_STATE);
+  const [cin, setCin] = useState<UploadState>(INITIAL_UPLOAD_STATE);
 
   useEffect(() => {
     async function load() {
@@ -31,24 +47,25 @@ export default function VerificationPage() {
     load();
   }, []);
 
-  const simulateUpload = (
+  const handleUpload = async (
     type: 'gst' | 'pan' | 'cin',
     file: File,
     setter: React.Dispatch<React.SetStateAction<UploadState>>
   ) => {
-    setter({ file, progress: 0, uploaded: false, error: null });
+    setter({ file, progress: 0, uploaded: false, error: null, url: null });
 
-    let currentProgress = 0;
-    const interval = setInterval(() => {
-      currentProgress += Math.floor(Math.random() * 15) + 5;
-      if (currentProgress >= 100) {
-        currentProgress = 100;
-        clearInterval(interval);
-        setter({ file, progress: 100, uploaded: true, error: null });
-      } else {
-        setter({ file, progress: currentProgress, uploaded: false, error: null });
-      }
-    }, 150);
+    try {
+      const url = await uploadDocumentFile(file, (progressEvent: any) => {
+        if (progressEvent.total) {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setter({ file, progress: percentCompleted, uploaded: false, error: null, url: null });
+        }
+      });
+
+      setter({ file, progress: 100, uploaded: true, error: null, url });
+    } catch (err: any) {
+      setter({ file, progress: 0, uploaded: false, error: err?.message || 'Upload failed', url: null });
+    }
   };
 
   const handleFileChange = (type: 'gst' | 'pan' | 'cin') => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,32 +75,47 @@ export default function VerificationPage() {
     // Limit to 5MB
     if (file.size > 5 * 1024 * 1024) {
       const err = 'File size exceeds 5MB limit.';
-      if (type === 'gst') setGst((prev) => ({ ...prev, error: err }));
-      if (type === 'pan') setPan((prev) => ({ ...prev, error: err }));
-      if (type === 'cin') setCin((prev) => ({ ...prev, error: err }));
+      const updateError = (prev: UploadState) => ({ ...prev, error: err });
+      if (type === 'gst') setGst(updateError);
+      if (type === 'pan') setPan(updateError);
+      if (type === 'cin') setCin(updateError);
       return;
     }
 
-    if (type === 'gst') simulateUpload('gst', file, setGst);
-    if (type === 'pan') simulateUpload('pan', file, setPan);
-    if (type === 'cin') simulateUpload('cin', file, setCin);
+    if (type === 'gst') handleUpload('gst', file, setGst);
+    if (type === 'pan') handleUpload('pan', file, setPan);
+    if (type === 'cin') handleUpload('cin', file, setCin);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!gst.uploaded || !pan.uploaded || !cin.uploaded) return;
+    if (!gst.uploaded || !pan.uploaded || !cin.uploaded || !profile?.id) return;
 
     setSubmitting(true);
     try {
-      // Promotes status from 'Incomplete' or 'Rejected' to 'Pending'
-      const updated = await updateVendorStatus('Pending');
+      // 1. Submit GST doc registry
+      if (gst.url) {
+        await addVendorDocument(profile.id, 'GST Certificate', gst.url);
+      }
+      // 2. Submit PAN doc registry
+      if (pan.url) {
+        await addVendorDocument(profile.id, 'PAN Card', pan.url);
+      }
+      // 3. Submit CIN doc registry
+      if (cin.url) {
+        await addVendorDocument(profile.id, 'CIN / Registration Certificate', cin.url);
+      }
+
+      // 4. Submit verification status change (INCOMPLETE to PENDING_VERIFICATION)
+      const updated = await submitVendorVerification(profile.id);
       if (updated) {
         setProfile(updated);
         // Force status reload in layout
         window.location.reload();
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to submit documents:', err);
+      alert(err?.message || 'Failed to submit documents for review.');
     } finally {
       setSubmitting(false);
     }

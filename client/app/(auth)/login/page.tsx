@@ -32,9 +32,23 @@ export default function LoginPage() {
     try {
       const result = await dispatch(loginUser({ email, password, type: role })).unwrap();
       setSuccessMessage(`Welcome back, ${result.user.firstName ?? result.user.name ?? 'User'}! Redirecting…`);
-      setTimeout(() => {
-        router.push(result.user.role === 'VENDOR' ? '/vendor-onboarding' : '/marketplace');
-      }, 1200);
+
+      if (result.user.role === 'VENDOR') {
+        // Check if vendor has already completed onboarding
+        setTimeout(async () => {
+          try {
+            const { getVendorProfile } = await import('@/lib/verification');
+            const profile = await getVendorProfile();
+            // If profile exists (even INCOMPLETE), send to dashboard
+            router.push(profile ? '/dashboard' : '/vendor-onboarding');
+          } catch {
+            // Fallback: send to onboarding if check fails
+            router.push('/vendor-onboarding');
+          }
+        }, 1200);
+      } else {
+        setTimeout(() => router.push('/marketplace'), 1200);
+      }
     } catch (error) {
       console.error('Login failed:', error);
     }

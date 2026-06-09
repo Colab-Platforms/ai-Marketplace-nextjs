@@ -29,9 +29,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       try {
         const data = await getVendorProfile();
         if (!data) {
-          // If no vendor details filled yet, force them to do the first step
+          // No vendor record at all — force first-time onboarding
           router.replace('/vendor-onboarding');
         } else {
+          // Profile exists (any status) — let them into the dashboard
+          // The sidebar and dashboard page show status-specific banners
           setProfile(data);
         }
       } catch (err) {

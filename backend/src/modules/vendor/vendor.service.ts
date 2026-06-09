@@ -11,17 +11,26 @@ class VendorService {
         owner_user_id: userId,
       },
     });
-    console.log("Existing Vendor:", existingVendor);
+
+    // If vendor is already verified or pending, block re-creation
     if (existingVendor && existingVendor.verification_status === "VERIFIED") {
-      throw new ApiError("Vendor with this owner already exists and is verified", STATUS_CODES.CONFLICT);
+      throw new ApiError("Vendor profile already exists and is verified", STATUS_CODES.CONFLICT);
     }
     if (existingVendor && existingVendor.verification_status === "PENDING_VERIFICATION") {
-      throw new ApiError("Vendor with this owner already exists and is pending verification", STATUS_CODES.CONFLICT);
-    }
-    if (existingVendor && existingVendor.verification_status === "INCOMPLETE") {
-      throw new ApiError("Vendor with this owner already exists and Onboarding is incomplete", STATUS_CODES.CONFLICT);
+      throw new ApiError("Vendor profile is currently pending verification", STATUS_CODES.CONFLICT);
     }
 
+    // If vendor exists but is INCOMPLETE (started but not finished), allow updating the details
+    if (existingVendor && existingVendor.verification_status === "INCOMPLETE") {
+      const updated = await prisma.vendors.update({
+        where: { id: existingVendor.id },
+        data: { ...data },
+        select: vendorSelectFields,
+      });
+      return updated;
+    }
+
+    // New vendor — create fresh record
     const vendor = await prisma.vendors.create({
       data: {
         ...data,

@@ -52,7 +52,7 @@ export default function VendorOnboardingPage() {
   const [error, setError] = useState<string | null>(null);
   const [checking, setChecking] = useState(true);
 
-  // Guard: must be a logged-in vendor; redirect away if already onboarded
+  // Guard: must be a logged-in vendor; redirect away if already onboarded past INCOMPLETE
   useEffect(() => {
     if (!accessToken || user?.role !== 'VENDOR') {
       router.replace('/login');
@@ -62,10 +62,29 @@ export default function VendorOnboardingPage() {
     async function checkStatus() {
       try {
         const profile = await getVendorProfile();
-        if (profile) {
-          // Profile already exists in DB (even if status is Incomplete, Pending, etc.)
+        if (profile && profile.verification_status !== 'Incomplete') {
+          // Profile exists AND is beyond the initial fill-in step — send to dashboard
           router.replace('/dashboard');
+        } else if (profile && profile.verification_status === 'Incomplete') {
+          // Profile started but INCOMPLETE — let them re-fill / update the form
+          setForm({
+            company_name: profile.company_name || '',
+            brand_name: profile.brand_name || '',
+            company_type: profile.company_type || '',
+            gstNumber: profile.gstNumber || '',
+            registaration_number: profile.registaration_number || '',
+            pan_number: profile.pan_number || '',
+            registered_address: profile.registered_address || '',
+            date_of_incorporation: profile.date_of_incorporation || '',
+            website_url: profile.website_url || '',
+            description: profile.description || '',
+            country: profile.country || '',
+            state: profile.state || '',
+            city: profile.city || '',
+          });
+          setChecking(false);
         } else {
+          // No profile at all — fresh onboarding
           setChecking(false);
         }
       } catch (err) {
