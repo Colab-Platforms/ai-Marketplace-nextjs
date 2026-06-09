@@ -147,12 +147,20 @@ class AuthService {
         });
 
         if (!user || !user.password) {
-            throw new ApiError("Invalid email or password", STATUS_CODES.UNAUTHORIZED);
+            throw new ApiError("No account found with this email", STATUS_CODES.UNAUTHORIZED);
         }
 
         const isPasswordValid = await comparePassword(data.password, user.password);
         if (!isPasswordValid) {
-            throw new ApiError("Invalid email or password", STATUS_CODES.UNAUTHORIZED);
+            throw new ApiError("Incorrect password", STATUS_CODES.UNAUTHORIZED);
+        }
+
+        const expectedRole = resolveRole(data.type);
+        if (user.role !== expectedRole) {
+            throw new ApiError(
+                `This account is not registered as a ${data.type}`,
+                STATUS_CODES.UNAUTHORIZED
+            );
         }
 
         if (!process.env.JWT_SECRET) {

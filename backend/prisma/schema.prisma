@@ -65,22 +65,41 @@ model vendors {
   id            String @id @default(cuid())
   owner_user_id String @unique
 
-  company_name  String
-  company_email String
-  phone_number  String @unique
-  website_url   String?
-  logo_url      String?
-  description   String?
+  company_name          String
+  brand_name            String?
+  company_type          String?
+  gstNumber             String?   @unique // GST
+  registaration_number  String?   @unique //CIN
+  pan_number            String?   @unique //PAN
+  registered_address    String?
+  date_of_incorporation DateTime?
+  website_url           String?
+  description           String?
+  country               String?
+  state                 String?
+  city                  String?
 
   verification_status String
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
 
   owner users @relation(fields: [owner_user_id], references: [id])
 
   tools   tools[]
   payouts payouts[]
+
+  vendor_docs vendor_docs[]
+}
+
+model vendor_docs {
+  id                  String   @id @default(cuid())
+  vendor_id           String
+  doc_type            String
+  doc_url             String
+  verification_status String
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+  vendor              vendors  @relation(fields: [vendor_id], references: [id])
 }
 
 model user_sessions {

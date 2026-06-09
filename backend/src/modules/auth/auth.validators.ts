@@ -45,6 +45,11 @@ const loginSchema = Joi.object({
         "string.empty": "Password is required",
         "any.required": "Password is required",
     }),
+    type: Joi.string().valid("Buyer", "Vendor").required().messages({
+        "any.only": "type must be either 'Buyer' or 'Vendor'",
+        "string.empty": "type is required",
+        "any.required": "type is required",
+    }),
 });
 
 const forgotPasswordSchema = Joi.object({

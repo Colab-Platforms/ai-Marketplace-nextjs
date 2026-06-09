@@ -13,6 +13,7 @@ export interface RegisterBody {
 export interface LoginBody {
     email: string;
     password: string;
+    type: "Buyer" | "Vendor";
 }
 
 export interface JwtPayload {
