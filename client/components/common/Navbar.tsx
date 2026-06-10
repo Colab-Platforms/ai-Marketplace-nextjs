@@ -93,7 +93,7 @@ export default function Navbar() {
               </>
             )}
             <Link
-              href="#enroll"
+              href="/contact"
               className="hidden xl:inline-flex items-center gap-2 bg-avatar-navy hover:bg-avatar-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition"
             >
               Consult Now

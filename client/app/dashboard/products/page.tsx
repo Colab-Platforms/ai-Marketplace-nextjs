@@ -18,7 +18,7 @@ export default function ProductsPage() {
       setLoading(true);
       const params = filter !== 'all' ? { status: filter } : {};
       const response = await toolService.getMyTools(params);
-      setTools(response.data?.records || response.data || []);
+      setTools(response.data?.data || response.data?.records || []);
     } catch (error) {
       console.error('Failed to load tools:', error);
     } finally {

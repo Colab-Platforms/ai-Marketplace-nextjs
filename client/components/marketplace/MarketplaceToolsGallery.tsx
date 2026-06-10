@@ -59,8 +59,8 @@ export default function MarketplaceToolsGallery({ selectedCategory, searchQuery,
     }),
   });
 
-  const tools = toolsData?.data?.records || [];
-  const pagination = toolsData?.data?.pagination;
+  const tools = toolsData?.data?.data || toolsData?.data?.records || [];
+  const pagination = toolsData?.data;
 
   // Reset to page 1 whenever filter or search changes
   useEffect(() => {
