@@ -12,24 +12,16 @@ class VendorService {
       },
     });
 
-    // If vendor is already verified or pending, block re-creation
-    if (existingVendor && existingVendor.verification_status === "VERIFIED") {
-      throw new ApiError("Vendor profile already exists and is verified", STATUS_CODES.CONFLICT);
+   if (existingVendor && existingVendor.verification_status === "VERIFIED") {
+      throw new ApiError("Vendor with this owner already exists and is verified", STATUS_CODES.CONFLICT);
     }
     if (existingVendor && existingVendor.verification_status === "PENDING_VERIFICATION") {
-      throw new ApiError("Vendor profile is currently pending verification", STATUS_CODES.CONFLICT);
+      throw new ApiError("Vendor with this owner already exists and is pending verification", STATUS_CODES.CONFLICT);
     }
-
-    // If vendor exists but is INCOMPLETE (started but not finished), allow updating the details
     if (existingVendor && existingVendor.verification_status === "INCOMPLETE") {
-      const updated = await prisma.vendors.update({
-        where: { id: existingVendor.id },
-        data: { ...data },
-        select: vendorSelectFields,
-      });
-      return updated;
+      throw new ApiError("Vendor with this owner already exists and Onboarding is incomplete", STATUS_CODES.CONFLICT);
     }
-
+    
     // New vendor — create fresh record
     const vendor = await prisma.vendors.create({
       data: {
@@ -57,33 +49,13 @@ class VendorService {
   }
 
   async getVendorByOwnerId(owner_user_id: string) {
-    // Find vendor, auto-create if not exists
-    let vendor = await prisma.vendors.findUnique({
+    const vendor = await prisma.vendors.findUnique({
       where: { owner_user_id },
       select: vendorSelectFields,
     });
 
-    // Auto-create vendor profile if doesn't exist (optional onboarding)
     if (!vendor) {
-      const user = await prisma.users.findUnique({
-        where: { id: owner_user_id },
-      });
-
-      if (!user) {
-        throw new ApiError("User not found", STATUS_CODES.NOT_FOUND);
-      }
-
-      // Create basic vendor profile automatically
-      vendor = await prisma.vendors.create({
-        data: {
-          owner_user_id: owner_user_id,
-          company_name: user.email.split('@')[0] + " Company",
-          verification_status: "VERIFIED", // Auto-approve
-          country: "India",
-          city: "Unknown",
-        },
-        select: vendorSelectFields,
-      });
+      throw new ApiError("Vendor profile not found", STATUS_CODES.NOT_FOUND);
     }
 
     return vendor;
@@ -189,50 +161,24 @@ class VendorService {
       throw new ApiError("Cannot submit for verification without documents", STATUS_CODES.BAD_REQUEST);
     }
 
-    // Auto-approve for now (until admin dashboard is ready)
     const updatedVendor = await prisma.vendors.update({
       where: { id: vendorId },
       data: {
-        verification_status: "VERIFIED" // Changed from PENDING_VERIFICATION to VERIFIED
+        verification_status: "PENDING_VERIFICATION"
       },
       select: vendorSelectFields
-    });
-
-    // Also update document statuses to VERIFIED
-    await prisma.vendor_docs.updateMany({
-      where: { vendor_id: vendorId },
-      data: { verification_status: "VERIFIED" }
     });
 
     return updatedVendor;
   }
 
   async getVendorStats(userId: string) {
-    // Find vendor by owner_user_id, auto-create if not exists
-    let vendor = await prisma.vendors.findUnique({
+    const vendor = await prisma.vendors.findUnique({
       where: { owner_user_id: userId },
     });
 
-    // Auto-create vendor profile if doesn't exist
     if (!vendor) {
-      const user = await prisma.users.findUnique({
-        where: { id: userId },
-      });
-
-      if (!user) {
-        throw new ApiError("User not found", STATUS_CODES.NOT_FOUND);
-      }
-
-      // Create basic vendor profile automatically
-      vendor = await prisma.vendors.create({
-        data: {
-          owner_user_id: userId,
-          company_name: user.email.split('@')[0] + " Company",
-          verification_status: "VERIFIED", // Auto-approve for now
-          country: "India",
-          city: "Unknown",
-        },
-      });
+      throw new ApiError("Vendor profile not found", STATUS_CODES.NOT_FOUND);
     }
 
     // Get total products count
@@ -336,18 +282,18 @@ class VendorService {
     };
   }
 
-  async autoApproveVendor(vendorId: string) {
-    // Temporary auto-approval until admin dashboard is ready
-    const updatedVendor = await prisma.vendors.update({
-      where: { id: vendorId },
-      data: {
-        verification_status: "VERIFIED"
-      },
-      select: vendorSelectFields
-    });
+  // async autoApproveVendor(vendorId: string) {
+  //   // Temporary auto-approval until admin dashboard is ready
+  //   const updatedVendor = await prisma.vendors.update({
+  //     where: { id: vendorId },
+  //     data: {
+  //       verification_status: "VERIFIED"
+  //     },
+  //     select: vendorSelectFields
+  //   });
 
-    return updatedVendor;
-  }
+  //   return updatedVendor;
+  // }
 }
 
 export default VendorService;

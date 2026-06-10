@@ -51,55 +51,12 @@ export function mapFrontendStatusToBackend(status: VendorProfile['verification_s
   }
 }
 
-// Fetch the vendor profile from backend, or fallback to localStorage
+// Fetch the vendor profile from backend, or fallback to localStorage on network errors
 export async function getVendorProfile(): Promise<VendorProfile | null> {
   try {
-    let response;
-    try {
-      response = await apiClient.get('/api/vendors/profile');
-    } catch (e) {
-      response = await apiClient.get('/api/vendors/me');
-    }
-    
+    const response = await apiClient.get('/api/vendors/profile');
+
     if (response && response.data && response.data.success && response.data.data) {
-      const data = response.data.data;
-      return {
-        ...data,
-        verification_status: mapBackendStatusToFrontend(data.verification_status),
-      };
-    }
-  } catch (error) {
-    console.warn('Backend vendor profile fetch failed, using fallback:', error);
-  }
-
-  // Fallback to local storage
-  if (typeof window !== 'undefined') {
-    const data = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (data) {
-      try {
-        const parsed = JSON.parse(data) as VendorProfile;
-        return {
-          ...parsed,
-          verification_status: mapBackendStatusToFrontend(parsed.verification_status),
-        };
-      } catch (e) {
-        return null;
-      }
-    }
-  }
-  return null;
-}
-
-// Create/Submit the initial vendor profile
-export async function createVendorProfile(profileData: Omit<VendorProfile, 'verification_status'>): Promise<VendorProfile> {
-  const payload = {
-    ...profileData,
-    verification_status: 'INCOMPLETE',
-  };
-
-  try {
-    const response = await apiClient.post('/api/vendors', payload);
-    if (response.data && response.data.success && response.data.data) {
       const data = response.data.data;
       const result = {
         ...data,
@@ -110,18 +67,51 @@ export async function createVendorProfile(profileData: Omit<VendorProfile, 'veri
       }
       return result;
     }
-  } catch (error) {
-    console.warn('Backend vendor profile creation failed, using fallback:', error);
-  }
+    return null;
+  } catch (error: any) {
+    // Vendor not found — clear stale localStorage and return null so onboarding gate works
+    if (error?.response?.status === 404) {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem(LOCAL_STORAGE_KEY);
+      }
+      return null;
+    }
 
-  // Fallback
-  if (typeof window !== 'undefined') {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(profileData));
+    // Network/server error — fall back to cached localStorage so the UI doesn't break
+    console.warn('Backend vendor profile fetch failed, using localStorage fallback:', error);
+    if (typeof window !== 'undefined') {
+      const cached = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached) as VendorProfile;
+          return {
+            ...parsed,
+            verification_status: mapBackendStatusToFrontend(parsed.verification_status),
+          };
+        } catch {
+          return null;
+        }
+      }
+    }
   }
-  return {
-    ...profileData,
-    verification_status: 'Incomplete',
-  };
+  return null;
+}
+
+// Create/Submit the initial vendor profile
+export async function createVendorProfile(profileData: Omit<VendorProfile, 'verification_status'>): Promise<VendorProfile> {
+  const response = await apiClient.post('/api/vendors', profileData);
+  if (response.data && response.data.success && response.data.data) {
+    const data = response.data.data;
+    const result = {
+      ...data,
+      verification_status: mapBackendStatusToFrontend(data.verification_status),
+    };
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(result));
+    }
+    return result;
+  }
+  throw new Error(response.data?.message || 'Failed to save vendor profile');
 }
 
 // Update the verification status (e.g. from Incomplete to Pending after documents are added)

@@ -2,18 +2,18 @@ import Joi from "joi";
 
 export const createVendorSchema = Joi.object({
   company_name: Joi.string().trim().required().messages({ "string.empty": "Company name is required", "any.required": "Company name is required" }),
-  brand_name: Joi.string().trim().optional().allow(null, ""),
-  company_type: Joi.string().trim().optional().allow(null, ""),
-  gstNumber: Joi.string().trim().optional().allow(null, ""),
-  registaration_number: Joi.string().trim().optional().allow(null, ""),
-  pan_number: Joi.string().trim().optional().allow(null, ""),
-  registered_address: Joi.string().trim().optional().allow(null, ""),
-  date_of_incorporation: Joi.date().iso().optional().allow(null, ""),
-  website_url: Joi.string().uri().optional().allow(null, ""),
-  description: Joi.string().trim().optional().allow(null, ""),
-  country: Joi.string().trim().optional().allow(null, ""),
-  state: Joi.string().trim().optional().allow(null, ""),
-  city: Joi.string().trim().optional().allow(null, "")
+  brand_name: Joi.string().trim().optional().allow(null).empty(""),
+  company_type: Joi.string().trim().optional().allow(null).empty(""),
+  gstNumber: Joi.string().trim().optional().allow(null).empty(""),
+  registaration_number: Joi.string().trim().optional().allow(null).empty(""),
+  pan_number: Joi.string().trim().optional().allow(null).empty(""),
+  registered_address: Joi.string().trim().optional().allow(null).empty(""),
+  date_of_incorporation: Joi.date().iso().optional().allow(null).empty(""),
+  website_url: Joi.string().trim().optional().allow(null).empty(""),
+  description: Joi.string().trim().optional().allow(null).empty(""),
+  country: Joi.string().trim().optional().allow(null).empty(""),
+  state: Joi.string().trim().optional().allow(null).empty(""),
+  city: Joi.string().trim().optional().allow(null).empty("")
 });
 
 export const validateCreateVendorSchema = (data: unknown) => {
@@ -21,19 +21,19 @@ export const validateCreateVendorSchema = (data: unknown) => {
 };
 
 export const updateVendorSchema = Joi.object({
-  company_name: Joi.string().trim().optional(),
-  brand_name: Joi.string().trim().optional().allow(null, ""),
-  company_type: Joi.string().trim().optional().allow(null, ""),
-  gstNumber: Joi.string().trim().optional().allow(null, ""),
-  registaration_number: Joi.string().trim().optional().allow(null, ""),
-  pan_number: Joi.string().trim().optional().allow(null, ""),
-  registered_address: Joi.string().trim().optional().allow(null, ""),
-  date_of_incorporation: Joi.date().iso().optional().allow(null, ""),
-  website_url: Joi.string().uri().optional().allow(null, ""),
-  description: Joi.string().trim().optional().allow(null, ""),
-  country: Joi.string().trim().optional().allow(null, ""),
-  state: Joi.string().trim().optional().allow(null, ""),
-  city: Joi.string().trim().optional().allow(null, ""),
+  company_name: Joi.string().trim().optional().allow(null).empty(""),
+  brand_name: Joi.string().trim().optional().allow(null).empty(""),
+  company_type: Joi.string().trim().optional().allow(null).empty(""),
+  gstNumber: Joi.string().trim().optional().allow(null).empty(""),
+  registaration_number: Joi.string().trim().optional().allow(null).empty(""),
+  pan_number: Joi.string().trim().optional().allow(null).empty(""),
+  registered_address: Joi.string().trim().optional().allow(null).empty(""),
+  date_of_incorporation: Joi.date().iso().optional().allow(null).empty(""),
+  website_url: Joi.string().trim().optional().allow(null).empty(""),
+  description: Joi.string().trim().optional().allow(null).empty(""),
+  country: Joi.string().trim().optional().allow(null).empty(""),
+  state: Joi.string().trim().optional().allow(null).empty(""),
+  city: Joi.string().trim().optional().allow(null).empty(""),
   verification_status: Joi.string().trim().optional()
 });
 

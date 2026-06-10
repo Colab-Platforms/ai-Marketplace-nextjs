@@ -12,7 +12,7 @@ import {
   getVendorProfile,
   updateVendorProfile,
   getVendorStats,
-  autoApproveVendor,
+  // autoApproveVendor,
 } from "./vendor.controller.js";
 import { auth } from "@/middlewares/authMiddleware.js";
 
@@ -35,6 +35,6 @@ router.delete("/:id", auth("VENDOR"), deleteVendor);
 router.post("/:id/docs", auth("VENDOR"), addVendorDoc);
 router.get("/:id/docs", auth("VENDOR"), getVendorDocs);
 router.post("/:id/submit-verification", auth("VENDOR"), submitForVerification);
-router.post("/:id/auto-approve", autoApproveVendor); // Temporary endpoint for auto-approval
+// router.post("/:id/auto-approve", autoApproveVendor); // Temporary endpoint for auto-approval
 
 export default router;
