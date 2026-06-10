@@ -68,9 +68,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const menuItems = [
     { name: 'Dashboard Overview', href: '/dashboard', icon: 'fa-th-large' },
     { name: 'Verification & Onboarding', href: '/dashboard/verification', icon: 'fa-shield-alt' },
-    { name: 'AI Tool Listings', href: '#', icon: 'fa-robot', badge: 'Mock' },
-    { name: 'Sales & Payouts', href: '#', icon: 'fa-wallet', badge: 'Mock' },
-    { name: 'Store Settings', href: '#', icon: 'fa-cog', badge: 'Mock' },
+    { name: 'AI Tool Listings', href: '/dashboard/products', icon: 'fa-robot' },
+    { name: 'Sales & Analytics', href: '/dashboard/analytics', icon: 'fa-chart-line' },
+    { name: 'API Integration', href: '/dashboard/api-integration', icon: 'fa-plug' },
   ];
 
   return (

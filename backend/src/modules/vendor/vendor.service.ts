@@ -57,13 +57,33 @@ class VendorService {
   }
 
   async getVendorByOwnerId(owner_user_id: string) {
-    const vendor = await prisma.vendors.findUnique({
+    // Find vendor, auto-create if not exists
+    let vendor = await prisma.vendors.findUnique({
       where: { owner_user_id },
       select: vendorSelectFields,
     });
 
+    // Auto-create vendor profile if doesn't exist (optional onboarding)
     if (!vendor) {
-      throw new ApiError("Vendor not found for this owner", STATUS_CODES.NOT_FOUND);
+      const user = await prisma.users.findUnique({
+        where: { id: owner_user_id },
+      });
+
+      if (!user) {
+        throw new ApiError("User not found", STATUS_CODES.NOT_FOUND);
+      }
+
+      // Create basic vendor profile automatically
+      vendor = await prisma.vendors.create({
+        data: {
+          owner_user_id: owner_user_id,
+          company_name: user.email.split('@')[0] + " Company",
+          verification_status: "VERIFIED", // Auto-approve
+          country: "India",
+          city: "Unknown",
+        },
+        select: vendorSelectFields,
+      });
     }
 
     return vendor;
@@ -169,10 +189,159 @@ class VendorService {
       throw new ApiError("Cannot submit for verification without documents", STATUS_CODES.BAD_REQUEST);
     }
 
+    // Auto-approve for now (until admin dashboard is ready)
     const updatedVendor = await prisma.vendors.update({
       where: { id: vendorId },
       data: {
-        verification_status: "PENDING_VERIFICATION"
+        verification_status: "VERIFIED" // Changed from PENDING_VERIFICATION to VERIFIED
+      },
+      select: vendorSelectFields
+    });
+
+    // Also update document statuses to VERIFIED
+    await prisma.vendor_docs.updateMany({
+      where: { vendor_id: vendorId },
+      data: { verification_status: "VERIFIED" }
+    });
+
+    return updatedVendor;
+  }
+
+  async getVendorStats(userId: string) {
+    // Find vendor by owner_user_id, auto-create if not exists
+    let vendor = await prisma.vendors.findUnique({
+      where: { owner_user_id: userId },
+    });
+
+    // Auto-create vendor profile if doesn't exist
+    if (!vendor) {
+      const user = await prisma.users.findUnique({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        throw new ApiError("User not found", STATUS_CODES.NOT_FOUND);
+      }
+
+      // Create basic vendor profile automatically
+      vendor = await prisma.vendors.create({
+        data: {
+          owner_user_id: userId,
+          company_name: user.email.split('@')[0] + " Company",
+          verification_status: "VERIFIED", // Auto-approve for now
+          country: "India",
+          city: "Unknown",
+        },
+      });
+    }
+
+    // Get total products count
+    const totalProducts = await prisma.tools.count({
+      where: { vendor_id: vendor.id },
+    });
+
+    // Get published products count
+    const publishedProducts = await prisma.tools.count({
+      where: { 
+        vendor_id: vendor.id,
+        status: "PUBLISHED"
+      },
+    });
+
+    // Get unpublished (draft) products count
+    const unpublishedProducts = await prisma.tools.count({
+      where: { 
+        vendor_id: vendor.id,
+        status: "DRAFT"
+      },
+    });
+
+    // Get total unique users (customers) who have subscriptions to this vendor's tools
+    const uniqueUsers = await prisma.subscriptions.groupBy({
+      by: ['user_id'],
+      where: {
+        tool: {
+          vendor_id: vendor.id
+        },
+        status: "ACTIVE"
+      }
+    });
+    
+    const totalUsers = uniqueUsers.length;
+
+    // Calculate vendor balance from payments
+    // This is a simplified calculation - you might need to adjust based on your commission structure
+    const payments = await prisma.payments.aggregate({
+      where: {
+        subscription: {
+          tool: {
+            vendor_id: vendor.id
+          }
+        },
+        status: "SUCCESS"
+      },
+      _sum: {
+        amount: true
+      }
+    });
+
+    // Get total payouts made to vendor
+    const payouts = await prisma.payouts.aggregate({
+      where: {
+        vendor_id: vendor.id,
+        status: "COMPLETED"
+      },
+      _sum: {
+        amount: true
+      }
+    });
+
+    const totalEarnings = payments._sum.amount || 0;
+    const totalPayouts = payouts._sum.amount || 0;
+    const vendorBalance = totalEarnings - totalPayouts;
+
+    // Get recent activity stats
+    const last30DaysSubscriptions = await prisma.subscriptions.count({
+      where: {
+        tool: {
+          vendor_id: vendor.id
+        },
+        created_at: {
+          gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) // Last 30 days
+        }
+      }
+    });
+
+    // Get total views across all tools
+    const viewsData = await prisma.tools.aggregate({
+      where: { vendor_id: vendor.id },
+      _sum: {
+        total_views: true
+      }
+    });
+
+    const totalViews = viewsData._sum.total_views || 0;
+
+    return {
+      totalProducts,
+      publishedProducts,
+      unpublishedProducts,
+      totalUsers,
+      vendorBalance,
+      totalEarnings,
+      totalPayouts,
+      last30DaysSubscriptions,
+      totalViews,
+      verification_status: vendor.verification_status
+    };
+  }
+
+  async autoApproveVendor(vendorId: string) {
+    // Temporary auto-approval until admin dashboard is ready
+    const updatedVendor = await prisma.vendors.update({
+      where: { id: vendorId },
+      data: {
+        verification_status: "VERIFIED"
       },
       select: vendorSelectFields
     });

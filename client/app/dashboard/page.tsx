@@ -3,14 +3,28 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getVendorProfile, VendorProfile } from '@/lib/verification';
+import { vendorService } from '@/services/vendor.service';
+import { VendorStats } from '@/type/tool';
 
 export default function DashboardPage() {
   const [profile, setProfile] = useState<VendorProfile | null>(null);
+  const [stats, setStats] = useState<VendorStats | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
-      const data = await getVendorProfile();
-      setProfile(data);
+      try {
+        const [profileData, statsData] = await Promise.all([
+          getVendorProfile(),
+          vendorService.getStats(),
+        ]);
+        setProfile(profileData);
+        setStats(statsData.data);
+      } catch (error) {
+        console.error('Failed to load dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
     }
     load();
   }, []);
@@ -90,9 +104,98 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Grid Menu Actions */}
+      {/* Stats Grid */}
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-10 h-10 rounded-full border-2 border-avatar-accent/30 border-t-avatar-accent animate-spin" />
+            <p className="text-sm text-avatar-steel">Loading stats...</p>
+          </div>
+        </div>
+      ) : stats ? (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 rounded-xl bg-avatar-accent/10 text-avatar-accent flex items-center justify-center">
+                <i className="fas fa-robot text-sm" />
+              </div>
+              <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">
+                {stats.publishedProducts} Live
+              </span>
+            </div>
+            <p className="text-2xl font-bold text-avatar-dark">{stats.totalProducts}</p>
+            <p className="text-xs text-avatar-slate mt-1">Total Products</p>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center">
+                <i className="fas fa-users text-sm" />
+              </div>
+            </div>
+            <p className="text-2xl font-bold text-avatar-dark">{stats.totalUsers}</p>
+            <p className="text-xs text-avatar-slate mt-1">Active Subscribers</p>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+                <i className="fas fa-dollar-sign text-sm" />
+              </div>
+            </div>
+            <p className="text-2xl font-bold text-avatar-dark">
+              ${stats.totalEarnings.toLocaleString()}
+            </p>
+            <p className="text-xs text-avatar-slate mt-1">Total Earnings</p>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center">
+                <i className="fas fa-wallet text-sm" />
+              </div>
+            </div>
+            <p className="text-2xl font-bold text-avatar-dark">
+              ${stats.vendorBalance.toLocaleString()}
+            </p>
+            <p className="text-xs text-avatar-slate mt-1">Available Balance</p>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Recent Activity */}
+      {stats && (
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+          <h2 className="text-lg font-bold text-avatar-dark mb-4 flex items-center gap-2">
+            <i className="fas fa-chart-line text-avatar-accent" />
+            Recent Activity
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-sky-500/10 text-sky-600 flex items-center justify-center shrink-0">
+                <i className="fas fa-calendar-check text-lg" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-avatar-dark">{stats.last30DaysSubscriptions}</p>
+                <p className="text-xs text-avatar-slate">New subscriptions (30 days)</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center shrink-0">
+                <i className="fas fa-eye text-lg" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-avatar-dark">{stats.totalViews.toLocaleString()}</p>
+                <p className="text-xs text-avatar-slate">Total profile views</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Quick Actions Grid */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm hover:shadow-md transition duration-200">
+        <Link href="/dashboard/products" className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm hover:shadow-md transition duration-200">
           <div className="w-12 h-12 rounded-2xl bg-avatar-accent/10 text-avatar-accent flex items-center justify-center mb-4">
             <i className="fas fa-robot text-lg" />
           </div>
@@ -100,12 +203,12 @@ export default function DashboardPage() {
           <p className="text-xs text-slate-500 leading-relaxed mb-4">
             View, edit, or update your published AI tools and integrations on our global marketplace.
           </p>
-          <button className="text-xs font-semibold text-avatar-accent hover:text-avatar-navy transition flex items-center gap-1">
+          <span className="text-xs font-semibold text-avatar-accent hover:text-avatar-navy transition flex items-center gap-1">
             View active tools <i className="fas fa-arrow-right text-[10px]" />
-          </button>
-        </div>
+          </span>
+        </Link>
 
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm hover:shadow-md transition duration-200">
+        <Link href="/dashboard/analytics" className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm hover:shadow-md transition duration-200">
           <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center mb-4">
             <i className="fas fa-chart-line text-lg" />
           </div>
@@ -113,23 +216,23 @@ export default function DashboardPage() {
           <p className="text-xs text-slate-500 leading-relaxed mb-4">
             Track tool installations, view subscription metrics, conversion statistics, and payout history.
           </p>
-          <button className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition flex items-center gap-1">
+          <span className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition flex items-center gap-1">
             Performance dashboard <i className="fas fa-arrow-right text-[10px]" />
-          </button>
-        </div>
+          </span>
+        </Link>
 
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm hover:shadow-md transition duration-200">
+        <Link href="/dashboard/api-integration" className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm hover:shadow-md transition duration-200">
           <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center mb-4">
-            <i className="fas fa-shield-alt text-lg" />
+            <i className="fas fa-plug text-lg" />
           </div>
-          <h2 className="text-lg font-bold text-slate-900 mb-1.5">Trust &amp; Compliance</h2>
+          <h2 className="text-lg font-bold text-slate-900 mb-1.5">API Integration</h2>
           <p className="text-xs text-slate-500 leading-relaxed mb-4">
-            Manage your legal profiles, review compliance reports, and see details of verified documents.
+            Configure webhooks, test integrations, and manage API endpoints for your tools.
           </p>
-          <Link href="/dashboard/verification" className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 transition flex items-center gap-1">
-            Verification center <i className="fas fa-arrow-right text-[10px]" />
-          </Link>
-        </div>
+          <span className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 transition flex items-center gap-1">
+            Webhook settings <i className="fas fa-arrow-right text-[10px]" />
+          </span>
+        </Link>
       </div>
     </div>
   );

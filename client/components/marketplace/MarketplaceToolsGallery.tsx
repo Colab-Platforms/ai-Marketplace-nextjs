@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { tools } from '@/data/marketplace';
+import { toolService } from '@/services/tool.service';
 import { useInView } from '@/hooks/useInView';
 
 const ITEMS_PER_PAGE = 9;
@@ -36,31 +37,43 @@ function StarRating({ rating }: { rating: number }) {
 interface MarketplaceToolsGalleryProps {
   selectedCategory: string;
   searchQuery: string;
+  categories: any[];
 }
 
-export default function MarketplaceToolsGallery({ selectedCategory, searchQuery }: MarketplaceToolsGalleryProps) {
+export default function MarketplaceToolsGallery({ selectedCategory, searchQuery, categories }: MarketplaceToolsGalleryProps) {
   const { ref, isInView } = useInView();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const filtered = tools.filter((tool) => {
-    const matchesCategory = selectedCategory === 'All Tools' || tool.category === selectedCategory;
-    const q = searchQuery.toLowerCase();
-    const matchesSearch =
-      !q ||
-      tool.name.toLowerCase().includes(q) ||
-      tool.description.toLowerCase().includes(q) ||
-      tool.category.toLowerCase().includes(q) ||
-      tool.tags.some((t) => t.toLowerCase().includes(q));
-    return matchesCategory && matchesSearch;
+  // Find category ID
+  const selectedCat = categories.find(cat => cat.name === selectedCategory);
+  const categoryId = selectedCat && selectedCat.id !== 'all' ? selectedCat.id : undefined;
+
+  // Fetch tools from API
+  const { data: toolsData, isLoading } = useQuery({
+    queryKey: ['marketplace-tools', categoryId, searchQuery, currentPage],
+    queryFn: () => toolService.getAllTools({
+      category_id: categoryId,
+      search: searchQuery || undefined,
+      page: currentPage,
+      pageSize: ITEMS_PER_PAGE,
+    }),
   });
 
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const tools = toolsData?.data?.records || [];
+  const pagination = toolsData?.data?.pagination;
 
   // Reset to page 1 whenever filter or search changes
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedCategory, searchQuery]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-avatar-accent"></div>
+      </div>
+    );
+  }
 
   return (
     <section ref={ref}>
@@ -68,8 +81,8 @@ export default function MarketplaceToolsGallery({ selectedCategory, searchQuery 
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <p className="text-sm text-avatar-slate">
           Showing{' '}
-          <span className="font-semibold text-avatar-dark">{filtered.length}</span> tool
-          {filtered.length !== 1 ? 's' : ''}
+          <span className="font-semibold text-avatar-dark">{pagination?.totalRecords || 0}</span> tool
+          {pagination?.totalRecords !== 1 ? 's' : ''}
           {selectedCategory !== 'All Tools' && (
             <>
               {' '}in{' '}
@@ -78,18 +91,16 @@ export default function MarketplaceToolsGallery({ selectedCategory, searchQuery 
           )}
         </p>
         <select className="text-sm border border-avatar-light rounded-lg px-3 py-1.5 text-avatar-slate bg-white focus:outline-none focus:ring-2 focus:ring-avatar-accent/20 focus:border-avatar-accent transition-all">
+          <option>Sort by: Newest</option>
           <option>Sort by: Popular</option>
           <option>Sort by: Rating</option>
-          <option>Sort by: Price — Low to High</option>
-          <option>Sort by: Price — High to Low</option>
-          <option>Sort by: Newest</option>
         </select>
       </div>
 
       {/* Cards grid */}
-      {paginated.length > 0 ? (
+      {tools.length > 0 ? (
         <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
-          {paginated.map((tool, index) => (
+          {tools.map((tool: any, index: number) => (
             <div
               key={tool.id}
               className={`bg-white rounded-2xl border border-avatar-light/60 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(44,62,90,0.12)] transition-all duration-350 flex flex-col overflow-hidden ${
@@ -99,20 +110,22 @@ export default function MarketplaceToolsGallery({ selectedCategory, searchQuery 
             >
               {/* Card image */}
               <div className="relative h-44 w-full overflow-hidden bg-avatar-ice">
-                <img
-                  src={tool.image}
-                  alt={tool.name}
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                {/* Badge overlaid on image */}
-                {tool.badge && (
-                  <span
-                    className={`absolute top-3 right-3 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm ${
-                      badgeColors[tool.badge] ?? 'bg-avatar-ice text-avatar-slate'
-                    }`}
-                  >
-                    {tool.badge}
+                {tool.logo_url || (tool.images && tool.images[0]) ? (
+                  <img
+                    src={tool.images?.[0]?.image_url || tool.logo_url}
+                    alt={tool.name}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-avatar-ice to-avatar-light">
+                    <i className="fas fa-robot text-4xl text-avatar-accent opacity-50"></i>
+                  </div>
+                )}
+                {/* Badge for new tools */}
+                {tool.total_views === 0 && (
+                  <span className="absolute top-3 right-3 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm bg-emerald-100 text-emerald-700">
+                    New
                   </span>
                 )}
               </div>
@@ -122,40 +135,55 @@ export default function MarketplaceToolsGallery({ selectedCategory, searchQuery 
                 {/* Header row */}
                 <div className="flex items-start gap-3 mb-3">
                   <div className="w-10 h-10 bg-avatar-ice rounded-xl flex items-center justify-center flex-shrink-0">
-                    <i className={`fas ${tool.icon} text-avatar-accent`}></i>
+                    {tool.logo_url ? (
+                      <img src={tool.logo_url} alt="" className="w-6 h-6 object-contain" />
+                    ) : (
+                      <i className="fas fa-robot text-avatar-accent"></i>
+                    )}
                   </div>
                   <div className="min-w-0">
                     <h3 className="font-display font-bold text-avatar-dark text-base leading-tight">
                       {tool.name}
                     </h3>
                     <span className="text-xs font-medium text-avatar-accent bg-avatar-ice px-2 py-0.5 rounded-full mt-1 inline-block">
-                      {tool.category}
+                      {tool.category?.name || 'AI Tool'}
                     </span>
                   </div>
                 </div>
 
                 {/* Description */}
-                <p className="text-sm text-avatar-slate leading-relaxed mb-4 flex-1">
-                  {tool.description}
+                <p className="text-sm text-avatar-slate leading-relaxed mb-4 flex-1 line-clamp-3">
+                  {tool.short_description || tool.full_description || 'No description available'}
                 </p>
 
                 {/* Rating */}
                 <div className="flex items-center gap-2 mb-4">
-                  <StarRating rating={tool.rating} />
-                  <span className="text-xs font-semibold text-avatar-dark">{tool.rating}</span>
-                  <span className="text-xs text-avatar-steel">({tool.reviews} reviews)</span>
+                  <StarRating rating={tool.average_rating || 0} />
+                  <span className="text-xs font-semibold text-avatar-dark">
+                    {tool.average_rating?.toFixed(1) || '0.0'}
+                  </span>
+                  <span className="text-xs text-avatar-steel">
+                    ({tool.total_reviews || 0} reviews)
+                  </span>
                 </div>
 
                 {/* Footer */}
                 <div className="flex items-center justify-between pt-4 border-t border-avatar-light/60">
-                  <span className="font-display font-bold text-avatar-dark text-base">
-                    {tool.price}
-                  </span>
+                  <div className="flex flex-col">
+                    <span className="font-display font-bold text-avatar-dark text-base">
+                      {tool.pricing_model === 'FREE' ? 'Free' : 
+                       tool.pricing_plans?.[0] ? `$${tool.pricing_plans[0].price}/${tool.pricing_plans[0].billing_cycle.toLowerCase()}` : 
+                       'View Pricing'}
+                    </span>
+                    {tool.pricing_model && tool.pricing_model !== 'FREE' && (
+                      <span className="text-xs text-avatar-steel">{tool.pricing_model}</span>
+                    )}
+                  </div>
                   <Link
-                    href="#"
-                    className="inline-flex items-center gap-1.5 bg-[#91959b] text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-[#4e5053] transition-colors"
+                    href={`/marketplace/${tool.slug || tool.id}`}
+                    className="inline-flex items-center gap-1.5 bg-avatar-accent text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-avatar-deep transition-colors"
                   >
-                    Coming Soon <i className="fas fa-arrow-right text-xs"></i>
+                    View Details <i className="fas fa-arrow-right text-xs"></i>
                   </Link>
                 </div>
               </div>
@@ -173,36 +201,48 @@ export default function MarketplaceToolsGallery({ selectedCategory, searchQuery 
       )}
 
       {/* Pagination */}
-      {totalPages > 1 && (
+      {pagination && pagination.totalPages > 1 && (
         <div className="flex items-center justify-center gap-1.5 mt-10">
           <button
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-            disabled={currentPage === 1}
+            disabled={!pagination.hasPreviousPage}
             className="w-9 h-9 flex items-center justify-center rounded-full border border-avatar-light text-avatar-slate hover:border-avatar-accent hover:text-avatar-accent transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-avatar-light disabled:hover:text-avatar-slate"
             aria-label="Previous page"
           >
             <i className="fas fa-chevron-left text-xs"></i>
           </button>
 
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => setCurrentPage(page)}
-              className={`w-9 h-9 flex items-center justify-center rounded-full text-sm font-semibold transition-all ${
-                currentPage === page
-                  ? 'bg-avatar-accent text-white shadow-sm'
-                  : 'border border-avatar-light text-avatar-slate hover:border-avatar-accent hover:text-avatar-accent'
-              }`}
-              aria-label={`Page ${page}`}
-              aria-current={currentPage === page ? 'page' : undefined}
-            >
-              {page}
-            </button>
-          ))}
+          {Array.from({ length: Math.min(pagination.totalPages, 5) }, (_, i) => {
+            let pageNum;
+            if (pagination.totalPages <= 5) {
+              pageNum = i + 1;
+            } else if (currentPage <= 3) {
+              pageNum = i + 1;
+            } else if (currentPage >= pagination.totalPages - 2) {
+              pageNum = pagination.totalPages - 4 + i;
+            } else {
+              pageNum = currentPage - 2 + i;
+            }
+            return (
+              <button
+                key={pageNum}
+                onClick={() => setCurrentPage(pageNum)}
+                className={`w-9 h-9 flex items-center justify-center rounded-full text-sm font-semibold transition-all ${
+                  currentPage === pageNum
+                    ? 'bg-avatar-accent text-white shadow-sm'
+                    : 'border border-avatar-light text-avatar-slate hover:border-avatar-accent hover:text-avatar-accent'
+                }`}
+                aria-label={`Page ${pageNum}`}
+                aria-current={currentPage === pageNum ? 'page' : undefined}
+              >
+                {pageNum}
+              </button>
+            );
+          })}
 
           <button
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((p) => Math.min(pagination.totalPages, p + 1))}
+            disabled={!pagination.hasNextPage}
             className="w-9 h-9 flex items-center justify-center rounded-full border border-avatar-light text-avatar-slate hover:border-avatar-accent hover:text-avatar-accent transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-avatar-light disabled:hover:text-avatar-slate"
             aria-label="Next page"
           >
@@ -223,7 +263,7 @@ export default function MarketplaceToolsGallery({ selectedCategory, searchQuery 
           Tell us what you need and our team will build a custom AI agent tailored to your business.
         </p>
         <a
-          href="#cta"
+          href="/contact"
           className="inline-flex items-center gap-2 bg-avatar-dark text-white font-semibold text-sm px-6 py-3 rounded-full hover:bg-avatar-deep transition-colors"
         >
           Request a Custom AI Tool <i className="fas fa-arrow-right text-xs"></i>

@@ -179,3 +179,31 @@ export const updateVendorProfile = async (req: Request, res: Response): Promise<
     sendResponse(res, false, null, error.message, error.statusCode ?? STATUS_CODES.SERVER_ERROR);
   }
 };
+
+export const getVendorStats = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      sendResponse(res, false, null, "User not authenticated", STATUS_CODES.UNAUTHORIZED);
+      return;
+    }
+
+    const result = await vendorService.getVendorStats(userId);
+
+    sendResponse(res, true, result, "Vendor stats fetched successfully", STATUS_CODES.OK);
+  } catch (error: any) {
+    sendResponse(res, false, null, error.message, error.statusCode ?? STATUS_CODES.SERVER_ERROR);
+  }
+};
+
+export const autoApproveVendor = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const vendorId = req.params.id as string;
+
+    const result = await vendorService.autoApproveVendor(vendorId);
+
+    sendResponse(res, true, result, "Vendor auto-approved successfully", STATUS_CODES.OK);
+  } catch (error: any) {
+    sendResponse(res, false, null, error.message, error.statusCode ?? STATUS_CODES.SERVER_ERROR);
+  }
+};

@@ -1,21 +1,15 @@
 'use client';
 
-import { categories, tools } from '@/data/marketplace';
-
 const priceRanges = ['Under ₹2,000/mo', '₹2,000 – ₹5,000/mo', '₹5,000+/mo', 'Free Trial Available'];
 const ratingFilters = ['4.5★ & above', '4.0★ & above', '3.5★ & above'];
 
 interface MarketplaceFilterProps {
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
+  categories: any[];
 }
 
-function getCategoryCount(name: string) {
-  if (name === 'All Tools') return tools.length;
-  return tools.filter((t) => t.category === name).length;
-}
-
-export default function MarketplaceFilter({ selectedCategory, onCategoryChange }: MarketplaceFilterProps) {
+export default function MarketplaceFilter({ selectedCategory, onCategoryChange, categories }: MarketplaceFilterProps) {
   return (
     <div className="bg-white rounded-2xl border border-avatar-light/60 p-5 sticky top-24">
       {/* Categories */}
@@ -25,9 +19,8 @@ export default function MarketplaceFilter({ selectedCategory, onCategoryChange }
       <ul className="space-y-0.5 mb-5">
         {categories.map((cat) => {
           const isActive = selectedCategory === cat.name;
-          const count = getCategoryCount(cat.name);
           return (
-            <li key={cat.name}>
+            <li key={cat.id || cat.name}>
               <button
                 onClick={() => onCategoryChange(cat.name)}
                 className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
@@ -38,18 +31,11 @@ export default function MarketplaceFilter({ selectedCategory, onCategoryChange }
               >
                 <span className="flex items-center gap-2.5">
                   <i
-                    className={`fas ${cat.icon} text-xs w-4 text-center ${
+                    className={`fas ${cat.icon || 'fa-robot'} text-xs w-4 text-center ${
                       isActive ? 'text-white' : 'text-avatar-steel'
                     }`}
                   ></i>
                   {cat.name}
-                </span>
-                <span
-                  className={`text-xs font-medium px-2 py-0.5 rounded-full min-w-[22px] text-center ${
-                    isActive ? 'bg-white/20 text-white' : 'bg-avatar-ice text-avatar-steel'
-                  }`}
-                >
-                  {count}
                 </span>
               </button>
             </li>

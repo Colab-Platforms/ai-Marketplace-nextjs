@@ -11,6 +11,8 @@ import {
   submitForVerification,
   getVendorProfile,
   updateVendorProfile,
+  getVendorStats,
+  autoApproveVendor,
 } from "./vendor.controller.js";
 import { auth } from "@/middlewares/authMiddleware.js";
 
@@ -23,6 +25,7 @@ router.get("/", getAllVendors);
 router.get("/profile", auth("VENDOR"), getVendorProfile);
 router.get("/me", auth("VENDOR"), getVendorProfile);
 router.put("/profile", auth("VENDOR"), updateVendorProfile);
+router.get("/stats", auth("VENDOR"), getVendorStats);
 
 router.get("/:id", getVendorById);
 router.get("/owner/:ownerId", auth("VENDOR"), getVendorByOwnerId);
@@ -32,5 +35,6 @@ router.delete("/:id", auth("VENDOR"), deleteVendor);
 router.post("/:id/docs", auth("VENDOR"), addVendorDoc);
 router.get("/:id/docs", auth("VENDOR"), getVendorDocs);
 router.post("/:id/submit-verification", auth("VENDOR"), submitForVerification);
+router.post("/:id/auto-approve", autoApproveVendor); // Temporary endpoint for auto-approval
 
 export default router;
