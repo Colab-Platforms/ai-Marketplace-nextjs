@@ -92,8 +92,8 @@ export default function VendorOnboardingPage() {
     setSubmitting(true);
     try {
       // Create profile via service
-      await createVendorProfile(form);
-      
+      const result = await createVendorProfile(form);
+      // console.log(result)
       // Redirect to dashboard after a short delay
       setTimeout(() => {
         router.push('/dashboard');

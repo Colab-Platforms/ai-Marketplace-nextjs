@@ -409,3 +409,12 @@ model notifications {
 
   user users @relation(fields: [user_id], references: [id])
 }
+
+model uploaded_files {
+  id         String   @id @default(cuid())
+  public_id  String   @unique
+  url        String   @unique
+  status     String   // PENDING, USED
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}

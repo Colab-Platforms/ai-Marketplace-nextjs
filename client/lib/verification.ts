@@ -55,8 +55,7 @@ export function mapFrontendStatusToBackend(status: VendorProfile['verification_s
 export async function getVendorProfile(): Promise<VendorProfile | null> {
   try {
     const response = await apiClient.get('/api/vendors/profile');
-
-    if (response && response.data && response.data.success && response.data.data) {
+    if (response && response.data && response.data.status && response.data.data) {
       const data = response.data.data;
       const result = {
         ...data,
@@ -100,12 +99,14 @@ export async function getVendorProfile(): Promise<VendorProfile | null> {
 // Create/Submit the initial vendor profile
 export async function createVendorProfile(profileData: Omit<VendorProfile, 'verification_status'>): Promise<VendorProfile> {
   const response = await apiClient.post('/api/vendors', profileData);
-  if (response.data && response.data.success && response.data.data) {
+  console.log(response)
+  if (response.data && response.data.status && response.data.data) {
     const data = response.data.data;
     const result = {
       ...data,
       verification_status: mapBackendStatusToFrontend(data.verification_status),
     };
+    console.log(result)
     if (typeof window !== 'undefined') {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(result));
     }
@@ -124,7 +125,7 @@ export async function updateVendorStatus(status: VendorProfile['verification_sta
 
   try {
     const response = await apiClient.put(`/api/vendors/profile`, { verification_status: backendStatus });
-    if (response.data && response.data.success && response.data.data) {
+    if (response.data && (response.data.status || response.data.success) && response.data.data) {
       const data = response.data.data;
       const result = {
         ...data,
@@ -138,7 +139,7 @@ export async function updateVendorStatus(status: VendorProfile['verification_sta
   } catch (error) {
     try {
       const response = await apiClient.put(`/api/vendors/${current.id}`, { verification_status: backendStatus });
-      if (response.data && response.data.success && response.data.data) {
+      if (response.data && (response.data.status || response.data.success) && response.data.data) {
         const data = response.data.data;
         const result = {
           ...data,
@@ -177,7 +178,7 @@ export async function uploadDocumentFile(
     onUploadProgress,
   });
 
-  if (response.data && response.data.success && response.data.data) {
+  if (response.data && (response.data.status || response.data.success) && response.data.data) {
     return response.data.data.url;
   }
   throw new Error(response.data?.message || 'File upload failed');
@@ -189,7 +190,7 @@ export async function addVendorDocument(vendorId: string, docType: string, docUr
     doc_type: docType,
     doc_url: docUrl,
   });
-  if (response.data && response.data.success) {
+  if (response.data && (response.data.status || response.data.success)) {
     return response.data.data;
   }
   throw new Error(response.data?.message || 'Failed to add vendor document');
@@ -198,7 +199,7 @@ export async function addVendorDocument(vendorId: string, docType: string, docUr
 // Trigger verification submit
 export async function submitVendorVerification(vendorId: string): Promise<VendorProfile> {
   const response = await apiClient.post(`/api/vendors/${vendorId}/submit-verification`);
-  if (response.data && response.data.success && response.data.data) {
+  if (response.data && (response.data.status || response.data.success) && response.data.data) {
     const data = response.data.data;
     const result = {
       ...data,

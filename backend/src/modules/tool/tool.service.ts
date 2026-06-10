@@ -78,6 +78,18 @@ class ToolService {
           image_url,
         })),
       });
+
+      await prisma.uploaded_files.updateMany({
+        where: { url: { in: data.images } },
+        data: { status: "USED" }
+      });
+    }
+
+    if (data.logo_url) {
+      await prisma.uploaded_files.updateMany({
+        where: { url: data.logo_url },
+        data: { status: "USED" }
+      });
     }
 
     return tool;
@@ -127,6 +139,13 @@ class ToolService {
       },
       select: toolSelectFields,
     });
+
+    if (data.logo_url) {
+      await prisma.uploaded_files.updateMany({
+        where: { url: data.logo_url },
+        data: { status: "USED" }
+      });
+    }
 
     return updatedTool;
   }

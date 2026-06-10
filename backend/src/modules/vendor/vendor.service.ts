@@ -12,7 +12,7 @@ class VendorService {
       },
     });
 
-   if (existingVendor && existingVendor.verification_status === "VERIFIED") {
+    if (existingVendor && existingVendor.verification_status === "VERIFIED") {
       throw new ApiError("Vendor with this owner already exists and is verified", STATUS_CODES.CONFLICT);
     }
     if (existingVendor && existingVendor.verification_status === "PENDING_VERIFICATION") {
@@ -21,7 +21,7 @@ class VendorService {
     if (existingVendor && existingVendor.verification_status === "INCOMPLETE") {
       throw new ApiError("Vendor with this owner already exists and Onboarding is incomplete", STATUS_CODES.CONFLICT);
     }
-    
+
     // New vendor — create fresh record
     const vendor = await prisma.vendors.create({
       data: {
@@ -133,6 +133,12 @@ class VendorService {
       }
     });
 
+    // Mark file as USED
+    await prisma.uploaded_files.updateMany({
+      where: { url: data.doc_url },
+      data: { status: "USED" }
+    });
+
     return doc;
   }
 
@@ -188,7 +194,7 @@ class VendorService {
 
     // Get published products count
     const publishedProducts = await prisma.tools.count({
-      where: { 
+      where: {
         vendor_id: vendor.id,
         status: "PUBLISHED"
       },
@@ -196,7 +202,7 @@ class VendorService {
 
     // Get unpublished (draft) products count
     const unpublishedProducts = await prisma.tools.count({
-      where: { 
+      where: {
         vendor_id: vendor.id,
         status: "DRAFT"
       },
@@ -212,7 +218,7 @@ class VendorService {
         status: "ACTIVE"
       }
     });
-    
+
     const totalUsers = uniqueUsers.length;
 
     // Calculate vendor balance from payments

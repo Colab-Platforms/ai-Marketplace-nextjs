@@ -13,7 +13,7 @@ router.get("/health", (_req: Request, res: Response) => {
 });
 
 router.use("/auth", authRoutes);
-router.use("/vendor", vendorRoutes);
+// router.use("/vendor", vendorRoutes);
 router.use("/vendors", vendorRoutes);
 router.use("/upload", uploadRoutes);
 router.use("/tools", toolRoutes);
