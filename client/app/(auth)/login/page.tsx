@@ -34,15 +34,15 @@ export default function LoginPage() {
       setSuccessMessage(`Welcome back, ${result.user.firstName ?? result.user.name ?? 'User'}! Redirecting…`);
 
       if (result.user.role === 'VENDOR') {
-        // Check if vendor has already completed onboarding
+        // Check if vendor has completed onboarding
         setTimeout(async () => {
           try {
             const { getVendorProfile } = await import('@/lib/verification');
             const profile = await getVendorProfile();
-            // If profile exists (even INCOMPLETE), send to dashboard
-            router.push(profile ? '/dashboard' : '/vendor-onboarding');
+            // Send to onboarding if no profile
+            const needsOnboarding = !profile;
+            router.push(needsOnboarding ? '/vendor-onboarding' : '/dashboard');
           } catch {
-            // Fallback: send to onboarding if check fails
             router.push('/vendor-onboarding');
           }
         }, 1200);
