@@ -1,87 +1,90 @@
 // Which fields to return from database
 export const toolSelectFields = {
     id: true,
-    vendorId: true,
+    vendor_id: true,
+    category_id: true,
     vendor: {
         select: {
             id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
+            company_name: true,
+            brand_name: true,
+            owner_user_id: true,
+        },
+    },
+    category: {
+        select: {
+            id: true,
+            name: true,
+            slug: true,
         },
     },
     name: true,
-    category: true,
-    description: true,
-    features: true,
-    pricingTiers: true,
-    screenshots: true,
-    demoVideoUrl: true,
-    documentationUrl: true,
-    painPoints: true,
-    targetIndustries: true,
-    pricingModel: true,
-    visibility: true,
+    slug: true,
+    short_description: true,
+    full_description: true,
+    logo_url: true,
+    website_url: true,
+    demo_url: true,
+    pricing_model: true,
     status: true,
-    createdAt: true,
-    updatedAt: true,
+    average_rating: true,
+    total_reviews: true,
+    total_views: true,
+    total_launches: true,
+    created_at: true,
+    updated_at: true,
+    images: {
+        select: {
+            id: true,
+            image_url: true,
+        },
+    },
+    pricing_plans: {
+        select: {
+            id: true,
+            name: true,
+            description: true,
+            billing_cycle: true,
+            price: true,
+            currency: true,
+            trial_days: true,
+            is_active: true,
+        },
+    },
 };
 
 // Type for creating tool (POST request)
 export interface CreateToolBody {
     name: string;
-    category: string;
-    description: string;
-    features: string[];
-    pricingTiers: string[];
-    screenshots: string[];
-    demoVideoUrl?: string;
-    documentationUrl?: string;
-    painPoints?: string[];
-    targetIndustries?: string[];
-    pricingModel?: string;
-    visibility?: 'PUBLIC' | 'PRIVATE';
+    category_id: string;
+    short_description?: string;
+    full_description?: string;
+    logo_url?: string;
+    website_url?: string;
+    demo_url?: string;
+    pricing_model: string; // "FREE", "PAID", "FREEMIUM", "SUBSCRIPTION"
+    images?: string[]; // Array of image URLs
 }
 
 // Type for updating tool (PUT request)
 export interface UpdateToolBody {
     name?: string;
-    category?: string;
-    description?: string;
-    features?: string[];
-    pricingTiers?: string[];
-    screenshots?: string[];
-    demoVideoUrl?: string;
-    documentationUrl?: string;
-    painPoints?: string[];
-    targetIndustries?: string[];
-    pricingModel?: string;
-    visibility?: 'PUBLIC' | 'PRIVATE';
+    category_id?: string;
+    short_description?: string;
+    full_description?: string;
+    logo_url?: string;
+    website_url?: string;
+    demo_url?: string;
+    pricing_model?: string;
 }
 
-// Type for tool response
-export interface Tool {
-    id: number;
-    vendorId: number;
-    vendor: {
-        id: number;
-        firstName?: string;
-        lastName?: string;
-        email: string;
-    };
+// Type for adding pricing plan
+export interface AddPricingPlanBody {
     name: string;
-    category: string;
-    description: string;
-    features: string[];
-    pricingTiers: string[];
-    screenshots: string[];
-    demoVideoUrl?: string;
-    documentationUrl?: string;
-    painPoints?: string[];
-    targetIndustries?: string[];
-    pricingModel?: string;
-    visibility?: string;
-    status: string;
-    createdAt: Date;
-    updatedAt: Date;
+    description?: string;
+    billing_cycle: string; // "MONTHLY", "YEARLY", "LIFETIME", "ONE_TIME"
+    price: number;
+    currency?: string;
+    trial_days?: number;
+    features?: string[];
 }

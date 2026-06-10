@@ -1,16 +1,31 @@
 'use client';
 
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import MarketplaceHero from '@/components/marketplace/MarketplaceHero';
 import MarketplaceSearch from '@/components/marketplace/MarketplaceSearch';
 import MarketplaceFilter from '@/components/marketplace/MarketplaceFilter';
 import MarketplaceToolsGallery from '@/components/marketplace/MarketplaceToolsGallery';
 import MarketplaceCTA from '@/components/marketplace/MarketplaceCTA';
-import { categories } from '@/data/marketplace';
+import { toolService, categoryService } from '@/services/tool.service';
 
 export default function MarketplacePage() {
   const [selectedCategory, setSelectedCategory] = useState('All Tools');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Fetch categories from API
+  const { data: categoriesData } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => categoryService.getAll(),
+  });
+
+  const categories = categoriesData?.data || [];
+
+  // Add "All Tools" to beginning
+  const allCategories = [
+    { id: 'all', name: 'All Tools', slug: 'all', icon: 'fa-th' },
+    ...categories.map((cat: any) => ({ ...cat, icon: 'fa-robot' }))
+  ];
 
   return (
     <>
@@ -23,7 +38,7 @@ export default function MarketplacePage() {
           {/* Mobile category tabs */}
           <div className="lg:hidden mb-6 -mx-1">
             <div className="flex gap-2 overflow-x-auto pb-2">
-              {categories.map((cat) => (
+              {allCategories.map((cat: any) => (
                 <button
                   key={cat.name}
                   onClick={() => setSelectedCategory(cat.name)}
@@ -46,6 +61,7 @@ export default function MarketplacePage() {
               <MarketplaceFilter
                 selectedCategory={selectedCategory}
                 onCategoryChange={setSelectedCategory}
+                categories={allCategories}
               />
             </aside>
 
@@ -54,6 +70,7 @@ export default function MarketplacePage() {
               <MarketplaceToolsGallery
                 selectedCategory={selectedCategory}
                 searchQuery={searchQuery}
+                categories={allCategories}
               />
             </div>
           </div>

@@ -1,9 +1,11 @@
 ﻿import prisma from "@root/prisma.js";
 import { seedSuperAdmin } from "./superAdmin.seed.js";
+import { seedCategories } from "./categories.seed.js";
 
 async function main() {
     console.log("🌱 Starting seed...");
     await seedSuperAdmin();
+    await seedCategories();
     console.log("✅ Seed completed successfully!");
 }
 
