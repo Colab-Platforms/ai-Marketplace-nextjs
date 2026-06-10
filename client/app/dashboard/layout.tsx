@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { logout } from '@/redux/slices/authSlice';
 import { getVendorProfile, VendorProfile } from '@/lib/verification';
@@ -65,7 +66,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   // Sidebar dynamic status card styling based on verification_status
   const status = profile?.verification_status || 'Incomplete';
 
-  const menuItems = [
+  const menuItems: { name: string; href: string; icon: string; badge?: string }[] = [
     { name: 'Dashboard Overview', href: '/dashboard', icon: 'fa-th-large' },
     { name: 'Verification & Onboarding', href: '/dashboard/verification', icon: 'fa-shield-alt' },
     { name: 'AI Tool Listings', href: '/dashboard/products', icon: 'fa-robot' },
@@ -77,8 +78,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-body">
       {/* Mobile Header */}
       <header className="md:hidden bg-avatar-deep text-white px-6 py-4 flex items-center justify-between border-b border-white/10 shrink-0">
-        <Link href="/" className="font-display font-extrabold text-xl tracking-wider text-avatar-accent">
-          AVATAR
+        <Link href="/">
+          <Image src="/Aavtat logo.svg" alt="Aavtat Logo" width={110} height={32} className="brightness-0 invert" />
         </Link>
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -97,8 +98,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       >
         {/* Brand Header */}
         <div className="p-8 border-b border-white/5 flex items-center justify-between shrink-0">
-          <Link href="/" className="font-display font-extrabold text-2xl tracking-wider text-avatar-accent">
-            AVATAR
+          <Link href="/">
+            <Image src="/Aavtat logo.svg" alt="Aavtat Logo" width={120} height={34} className="brightness-0 invert" />
           </Link>
           <span className="text-[9px] font-bold bg-avatar-accent text-white px-2 py-0.5 rounded-full leading-none tracking-widest uppercase shadow-[0_0_12px_rgba(30,144,255,0.4)]">
             Vendor

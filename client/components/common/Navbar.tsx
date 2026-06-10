@@ -70,13 +70,14 @@ export default function Navbar() {
               <>
                 <Link
                   href={user?.role === 'VENDOR' ? '/dashboard' : '/marketplace'}
-                  className="text-sm font-medium text-avatar-slate hover:text-avatar-dark transition"
+                  className="inline-flex items-center gap-2 bg-avatar-accent hover:bg-avatar-navy text-white text-sm font-semibold px-5 py-2.5 rounded-full transition"
                 >
-                  {user?.firstName ?? user?.name ?? 'Account'}
+                  <i className="fas fa-th-large text-xs" />
+                  Dashboard
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="inline-flex items-center gap-2 bg-avatar-navy hover:bg-avatar-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition"
+                  className="text-sm font-medium text-avatar-slate hover:text-avatar-dark transition"
                 >
                   Logout
                 </button>
@@ -141,13 +142,14 @@ export default function Navbar() {
               <Link
                 href={user?.role === 'VENDOR' ? '/dashboard' : '/marketplace'}
                 onClick={toggleMobileMenu}
-                className="text-center text-sm font-medium text-avatar-slate border border-avatar-silver rounded-full py-2.5 hover:bg-avatar-ice transition-colors"
+                className="flex items-center justify-center gap-2 text-sm font-semibold bg-avatar-accent text-white rounded-full py-2.5 hover:bg-avatar-navy transition-colors"
               >
-                {user?.firstName ?? user?.name ?? 'My Account'}
+                <i className="fas fa-th-large text-xs" />
+                Dashboard
               </Link>
               <button
                 onClick={() => { toggleMobileMenu(); handleLogout(); }}
-                className="text-center text-sm font-semibold bg-avatar-dark text-white rounded-full py-2.5 hover:bg-avatar-navy transition-colors"
+                className="text-center text-sm font-medium text-avatar-slate border border-avatar-silver rounded-full py-2.5 hover:bg-avatar-ice transition-colors"
               >
                 Logout
               </button>
