@@ -10,6 +10,8 @@ import helmet from "helmet";
 import sanitizeMiddleware from "./middlewares/sanitize.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import compression from "compression";
+import { startCloudinaryCleanupJob } from "./jobs/cloudinaryCleanup.js";
+
 const app = express();
 
 const allowedOrigins = [
@@ -50,6 +52,10 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
+
+// Start background jobs
+startCloudinaryCleanupJob();
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

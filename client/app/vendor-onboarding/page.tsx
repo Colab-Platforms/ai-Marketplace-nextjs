@@ -63,10 +63,10 @@ export default function VendorOnboardingPage() {
       try {
         const profile = await getVendorProfile();
         if (profile) {
-          // Profile exists — send to dashboard
+          // Profile already exists (any status) — user has completed onboarding, send to dashboard
           router.replace('/dashboard');
         } else {
-          // No profile at all — fresh onboarding
+          // No profile at all — show the onboarding form
           setChecking(false);
         }
       } catch (err) {
@@ -92,14 +92,14 @@ export default function VendorOnboardingPage() {
     setSubmitting(true);
     try {
       // Create profile via service
-      await createVendorProfile(form);
-      
+      const result = await createVendorProfile(form);
+      // console.log(result)
       // Redirect to dashboard after a short delay
       setTimeout(() => {
         router.push('/dashboard');
       }, 500);
     } catch (err: any) {
-      setError(err?.message || 'Something went wrong. Please try again.');
+      setError(err?.response?.data?.message || err?.message || 'Something went wrong. Please try again.');
     } finally {
       setSubmitting(false);
     }

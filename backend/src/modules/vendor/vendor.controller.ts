@@ -196,14 +196,14 @@ export const getVendorStats = async (req: Request, res: Response): Promise<void>
   }
 };
 
-export const autoApproveVendor = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const vendorId = req.params.id as string;
+// export const autoApproveVendor = async (req: Request, res: Response): Promise<void> => {
+//   try {
+//     const vendorId = req.params.id as string;
 
-    const result = await vendorService.autoApproveVendor(vendorId);
+//     const result = await vendorService.autoApproveVendor(vendorId);
 
-    sendResponse(res, true, result, "Vendor auto-approved successfully", STATUS_CODES.OK);
-  } catch (error: any) {
-    sendResponse(res, false, null, error.message, error.statusCode ?? STATUS_CODES.SERVER_ERROR);
-  }
-};
+//     sendResponse(res, true, result, "Vendor auto-approved successfully", STATUS_CODES.OK);
+//   } catch (error: any) {
+//     sendResponse(res, false, null, error.message, error.statusCode ?? STATUS_CODES.SERVER_ERROR);
+//   }
+// };

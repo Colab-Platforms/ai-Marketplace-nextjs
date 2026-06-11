@@ -46,7 +46,6 @@ export default function VerificationPage() {
     }
     load();
   }, []);
-
   const handleUpload = async (
     type: 'gst' | 'pan' | 'cin',
     file: File,
@@ -56,12 +55,14 @@ export default function VerificationPage() {
 
     try {
       const url = await uploadDocumentFile(file, (progressEvent: any) => {
-        if (progressEvent.total) {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          setter({ file, progress: percentCompleted, uploaded: false, error: null, url: null });
-        }
+        // Guard against missing total, fall back to indeterminate progress
+        const percent = progressEvent.total
+          ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          : 50; // show 50% as "in progress" if total unknown
+        setter(prev => ({ ...prev, progress: percent }));
       });
 
+      // Explicitly set 100% + uploaded only after the Promise resolves
       setter({ file, progress: 100, uploaded: true, error: null, url });
     } catch (err: any) {
       setter({ file, progress: 0, uploaded: false, error: err?.message || 'Upload failed', url: null });
@@ -158,7 +159,7 @@ export default function VerificationPage() {
       label: 'CIN / Registration Certificate',
     },
   ];
-
+  // console.log(docSlots[0].state)
   const allUploaded = gst.uploaded && pan.uploaded && cin.uploaded;
 
   return (
@@ -254,9 +255,8 @@ export default function VerificationPage() {
                 {/* Progress bar / Uploaded Status */}
                 {slot.state.file && (
                   <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 flex items-center gap-4">
-                    <span className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-sm ${
-                      slot.state.uploaded ? 'bg-emerald-100 text-emerald-600' : 'bg-avatar-accent/10 text-avatar-accent'
-                    }`}>
+                    <span className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-sm ${slot.state.uploaded ? 'bg-emerald-100 text-emerald-600' : 'bg-avatar-accent/10 text-avatar-accent'
+                      }`}>
                       <i className={`fas ${slot.state.uploaded ? 'fa-check' : 'fa-file-alt animate-pulse'}`} />
                     </span>
                     <div className="flex-1 min-w-0">
@@ -266,9 +266,8 @@ export default function VerificationPage() {
                       </div>
                       <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
                         <div
-                          className={`h-full transition-all duration-300 ${
-                            slot.state.uploaded ? 'bg-emerald-500' : 'bg-avatar-accent'
-                          }`}
+                          className={`h-full transition-all duration-300 ${slot.state.uploaded ? 'bg-emerald-500' : 'bg-avatar-accent'
+                            }`}
                           style={{ width: `${slot.state.progress}%` }}
                         />
                       </div>
