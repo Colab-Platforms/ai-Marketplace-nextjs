@@ -62,7 +62,7 @@ export interface CreateToolBody {
     logo_url?: string;
     website_url?: string;
     demo_url?: string;
-    pricing_model: string; // "FREE", "PAID", "FREEMIUM", "SUBSCRIPTION"
+    pricing_model: string; // "FREE", "PAID", "SUBSCRIPTION"
     images?: string[]; // Array of image URLs
 }
 
@@ -76,6 +76,8 @@ export interface UpdateToolBody {
     website_url?: string;
     demo_url?: string;
     pricing_model?: string;
+    /** Full replacement set of image URLs (existing kept + new uploads) */
+    images?: string[];
 }
 
 // Type for adding pricing plan

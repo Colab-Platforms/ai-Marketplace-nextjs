@@ -15,8 +15,8 @@ const createToolSchema = Joi.object({
     logo_url: Joi.string().trim().uri().optional().allow(null, ""),
     website_url: Joi.string().trim().uri().optional().allow(null, ""),
     demo_url: Joi.string().trim().uri().optional().allow(null, ""),
-    pricing_model: Joi.string().valid('FREE', 'PAID', 'FREEMIUM', 'SUBSCRIPTION').required().messages({
-        "any.only": "Pricing model must be one of: FREE, PAID, FREEMIUM, SUBSCRIPTION",
+    pricing_model: Joi.string().valid('FREE', 'PAID', 'SUBSCRIPTION').required().messages({
+        "any.only": "Pricing model must be one of: FREE, PAID, SUBSCRIPTION",
         "any.required": "Pricing model is required",
     }),
     images: Joi.array().items(Joi.string().trim().uri()).optional(),
@@ -35,7 +35,8 @@ const updateToolSchema = Joi.object({
     logo_url: Joi.string().trim().uri().optional().allow(null, ""),
     website_url: Joi.string().trim().uri().optional().allow(null, ""),
     demo_url: Joi.string().trim().uri().optional().allow(null, ""),
-    pricing_model: Joi.string().valid('FREE', 'PAID', 'FREEMIUM', 'SUBSCRIPTION').optional(),
+    pricing_model: Joi.string().valid('FREE', 'PAID', 'SUBSCRIPTION').optional(),
+    images: Joi.array().items(Joi.string().trim().uri()).optional(),
 });
 
 export const validateUpdateToolSchema = (data: unknown) => {

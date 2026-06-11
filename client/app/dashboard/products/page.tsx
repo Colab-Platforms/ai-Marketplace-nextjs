@@ -182,8 +182,6 @@ export default function ProductsPage() {
                     className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider shrink-0 ${
                       tool.pricing_model === 'FREE'
                         ? 'bg-emerald-100 text-emerald-700'
-                        : tool.pricing_model === 'FREEMIUM'
-                        ? 'bg-blue-100 text-blue-700'
                         : 'bg-purple-100 text-purple-700'
                     }`}
                   >
