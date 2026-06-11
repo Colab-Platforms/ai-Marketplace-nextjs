@@ -27,18 +27,17 @@ class ToolService {
         data: {
           owner_user_id: userId,
           company_name: user.email.split('@')[0] + " Company", // Default name from email
-          verification_status: "VERIFIED", // Auto-approve for now
+          verification_status: "INCOMPLETE",
           country: "India",
           city: "Unknown",
         },
       });
     }
 
-    // Auto-approve: Skip verification check for now (for testing/development)
-    // Can be re-enabled in production by uncommenting below:
-    // if (vendor.verification_status !== "VERIFIED") {
-    //   throw new ApiError("Your vendor profile must be verified before adding tools", STATUS_CODES.FORBIDDEN);
-    // }
+   // Ensure vendor is verified before allowing tool creation
+    if (vendor.verification_status !== "VERIFIED") {
+      throw new ApiError("Your vendor profile must be verified before adding tools", STATUS_CODES.FORBIDDEN);
+    }
 
     // Check if category exists
     const category = await prisma.categories.findUnique({
@@ -65,6 +64,7 @@ class ToolService {
         website_url: data.website_url,
         demo_url: data.demo_url,
         pricing_model: data.pricing_model,
+        isDeleted: false,
         status: "DRAFT", // Start as draft
       },
       select: toolSelectFields,
@@ -113,7 +113,7 @@ class ToolService {
   async updateTool(id: string, data: UpdateToolBody, userId: string) {
     const tool = await prisma.tools.findUnique({
       where: { id },
-      include: { vendor: true },
+      include: { vendor: true, images: true },
     });
 
     if (!tool) {
@@ -130,21 +130,51 @@ class ToolService {
       data: {
         ...(data.name && { name: data.name }),
         ...(data.category_id && { category_id: data.category_id }),
-        ...(data.short_description && { short_description: data.short_description }),
-        ...(data.full_description && { full_description: data.full_description }),
-        ...(data.logo_url && { logo_url: data.logo_url }),
-        ...(data.website_url && { website_url: data.website_url }),
-        ...(data.demo_url && { demo_url: data.demo_url }),
+        ...(data.short_description !== undefined && { short_description: data.short_description }),
+        ...(data.full_description !== undefined && { full_description: data.full_description }),
+        ...(data.logo_url !== undefined && { logo_url: data.logo_url }),
+        ...(data.website_url !== undefined && { website_url: data.website_url }),
+        ...(data.demo_url !== undefined && { demo_url: data.demo_url }),
         ...(data.pricing_model && { pricing_model: data.pricing_model }),
       },
       select: toolSelectFields,
     });
 
+    // Mark new logo as USED in uploaded_files
     if (data.logo_url) {
       await prisma.uploaded_files.updateMany({
         where: { url: data.logo_url },
-        data: { status: "USED" }
+        data: { status: "USED" },
       });
+    }
+
+    // Sync images if provided (full replacement: delete removed, create new)
+    if (data.images !== undefined) {
+      const incomingUrls = data.images;
+      const existingUrls = tool.images.map(img => img.image_url);
+
+      // Find images that are no longer in the incoming list (user removed them)
+      const removedUrls = existingUrls.filter(url => !incomingUrls.includes(url));
+      // Find URLs that are new (not in the existing set)
+      const addedUrls = incomingUrls.filter(url => !existingUrls.includes(url));
+
+      // Delete removed image records
+      if (removedUrls.length > 0) {
+        await prisma.tool_images.deleteMany({
+          where: { tool_id: id, image_url: { in: removedUrls } },
+        });
+      }
+
+      // Create new image records and mark their uploads as USED
+      if (addedUrls.length > 0) {
+        await prisma.tool_images.createMany({
+          data: addedUrls.map(image_url => ({ tool_id: id, image_url })),
+        });
+        await prisma.uploaded_files.updateMany({
+          where: { url: { in: addedUrls } },
+          data: { status: "USED" },
+        });
+      }
     }
 
     return updatedTool;
@@ -216,6 +246,7 @@ class ToolService {
 
     const where: any = {
       vendor_id: vendor.id,
+      isDeleted: false,// Exclude soft-deleted tools from vendor's list
     };
 
     // Filter by status if provided
@@ -293,7 +324,7 @@ class ToolService {
   async deleteTool(id: string, userId: string) {
     const tool = await prisma.tools.findUnique({
       where: { id },
-      include: { vendor: true },
+      include: { vendor: true, images: true },
     });
 
     if (!tool) {
@@ -316,7 +347,26 @@ class ToolService {
       throw new ApiError("Cannot delete tool with active subscriptions", STATUS_CODES.BAD_REQUEST);
     }
 
-    await prisma.tools.delete({ where: { id } });
+    // Collect all image URLs to clean up from uploaded_files after deletion
+    const imageUrls = tool.images.map(img => img.image_url);
+    const logoUrl = tool.logo_url;
+
+    // await prisma.tools.delete({ where: { id } });
+    // Soft delete: mark as deleted instead of removing from DB
+    await prisma.tools.update({
+      where: { id },
+      data: { isDeleted: true },
+    });
+
+    // Mark the associated uploaded_files records back to PENDING so the cron job
+    // will clean them up from Cloudinary on the next run.
+    const allUrls = [...imageUrls, ...(logoUrl ? [logoUrl] : [])];
+    if (allUrls.length > 0) {
+      await prisma.uploaded_files.updateMany({
+        where: { url: { in: allUrls } },
+        data: { status: "PENDING", updated_at: new Date() },
+      });
+    }
 
     return { message: "Tool deleted successfully" };
   }

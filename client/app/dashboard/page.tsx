@@ -144,7 +144,7 @@ export default function DashboardPage() {
               </div>
             </div>
             <p className="text-2xl font-bold text-avatar-dark">
-              ${stats.totalEarnings.toLocaleString()}
+              ₹{stats.totalEarnings.toLocaleString()}
             </p>
             <p className="text-xs text-avatar-slate mt-1">Total Earnings</p>
           </div>
@@ -156,7 +156,7 @@ export default function DashboardPage() {
               </div>
             </div>
             <p className="text-2xl font-bold text-avatar-dark">
-              ${stats.vendorBalance.toLocaleString()}
+              ₹{stats.vendorBalance.toLocaleString()}
             </p>
             <p className="text-xs text-avatar-slate mt-1">Available Balance</p>
           </div>

@@ -22,6 +22,23 @@ export interface AddPricingPlanData {
   features?: string[];
 }
 
+export const uploadService = {
+  /**
+   * Uploads a single image file to Cloudinary via the backend.
+   * Returns { url, public_id } on success. The file is stored as PENDING
+   * in uploaded_files until the tool form is submitted (status → USED).
+   */
+  uploadImage: async (file: File, folder = 'ai-marketplace/tools'): Promise<{ url: string; public_id: string }> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folder', folder);
+    const response = await apiClient.post('/api/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data.data; // { url, public_id }
+  },
+};
+
 export const toolService = {
   // Get my tools
   getMyTools: async (params?: { status?: string; page?: number; pageSize?: number }) => {

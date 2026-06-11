@@ -75,6 +75,17 @@ export default function LoginPage() {
         <div className="absolute top-1/2 left-1/3 w-48 h-48 rounded-full bg-avatar-accent/10 blur-[60px] pointer-events-none" />
 
         <div className="relative z-10 flex flex-col h-full p-10 xl:p-14">
+          {/* Back to home */}
+          <Link
+            href="/"
+            className="absolute top-7 left-8 xl:left-10 flex items-center gap-2.5 text-avatar-steel hover:text-white transition-colors duration-200 group w-fit"
+          >
+            <span className="w-9 h-9 rounded-full bg-white/8 border border-white/10 flex items-center justify-center group-hover:bg-white/15 transition-all duration-200">
+              <i className="fas fa-arrow-left text-sm" />
+            </span>
+            <span className="text-sm font-medium">Back to home</span>
+          </Link>
+
           <div className="flex-1 flex flex-col justify-center">
             <div className="inline-flex items-center gap-2 bg-white/6 border border-white/10 rounded-full px-4 py-2 mb-7 w-fit">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />

@@ -7,7 +7,7 @@ export interface Tool {
   logo_url?: string;
   website_url?: string;
   demo_url?: string;
-  pricing_model: 'FREE' | 'PAID' | 'FREEMIUM' | 'SUBSCRIPTION';
+  pricing_model: 'FREE' | 'PAID' | 'SUBSCRIPTION';
   status: 'DRAFT' | 'PUBLISHED';
   vendor_id: string;
   created_at: string;

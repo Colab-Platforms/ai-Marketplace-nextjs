@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import { uploadFile } from './upload.controller.js';
+import { auth } from '@/middlewares/authMiddleware.js';
 
 const router = Router();
 
@@ -13,6 +14,7 @@ const upload = multer({
     }
 });
 
-router.post('/', upload.single('file'), uploadFile);
+// Require authentication — only logged-in users can upload
+router.post('/', auth(), upload.single('file'), uploadFile);
 
 export default router;

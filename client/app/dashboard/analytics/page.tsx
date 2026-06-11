@@ -67,16 +67,16 @@ export default function AnalyticsPage() {
       {/* Revenue Overview */}
       <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-3xl p-8 text-white shadow-lg">
         <div className="flex items-center gap-2 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-            <i className="fas fa-dollar-sign text-lg" />
-          </div>
+       <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+          <i className="fas fa-indian-rupee-sign text-lg" />
+        </div>
           <h2 className="text-lg font-bold">Revenue Overview</h2>
         </div>
         <div className="grid sm:grid-cols-3 gap-6">
           {revenueData.map((item) => (
             <div key={item.label} className="bg-white/10 rounded-2xl p-5 backdrop-blur-sm">
               <p className="text-sm text-white/80 mb-2">{item.label}</p>
-              <p className="text-3xl font-bold">${item.value.toLocaleString()}</p>
+              <p className="text-3xl font-bold">{item.value.toLocaleString()}</p>
             </div>
           ))}
         </div>
@@ -199,14 +199,14 @@ export default function AnalyticsPage() {
             </div>
             <div>
               <p className="text-sm text-avatar-slate">Total Earnings</p>
-              <p className="text-2xl font-bold text-avatar-dark">${stats.totalEarnings.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-avatar-dark">₹{stats.totalEarnings.toLocaleString()}</p>
             </div>
           </div>
           <div className="space-y-2 pt-4 border-t border-slate-100">
             <div className="flex items-center justify-between text-xs">
               <span className="text-avatar-steel">Average per subscriber</span>
               <span className="font-semibold text-avatar-dark">
-                ${stats.totalUsers > 0 ? (stats.totalEarnings / stats.totalUsers).toFixed(2) : '0.00'}
+                {stats.totalUsers > 0 ? (stats.totalEarnings / stats.totalUsers).toFixed(2) : '0.00'}
               </span>
             </div>
             <div className="flex items-center justify-between text-xs">
@@ -224,14 +224,14 @@ export default function AnalyticsPage() {
             </div>
             <div>
               <p className="text-sm text-avatar-slate">Total Payouts</p>
-              <p className="text-2xl font-bold text-avatar-dark">${stats.totalPayouts.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-avatar-dark">₹{stats.totalPayouts.toLocaleString()}</p>
             </div>
           </div>
           <div className="space-y-2 pt-4 border-t border-slate-100">
             <div className="flex items-center justify-between text-xs">
               <span className="text-avatar-steel">Available balance</span>
               <span className="font-semibold text-emerald-600">
-                ${stats.vendorBalance.toLocaleString()}
+                {stats.vendorBalance.toLocaleString()}
               </span>
             </div>
             <div className="flex items-center justify-between text-xs">

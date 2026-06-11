@@ -170,6 +170,7 @@ model tools {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
+  isDeleted     Boolean  @default(false)
   vendor   vendors    @relation(fields: [vendor_id], references: [id])
   category categories @relation(fields: [category_id], references: [id])
 
