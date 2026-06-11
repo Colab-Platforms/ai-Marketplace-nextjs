@@ -75,7 +75,7 @@ export default function RegisterPage() {
     <div className="flex min-h-screen">
 
       {/* ── Left dark panel ── */}
-      <aside className="hidden lg:flex w-[42%] xl:w-[40%] flex-col bg-avatar-deep relative overflow-hidden">
+      <aside className="hidden lg:flex w-[42%] xl:w-[40%] flex-col bg-avatar-deep relative overflow-hidden sticky top-0 self-start h-screen">
         {/* Grid overlay */}
         <div
           className="absolute inset-0 opacity-[0.04]"
@@ -91,8 +91,19 @@ export default function RegisterPage() {
         <div className="absolute bottom-0 -left-20 w-80 h-80 rounded-full bg-avatar-navy/50 blur-[90px] pointer-events-none" />
         <div className="absolute top-2/3 right-1/4 w-48 h-48 rounded-full bg-avatar-accent/10 blur-[60px] pointer-events-none" />
 
-        <div className="relative z-10 flex flex-col h-full p-10 xl:p-14">
-          <div className="flex-1 flex flex-col justify-center">
+        <div className="relative z-10 flex flex-col h-full p-10 xl:p-14 justify-between">
+          {/* Back to home */}
+          <Link
+            href="/"
+            className="absolute top-7  left-8 xl:left-10 flex items-center gap-2.5 text-avatar-steel hover:text-white transition-colors duration-200 group w-fit"
+          >
+            <span className="w-9 h-9 rounded-full bg-white/8 border border-white/10 flex items-center justify-center group-hover:bg-white/15 transition-all duration-200">
+              <i className="fas fa-arrow-left text-sm" />
+            </span>
+            <span className="text-sm font-medium">Back to home</span>
+          </Link>
+
+          <div className="flex flex-col mt-12 justify-center">
             <div className="inline-flex items-center gap-2 bg-white/6 border border-white/10 rounded-full px-4 py-2 mb-7 w-fit">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-[10px] font-semibold tracking-widest uppercase text-avatar-steel">
@@ -388,7 +399,7 @@ export default function RegisterPage() {
               <label className="flex items-start gap-2.5 cursor-pointer select-none">
                 <input type="checkbox" required className="w-4 h-4 mt-0.5 rounded border-avatar-light accent-avatar-navy cursor-pointer shrink-0" />
                 <span className="text-sm text-avatar-slate leading-snug flex items-center gap-1 flex-wrap">
-                  I confirm that I own or have the rights to distribute the AI tools I submit.
+                  I confirm that I own or have the rights to List the AI tools I submit.
                   <button type="button" className="text-avatar-steel hover:text-avatar-slate transition shrink-0" aria-label="More info">
                     <i className="fas fa-info-circle text-[11px]" />
                   </button>

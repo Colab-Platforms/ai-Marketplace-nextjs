@@ -35,9 +35,9 @@ class ToolService {
     }
 
    // Ensure vendor is verified before allowing tool creation
-    // if (vendor.verification_status !== "VERIFIED") {
-    //   throw new ApiError("Your vendor profile must be verified before adding tools", STATUS_CODES.FORBIDDEN);
-    // }
+    if (vendor.verification_status !== "VERIFIED") {
+      throw new ApiError("Your vendor profile must be verified before adding tools", STATUS_CODES.FORBIDDEN);
+    }
 
     // Check if category exists
     const category = await prisma.categories.findUnique({
