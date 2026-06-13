@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, Syne } from 'next/font/google';
+import { Inter, Space_Grotesk, Syne, Roboto_Flex } from 'next/font/google';
 import Script from "next/script";
 import "./globals.css";
 import PageLoader from "@/components/common/PageLoader";
@@ -25,6 +25,13 @@ const syne = Syne({
   display: 'swap',
 });
 
+const robotoFlex = Roboto_Flex({
+  subsets: ['latin'],
+  variable: '--font-roboto-flex',
+  display: 'swap',
+  axes: ['opsz'],
+});
+
 export const metadata: Metadata = {
   title: "AVATAR — The Operating System for the AI Era",
   description: "From AI education and automation to enterprise infrastructure — Avatar is the centralized platform powering AI transformation for individuals and businesses worldwide.",
@@ -36,11 +43,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${syne.variable} scroll-smooth`}>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${syne.variable} ${robotoFlex.variable} scroll-smooth`}>
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
       </head>
-      <body className="font-body bg-white text-avatar-dark antialiased">
+      <body className="font-body bg-background text-foreground antialiased">
         <Script id="meta-pixel" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)

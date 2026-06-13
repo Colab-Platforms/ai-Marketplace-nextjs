@@ -1,60 +1,71 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { useInView } from '@/hooks/useInView';
-import Img from "@/public/bannerimages/ai-workflow-web.jpeg";
+
 const agents = [
-  'HR AI Agent',
-  'Sales AI Agent',
-  'Support AI Agent',
-  'Marketing AI Agent',
-  'Content AI Agent',
-  'Analytics AI Agent'
+  { title: 'HR AI Agent', desc: 'Screen, schedule, onboard.' },
+  { title: 'Sales AI Agent', desc: 'Prospect, qualify, close.' },
+  { title: 'Support AI Agent', desc: 'Resolve tickets 24/7.' },
+  { title: 'Marketing AI Agent', desc: 'Campaigns on autopilot.' },
+  { title: 'Content AI Agent', desc: 'Generate at scale.' },
+  { title: 'Analytics AI Agent', desc: 'Real-time intelligence.' },
 ];
 
 export default function MarketplaceSection() {
   const { ref, isInView } = useInView();
 
   return (
-    <section
-      className="relative py-24 lg:py-32 bg-fixed bg-cover bg-center"
-      id="marketplace"
-      style={{ backgroundImage: "url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1920&q=80')" }}
-      ref={ref}
-    >
-      <div className="absolute inset-0 bg-avatar-deep/85"></div>
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className={`transition-all duration-800 ${isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
-            <span className="text-xs font-semibold uppercase tracking-widest text-avatar-steel mb-4 inline-block">AI Agent Marketplace</span>
-            <h2 className="font-display text-3xl lg:text-4xl font-bold text-white mb-5 leading-tight">
-              Deploy AI Agents in Minutes — Not Months
-            </h2>
-            <p className="text-avatar-silver leading-relaxed mb-6">
-              Browse our marketplace of pre-built, customizable AI agents. From HR screening to sales outreach, support tickets to content generation — find the agent your business needs and deploy it instantly.
-            </p>
-            <div className="flex flex-wrap gap-3 mb-8">
-              {agents.map((agent, index) => (
-                <span key={index} className="bg-white/10 backdrop-blur-sm text-white text-xs font-medium px-4 py-2 rounded-full border border-white/15">
-                  {agent}
-                </span>
-              ))}
-            </div>
-            <Link href="#cta" className="inline-flex items-center justify-center gap-2 bg-white text-avatar-dark font-semibold px-7 py-3 rounded-full hover:bg-avatar-ice transition-colors text-sm">
-              Browse Marketplace <i className="fas fa-arrow-right text-xs"></i>
-            </Link>
-          </div>
-          <div className={`transition-all duration-800 delay-200 ${isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
-            <Image
-              src="/landingimage/ai-workflow-web.jpeg"
-              alt="AI Marketplace Dashboard"
-              width={800}
-              height={420}
-              className="rounded-2xl shadow-2xl w-full object-cover bg-transparent h-[420px] border border-white/10"
-            />
-          </div>
+    <section className="relative mx-auto max-w-7xl px-6 py-24" id="marketplace" ref={ref}>
+      <div className={`text-center max-w-2xl mx-auto mb-14 transition-all duration-800 ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-primary mb-4">
+          <span className="h-px w-8 bg-primary" />
+          AI Agent Marketplace
+          <span className="h-px w-8 bg-primary" />
         </div>
+        <h2 className="text-4xl sm:text-5xl font-black leading-[1.05] tracking-tight mb-5">
+          Deploy AI Agents in <span className="text-gradient italic">minutes</span> — not months
+        </h2>
+        <p className="text-muted-foreground leading-relaxed">
+          Browse pre-built, customizable AI agents. From HR screening to sales outreach, support tickets to content generation — find the agent your business needs and deploy it instantly.
+        </p>
+      </div>
+
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {agents.map(({ title, desc }, i) => (
+          <div
+            key={title}
+            className={`group relative glass rounded-2xl p-6 overflow-hidden hover:glow-ring transition-all duration-500 hover:-translate-y-1 ${
+              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+            }`}
+            style={{ transitionDelay: `${i * 60}ms` }}
+          >
+            <div className="absolute -top-12 -right-12 h-32 w-32 rounded-full bg-primary/20 blur-2xl group-hover:bg-accent/40 transition" />
+            <div className="relative">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-primary/70">
+                Agent · {String(i + 1).padStart(2, '0')}
+              </div>
+              <div className="mt-2 text-xl font-bold text-foreground">{title}</div>
+              <div className="mt-1 text-sm text-muted-foreground">{desc}</div>
+              <Link
+                href="/marketplace"
+                className="mt-6 inline-flex items-center gap-2 text-xs text-primary font-semibold"
+              >
+                Deploy <ArrowRight size={12} className="group-hover:translate-x-1 transition" />
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className={`mt-10 text-center transition-all duration-800 delay-400 ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <Link
+          href="/marketplace"
+          className="inline-flex items-center gap-2 px-7 py-3 rounded-full glass font-medium text-sm hover:bg-primary/10 transition"
+        >
+          Browse Full Marketplace <ArrowRight size={14} />
+        </Link>
       </div>
     </section>
   );

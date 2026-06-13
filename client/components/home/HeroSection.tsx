@@ -1,132 +1,222 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
-
-const slides = [
-  { id: 0, image: '/bannerimages/Banner 3.png', alt: 'India Tech Hub' },
-  { id: 1, image: '/bannerimages/ai-robot-interacting-with-futuristic-data-interface.png', alt: 'Digital India' },
-  { id: 2, image: '/bannerimages/computer-generated-image-flag-with-logo-sun-middle.png', alt: 'AI Innovation India' },
-  { id: 3, image: '/bannerimages/WhatsApp Image 2026-05-27 at 1.18.52 PM.jpeg', alt: 'Tech Growth India' }
-];
-
-const typewriterPhrases = [
-  'AI Education.',
-  'Business Automation.',
-  'AI Agents.',
-  'Enterprise Solutions.',
-  'Cloud Workspace.',
-  'AI Talent.',
-  'Your AI Future.'
-];
+import { ArrowRight, Play, Sparkles, ChevronDown } from 'lucide-react';
+import VariableProximity from '@/components/common/VariableProximity';
 
 export default function HeroSection() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [typewriterText, setTypewriterText] = useState('');
-  const [phraseIndex, setPhraseIndex] = useState(0);
-  const [charIndex, setCharIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const layer1Ref = useRef<HTMLDivElement>(null);
+  const layer2Ref = useRef<HTMLDivElement>(null);
+  const layer3Ref = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLElement>(null);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
-  // Slider effect
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
-    return () => clearInterval(interval);
+    // Attempt autoplay on mount
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // Autoplay blocked – video will remain paused (fine, poster still shows)
+      });
+    }
   }, []);
 
-  // Typewriter effect
   useEffect(() => {
-    const currentPhrase = typewriterPhrases[phraseIndex];
-    let timeout: NodeJS.Timeout;
+    const handleScroll = () => {
+      const section = sectionRef.current;
+      if (!section) return;
 
-    if (isDeleting) {
-      if (charIndex > 0) {
-        timeout = setTimeout(() => {
-          setTypewriterText(currentPhrase.substring(0, charIndex - 1));
-          setCharIndex(charIndex - 1);
-        }, 40);
-      } else {
-        setIsDeleting(false);
-        setPhraseIndex((phraseIndex + 1) % typewriterPhrases.length);
-        timeout = setTimeout(() => {}, 300);
-      }
-    } else {
-      if (charIndex < currentPhrase.length) {
-        timeout = setTimeout(() => {
-          setTypewriterText(currentPhrase.substring(0, charIndex + 1));
-          setCharIndex(charIndex + 1);
-        }, 80);
-      } else {
-        timeout = setTimeout(() => {
-          setIsDeleting(true);
-        }, 2000);
-      }
-    }
+      const sectionTop = section.offsetTop;
+      const sectionScrollH = section.offsetHeight - window.innerHeight;
+      const raw = (window.scrollY - sectionTop) / sectionScrollH;
+      const p = Math.max(0, Math.min(1, raw));
 
-    return () => clearTimeout(timeout);
-  }, [charIndex, isDeleting, phraseIndex]);
+      // Video layer: subtle scale zoom
+      if (layer1Ref.current) {
+        layer1Ref.current.style.transform = `scale(${1 + p * 0.3})`;
+        layer1Ref.current.style.opacity = String(Math.max(0, 1 - p / 0.75));
+      }
+      // Radial vignette
+      if (layer2Ref.current) {
+        layer2Ref.current.style.transform = `scale(${1 + p * 1.4})`;
+      }
+      // Grid layer
+      if (layer3Ref.current) {
+        layer3Ref.current.style.transform = `scale(${1 + p * 0.6})`;
+      }
+      // Content: fade + float up
+      if (contentRef.current) {
+        contentRef.current.style.opacity = String(Math.max(0, 1 - p / 0.65));
+        contentRef.current.style.transform = `translateY(${p * -160}px)`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <section className="relative h-screen min-h-[640px] max-h-[900px] overflow-hidden" id="hero">
-      {/* Slides */}
-      {slides.map((slide, index) => (
-        <div
-          key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-1200 ${
-            index === currentSlide ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <Image src={slide.image} alt={slide.alt} fill className="object-cover" priority={index === 0} />
-          <div className="absolute inset-0 bg-gradient-to-r from-avatar-deep/90 via-avatar-dark/70 to-transparent"></div>
-        </div>
-      ))}
+    <section ref={sectionRef} className="relative h-[220vh]" id="hero">
+      <div className="sticky top-0 h-screen w-full overflow-hidden">
 
-      {/* Hero Content */}
-      <div className="absolute inset-0 flex items-center z-10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 rounded-full px-4 py-1.5 mb-6">
-              <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
-              <span className="text-xs font-medium text-avatar-silver tracking-wide uppercase">Your Partners for the AI Era</span>
-            </div>
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
-              <span>One Ecosystem for</span><br />
-              <span className="text-avatar-steel">{typewriterText}</span>
-              <span className="inline-block w-[3px] h-[1em] bg-avatar-accent ml-[2px] animate-blink align-text-bottom"></span>
-            </h1>
-            <p className="text-base md:text-lg text-avatar-silver/90 leading-relaxed mb-8 max-w-lg">
-              From AI education and automation to enterprise infrastructure — Avatar is the centralized platform powering AI transformation for individuals and businesses worldwide.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="#cta" className="inline-flex items-center justify-center gap-2 bg-white text-avatar-dark font-semibold px-7 py-3.5 rounded-full hover:bg-avatar-ice transition-colors text-sm">
-                Start Your AI Journey
-                <i className="fas fa-arrow-right text-xs"></i>
-              </Link>
-              <Link href="#about" className="inline-flex items-center justify-center gap-2 border border-white/25 text-white font-medium px-7 py-3.5 rounded-full hover:bg-white/10 transition-colors text-sm">
-                <i className="fas fa-play text-xs"></i>
-                Watch Overview
-              </Link>
-            </div>
+        {/* ── Layer 0 — solid dark base (always visible) ── */}
+        <div className="absolute inset-0 bg-[var(--background)]" />
+
+        {/* ── Layer 1 — human_vid.mp4 full-bleed video ── */}
+        <div ref={layer1Ref} className="absolute inset-0 will-change-transform">
+          {/* Fade-in once video is ready */}
+          <video
+            ref={videoRef}
+            src="/avatar_video.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            onCanPlay={() => setVideoLoaded(true)}
+            className={`h-full w-full object-cover transition-opacity duration-1000  ${
+              videoLoaded ? 'opacity-100'  : 'opacity-0'
+            }`}
+          />
+          {/* Dark cinematic overlay — keeps text readable */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[var(--background)]/60 via-[var(--background)]/30 to-[var(--background)]/80" />
+          {/* Side vignette */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_120%_100%_at_50%_50%,transparent_40%,var(--background)_100%)]" />
+          {/* Chromatic-aberration colour wash */}
+          <div className="absolute inset-0 mix-blend-color bg-[radial-gradient(ellipse_at_40%_60%,oklch(0.78_0.16_210)/18%,transparent_70%)]" />
+          <div className="absolute inset-0 mix-blend-color bg-[radial-gradient(ellipse_at_60%_40%,oklch(0.68_0.27_320)/12%,transparent_70%)]" />
+        </div>
+
+        {/* ── Layer 2 — radial vignette ── */}
+        <div ref={layer2Ref} className="absolute inset-0 will-change-transform pointer-events-none">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,var(--background)_72%)]" />
+        </div>
+
+        {/* ── Layer 3 — subtle grid ── */}
+        <div ref={layer3Ref} className="absolute inset-0 will-change-transform pointer-events-none">
+          <div className="absolute inset-0 grid-bg opacity-60" />
+        </div>
+
+        {/* ── Floating ambient particles ── */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {[
+            { cx: '20%', cy: '30%', r: 240, color: 'oklch(0.78 0.16 210)' },
+            { cx: '80%', cy: '70%', r: 200, color: 'oklch(0.68 0.27 320)' },
+            { cx: '50%', cy: '85%', r: 180, color: 'oklch(0.78 0.16 210)' },
+          ].map((blob, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full blur-[120px] animate-pulse-glow"
+              style={{
+                left: blob.cx,
+                top: blob.cy,
+                width: blob.r,
+                height: blob.r,
+                background: blob.color,
+                opacity: 0.08,
+                transform: 'translate(-50%, -50%)',
+                animationDelay: `${i * 1.2}s`,
+                animationDuration: `${5 + i}s`,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* ── Orbit rings (tighter, more visible) ── */}
+        <div className="absolute inset-0 grid place-items-center pointer-events-none">
+          <div className="relative">
+            {[100, 160, 230, 320].map((r, i) => (
+              <div
+                key={r}
+                className="absolute left-1/2 top-1/2 rounded-full border border-primary/15"
+                style={{
+                  width: r * 2,
+                  height: r * 2,
+                  transform: 'translate(-50%, -50%)',
+                  animation: `pulse-glow ${4 + i}s ease-in-out infinite`,
+                  animationDelay: `${i * 0.4}s`,
+                }}
+              />
+            ))}
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <div
+                key={i}
+                className="absolute left-1/2 top-1/2 h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_16px_var(--primary)]"
+                style={{
+                  ['--r' as string]: `${110 + i * 42}px`,
+                  animation: `orbit ${12 + i * 3}s linear infinite`,
+                }}
+              />
+            ))}
           </div>
         </div>
-      </div>
 
-      {/* Slide Indicators */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-        {slides.map((slide, index) => (
-          <button
-            key={slide.id}
-            onClick={() => setCurrentSlide(index)}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              index === currentSlide
-                ? 'w-7 bg-white'
-                : 'w-2 bg-white/40'
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
+        {/* ── Main content ── */}
+        <div
+          ref={contentRef}
+          className="relative z-10 h-full flex flex-col items-center justify-center px-6 text-center will-change-transform"
+        >
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-xs font-medium text-primary mb-2 border border-primary/20 shadow-[0_0_20px_-4px_var(--primary)]">
+            <Sparkles size={12} className="animate-pulse" />
+            <span>AI Agent Marketplace is live — deploy in minutes</span>
+          </div>
+
+          {/* Headline */}
+          <h1
+            ref={headingRef as React.RefObject<HTMLHeadingElement>}
+            className="mt-6 max-w-5xl leading-[0.93] tracking-tight"
+          >
+            <VariableProximity
+              label="One Ecosystem"
+              containerRef={headingRef as React.MutableRefObject<HTMLElement | null>}
+              fromFontVariationSettings="'wght' 400, 'opsz' 9"
+              toFontVariationSettings="'wght' 900, 'opsz' 40"
+              radius={200}
+              falloff="linear"
+              className="text-5xl sm:text-7xl md:text-[5.5rem] font-black text-primary text-glow block cursor-default"
+            />
+            <span className="block text-5xl sm:text-7xl md:text-[5.5rem] font-black text-foreground/90 mt-2">
+              for the{' '}
+              <span className="italic font-serif text-gradient animate-gradient">AI Era</span>.
+            </span>
+          </h1>
+
+          {/* Sub-copy */}
+          <p className="mt-6 max-w-2xl text-base sm:text-lg text-muted-foreground leading-relaxed">
+            Education, automation, agents, and enterprise infrastructure — Avatar is the
+            centralized platform powering AI transformation for individuals and businesses worldwide.
+          </p>
+
+          {/* CTA buttons */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/register"
+              className="group relative inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-primary text-primary-foreground font-semibold text-sm overflow-hidden glow-ring hover:scale-[1.04] active:scale-[0.98] transition-transform"
+            >
+              <span className="relative z-10">Start Your AI Journey</span>
+              <ArrowRight size={15} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+              <span className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/25 to-transparent group-hover:translate-x-full transition-transform duration-700" />
+            </Link>
+            <Link
+              href="#about"
+              className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full glass border border-primary/20 text-sm font-medium hover:bg-primary/10 hover:border-primary/40 transition-all"
+            >
+              <span className="h-5 w-5 rounded-full flex items-center justify-center bg-primary/15 group-hover:bg-primary/30 transition-colors">
+                <Play size={10} className="text-primary translate-x-px" />
+              </span>
+              Watch Overview
+            </Link>
+          </div>
+
+          {/* Scroll indicator */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-[9px] uppercase tracking-[0.35em] text-muted-foreground/60">
+            <span>Scroll to explore</span>
+            <ChevronDown size={14} className="animate-bounce text-primary/50" />
+          </div>
+        </div>
       </div>
     </section>
   );
