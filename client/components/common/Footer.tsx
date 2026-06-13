@@ -2,10 +2,11 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-avatar-deep pt-16 pb-8">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
-          {/* Brand */}
+    <footer className="relative mt-32 border-t border-border/60">
+      <div className="absolute inset-0 grid-bg opacity-40 pointer-events-none" />
+      <div className="relative mx-auto max-w-7xl px-6 py-16 grid gap-12 md:grid-cols-4">
+
+        {/* Brand */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1 mb-4 lg:mb-0">
             <Link href="/" className="flex items-center gap-2.5 mb-4">
               <svg width="32" height="32" viewBox="0 0 60 60" fill="none">
@@ -32,72 +33,63 @@ export default function Footer() {
                 <i className="fab fa-instagram text-sm"></i>
               </Link>
             </div>
-          </div>
+           </div> 
 
-          {/* Ecosystem */}
-          <div>
-            <h4 className="font-display font-semibold text-sm text-white mb-4">Ecosystem</h4>
-            <ul className="space-y-2.5">
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">AI Learning</Link></li>
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">AI Solutions</Link></li>
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Agent Marketplace</Link></li>
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">SaaS Products</Link></li>
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Cloud Workspace</Link></li>
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div>
-            <h4 className="font-display font-semibold text-sm text-white mb-4">Resources</h4>
-            <ul className="space-y-2.5">
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Documentation</Link></li>
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Blog</Link></li>
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Case Studies</Link></li>
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">AI Research</Link></li>
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Help Center</Link></li>
-            </ul>
-          </div>
-
-          {/* Company */}
-          <div>
-            <h4 className="font-display font-semibold text-sm text-white mb-4">Company</h4>
-            <ul className="space-y-2.5">
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">About Us</Link></li>
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Careers</Link></li>
-              <li><Link href="/contact" className="text-sm text-avatar-steel hover:text-white transition-colors">Contact</Link></li>
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Partners</Link></li>
-              <li><Link href="#" className="text-sm text-avatar-steel hover:text-white transition-colors">Press</Link></li>
-            </ul>
-          </div>
-
-          {/* Support */}
-          <div>
-            <h4 className="font-display font-semibold text-sm text-white mb-4">Support</h4>
-            <ul className="space-y-2.5">
-              <li>
-                <a href="mailto:support@avatarindia.com" className="text-sm text-avatar-steel hover:text-white transition-colors flex items-center gap-2">
-                  <i className="fas fa-envelope text-xs" />
-                  support@avatarindia.com
-                </a>
-              </li>
-              <li>
-                <a href="tel:+919136774304" className="text-sm text-avatar-steel hover:text-white transition-colors flex items-center gap-2">
-                  <i className="fas fa-phone text-xs" />
-                  +91 913 677 4304
-                </a>
-              </li>
-              <li><Link href="/contact" className="text-sm text-avatar-steel hover:text-white transition-colors flex items-center gap-2">
-                <i className="fas fa-paper-plane text-xs" />
-                Contact Form
-              </Link></li>
-            </ul>
-          </div>
+        {/* Ecosystem */}
+        <div>
+          <div className="text-xs uppercase tracking-[0.3em] text-primary/80">Ecosystem</div>
+          <ul className="mt-4 space-y-2">
+            <li><Link href="/learning" className="text-sm text-muted-foreground hover:text-foreground transition">AI Learning</Link></li>
+            <li><Link href="/#divisions" className="text-sm text-muted-foreground hover:text-foreground transition">AI Solutions</Link></li>
+            <li><Link href="/marketplace" className="text-sm text-muted-foreground hover:text-foreground transition">Agent Marketplace</Link></li>
+            <li><Link href="/#divisions" className="text-sm text-muted-foreground hover:text-foreground transition">SaaS Products</Link></li>
+            <li><Link href="/#divisions" className="text-sm text-muted-foreground hover:text-foreground transition">Cloud Workspace</Link></li>
+          </ul>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-avatar-steel">© 2025 Avatar AI Ecosystem. All rights reserved.</p>
-          <p className="text-xs text-avatar-steel">AI Adoption for Everyone — Confidential</p>
+        {/* Company */}
+        <div>
+          <div className="text-xs uppercase tracking-[0.3em] text-primary/80">Company</div>
+          <ul className="mt-4 space-y-2">
+            <li><Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition">About Us</Link></li>
+            <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition">Careers</Link></li>
+            <li><Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition">Contact</Link></li>
+            <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition">Partners</Link></li>
+            <li><Link href="/login" className="text-sm text-muted-foreground hover:text-foreground transition">Login</Link></li>
+            <li><Link href="/register" className="text-sm text-muted-foreground hover:text-foreground transition">Register</Link></li>
+          </ul>
+        </div>
+
+        {/* Contact */}
+        <div>
+          <div className="text-xs uppercase tracking-[0.3em] text-primary/80">Contact</div>
+          <ul className="mt-4 space-y-2">
+            <li>
+              <a href="mailto:support@avatarindia.com" className="text-sm text-muted-foreground hover:text-foreground transition flex items-center gap-2">
+                <i className="fas fa-envelope text-xs" />
+                support@avatarindia.com
+              </a>
+            </li>
+            <li>
+              <a href="tel:+919136774304" className="text-sm text-muted-foreground hover:text-foreground transition flex items-center gap-2">
+                <i className="fas fa-phone text-xs" />
+                +91 913 677 4304
+              </a>
+            </li>
+            <li>
+              <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition flex items-center gap-2">
+                <i className="fas fa-paper-plane text-xs" />
+                Contact Form
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="relative border-t border-border/60">
+        <div className="mx-auto max-w-7xl px-6 py-6 flex flex-col sm:flex-row justify-between gap-2 text-xs text-muted-foreground">
+          <div>© {new Date().getFullYear()} Avatar AI Ecosystem. All rights reserved.</div>
+          <div className="font-mono">AI Adoption for Everyone — Confidential</div>
         </div>
       </div>
     </footer>
