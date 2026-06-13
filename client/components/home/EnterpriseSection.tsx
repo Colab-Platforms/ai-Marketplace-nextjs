@@ -2,7 +2,9 @@
 
 import Image from 'next/image';
 import { useInView } from '@/hooks/useInView';
-
+import business from "@/public/landingimage/business.jpg"
+import learning from "@/public/landingimage/learning.jpg"
+import enterprise from "@/public/landingimage/enterprise.png"
 const segments = [
   {
     icon: 'fa-user',
@@ -10,9 +12,9 @@ const segments = [
     title: 'Upskill, Build & Earn with AI',
     description: 'Access world-class AI learning, earn certifications, build your AI-powered resume, boost productivity, and freelance your AI skills on the Avatar Talent Network.',
     tags: ['Learning & Certifications', 'AI Assistant', 'Resume AI', 'Productivity AI', 'Freelancing Tools'],
-    image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80',
+    image: learning,
     imageAlt: 'Individual AI Learning',
-    imageLeft: true
+    imageLeft: true,
   },
   {
     icon: 'fa-briefcase',
@@ -20,9 +22,9 @@ const segments = [
     title: 'Automate, Optimize & Scale',
     description: 'From AI customer support and CRM to marketing automation and analytics — equip your business with intelligent systems that work around the clock and grow with you.',
     tags: ['AI Customer Support', 'AI Automation', 'AI CRM', 'AI Marketing', 'AI Analytics'],
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
+    image: business,
     imageAlt: 'Business AI Solutions',
-    imageLeft: false
+    imageLeft: false,
   },
   {
     icon: 'fa-building',
@@ -30,57 +32,71 @@ const segments = [
     title: 'Transform Operations at Scale',
     description: 'Deploy custom AI systems, internal copilots, security AI, and full AI infrastructure across your organization. Long-term contracts, dedicated support, and enterprise-grade security.',
     tags: ['AI Operations', 'Custom AI Systems', 'Internal Copilots', 'Security AI', 'AI Infrastructure'],
-    image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80',
+    image: enterprise,
     imageAlt: 'Enterprise AI Infrastructure',
-    imageLeft: true
-  }
+    imageLeft: true,
+  },
 ];
 
 export default function EnterpriseSection() {
   const { ref, isInView } = useInView();
 
   return (
-    <section className="py-20 lg:py-28 bg-white" id="enterprise" ref={ref}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className={`text-center max-w-2xl mx-auto mb-16 transition-all duration-800 ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <span className="text-xs font-semibold uppercase tracking-widest text-avatar-accent mb-4 inline-block">A-to-Z Solutions</span>
-          <h2 className="font-display text-3xl lg:text-4xl font-bold text-avatar-dark mb-4">
-            AI Adoption for Everyone
-          </h2>
-          <p className="text-avatar-slate leading-relaxed">
-            Whether you&apos;re an individual, a growing business, or a global enterprise — Avatar has solutions tailored to your needs.
-          </p>
+    <section className="relative mx-auto max-w-7xl px-6 py-24" id="enterprise" ref={ref}>
+      <div className={`text-center max-w-2xl mx-auto mb-16 transition-all duration-800 ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-primary mb-4">
+          <span className="h-px w-8 bg-primary" />
+          A-to-Z Solutions
+          <span className="h-px w-8 bg-primary" />
         </div>
+        <h2 className="text-4xl sm:text-5xl font-black leading-[1.05] tracking-tight mb-5">
+          AI adoption for <span className="text-gradient">everyone</span>
+        </h2>
+        <p className="text-muted-foreground leading-relaxed">
+          Whether you&apos;re an individual, a growing business, or a global enterprise — Avatar has solutions tailored to your needs.
+        </p>
+      </div>
 
-        {segments.map((segment, index) => (
-          <div key={index} className={`grid lg:grid-cols-2 gap-10 lg:gap-16 items-center ${index < segments.length - 1 ? 'mb-20' : ''}`}>
-            <div className={`${segment.imageLeft ? 'lg:order-1' : 'lg:order-2'} transition-all duration-800 delay-${index * 100} ${isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
-              <Image
-                src={segment.image}
-                alt={segment.imageAlt}
-                width={800}
-                height={340}
-                className="rounded-2xl shadow-lg w-full h-[340px] object-cover hover:scale-105 transition-transform duration-600"
-              />
-            </div>
-            <div className={`${segment.imageLeft ?  'lg:order-2' : 'lg:order-1'} transition-all duration-800 delay-${index * 100 + 200} ${isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
-              <div className="inline-flex items-center gap-2 bg-avatar-ice rounded-full px-4 py-1.5 mb-4">
-                <i className={`fas ${segment.icon} text-avatar-accent text-xs`}></i>
-                <span className="text-xs font-semibold text-avatar-accent">{segment.badge}</span>
-              </div>
-              <h3 className="font-display text-2xl font-bold text-avatar-dark mb-3">{segment.title}</h3>
-              <p className="text-avatar-slate leading-relaxed mb-5">{segment.description}</p>
-              <div className="flex flex-wrap gap-2">
-                {segment.tags.map((tag, tagIndex) => (
-                  <span key={tagIndex} className="text-xs bg-avatar-ice text-avatar-slate px-3 py-1.5 rounded-full">
-                    {tag}
-                  </span>
-                ))}
-              </div>
+      {segments.map((segment, index) => (
+        <div
+          key={index}
+          className={`grid lg:grid-cols-2 gap-10 lg:gap-16 items-center ${index < segments.length - 1 ? 'mb-20' : ''}`}
+        >
+          <div className={`${segment.imageLeft ? 'lg:order-1' : 'lg:order-2'} relative aspect-5/4 rounded-3xl overflow-hidden glow-ring transition-all duration-800 ${isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}
+            style={{ transitionDelay: `${index * 100}ms` }}
+          >
+            <Image
+              src={segment.image}
+              alt={segment.imageAlt}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-700"
+            />
+            <div className="absolute inset-0 bg-linear-to-t from-background via-background/20 to-transparent" />
+            <div className="absolute top-4 left-4 glass-strong rounded-full px-3 py-1 text-[10px] uppercase tracking-widest text-primary">
+              {segment.badge}
             </div>
           </div>
-        ))}
-      </div>
+
+          <div
+            className={`${segment.imageLeft ? 'lg:order-2' : 'lg:order-1'} transition-all duration-800 ${isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}
+            style={{ transitionDelay: `${index * 100 + 150}ms` }}
+          >
+            <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 mb-4">
+              <i className={`fas ${segment.icon} text-primary text-xs`} />
+              <span className="text-xs font-semibold text-primary">{segment.badge}</span>
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground mb-3">{segment.title}</h3>
+            <p className="text-muted-foreground leading-relaxed mb-5">{segment.description}</p>
+            <div className="flex flex-wrap gap-2">
+              {segment.tags.map((tag) => (
+                <span key={tag} className="text-[11px] px-2.5 py-1 rounded-full border border-primary/30 text-primary/90">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
     </section>
   );
 }

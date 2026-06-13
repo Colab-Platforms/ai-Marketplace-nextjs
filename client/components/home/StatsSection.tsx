@@ -18,11 +18,7 @@ export default function StatsSection() {
       },
       { threshold: 0.3 }
     );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
+    if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, [hasAnimated]);
 
@@ -31,7 +27,6 @@ export default function StatsSection() {
       const duration = 2000;
       const step = stat.value / (duration / 16);
       let current = 0;
-
       const timer = setInterval(() => {
         current += step;
         if (current >= stat.value) {
@@ -39,33 +34,40 @@ export default function StatsSection() {
           clearInterval(timer);
         }
         setCounters((prev) => {
-          const newCounters = [...prev];
-          newCounters[index] = Math.floor(current);
-          return newCounters;
+          const next = [...prev];
+          next[index] = Math.floor(current);
+          return next;
         });
       }, 16);
     });
   };
 
   return (
-    <section className="py-20 lg:py-24 bg-avatar-dark" ref={sectionRef}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-14">
-          <h2 className="font-display text-3xl lg:text-4xl font-bold text-white mb-3">
-            The Numbers Speak
-          </h2>
-          <p className="text-avatar-steel">Building the future of AI adoption — globally.</p>
+    <section className="relative mx-auto max-w-7xl px-6 py-24" ref={sectionRef}>
+      <div className={`text-center mb-14 transition-all duration-800 ${hasAnimated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-primary mb-4">
+          <span className="h-px w-8 bg-primary" />
+          The Numbers Speak
+          <span className="h-px w-8 bg-primary" />
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-4">
-          {stats.map((stat, index) => (
-            <div key={stat.id} className="text-center">
-              <p className="font-display text-4xl lg:text-5xl font-bold text-white mb-2 tabular-nums">
-                {counters[index].toLocaleString()}{stat.suffix}
-              </p>
-              <p className="text-sm text-avatar-steel">{stat.label}</p>
-            </div>
-          ))}
-        </div>
+        <h2 className="text-4xl sm:text-5xl font-black leading-[1.05] tracking-tight">
+          Building the future of AI adoption — <span className="text-gradient">globally</span>.
+        </h2>
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+        {stats.map((stat, index) => (
+          <div
+            key={stat.id}
+            className={`glass rounded-2xl p-8 text-center transition-all duration-800 ${hasAnimated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+            style={{ transitionDelay: `${index * 80}ms` }}
+          >
+            <p className="font-display text-4xl lg:text-5xl font-black text-gradient tabular-nums mb-2">
+              {counters[index].toLocaleString()}{stat.suffix}
+            </p>
+            <p className="text-sm text-muted-foreground">{stat.label}</p>
+          </div>
+        ))}
       </div>
     </section>
   );
