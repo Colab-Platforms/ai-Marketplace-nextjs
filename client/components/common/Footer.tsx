@@ -17,19 +17,19 @@ export default function Footer() {
               <span className="font-display font-bold text-lg text-white tracking-wide">AVATAR</span>
             </Link>
             <p className="text-sm text-avatar-steel leading-relaxed mb-5">
-              The Operating System for the AI Era. Education, solutions, infrastructure — all in one ecosystem.
+              The One Ecosystem For The AI Era. Education, solutions, infrastructure — all in one ecosystem.
             </p>
             <div className="flex gap-3">
-              <Link href="#" className="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="LinkedIn">
+              <Link href="https://www.linkedin.com/in/avatar-india-358b39413?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" className="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="LinkedIn">
                 <i className="fab fa-linkedin-in text-sm"></i>
               </Link>
-              <Link href="#" className="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="Twitter">
-                <i className="fab fa-x-twitter text-sm"></i>
+              <Link href="https://www.threads.com/@avatar.india" className="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="Twitter">
+                <i className="fab fa-threads text-sm"></i>
               </Link>
-              <Link href="#" className="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="YouTube">
+              <Link href="https://www.youtube.com/@AvatarIndia-g1i" className="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="YouTube">
                 <i className="fab fa-youtube text-sm"></i>
               </Link>
-              <Link href="#" className="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="Instagram">
+              <Link href="https://www.instagram.com/avatar.india/" className="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-avatar-steel hover:text-white hover:bg-white/10 transition-colors" aria-label="Instagram">
                 <i className="fab fa-instagram text-sm"></i>
               </Link>
             </div>

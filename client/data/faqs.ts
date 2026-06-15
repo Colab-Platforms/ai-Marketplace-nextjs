@@ -8,7 +8,7 @@ export const faqs: FAQ[] = [
   {
     id: '1',
     question: 'What is Avatar and how is it different from other AI platforms?',
-    answer: 'Avatar is a complete AI ecosystem — not just a tool or course platform. We combine AI education, SaaS products, an agent marketplace, cloud workspace, talent network, and R&D under one roof. Think of it as the operating system for the AI era, designed for individuals, businesses, and enterprises alike.'
+    answer: 'Avatar is a complete AI ecosystem — not just a tool or course platform. We combine AI education, SaaS products, an agent marketplace, cloud workspace, talent network, and R&D under one roof. Think of it as the One system for the AI era, designed for individuals, businesses, and enterprises alike.'
   },
   {
     id: '2',

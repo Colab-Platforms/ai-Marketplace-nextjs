@@ -228,7 +228,7 @@ export default function ContactPage() {
                 <div className="flex items-center gap-2.5">
                   {[
                     { href: 'https://www.facebook.com/share/1JpYwqS4jQ/', icon: 'fa-facebook-f', bg: 'bg-[#1877f2] hover:bg-[#1465d0]' },
-                    { href: '#', icon: 'fa-twitter', bg: 'bg-[#1da1f2] hover:bg-[#1a91da]' },
+                    { href: 'https://www.threads.com/@avatar.india', icon: 'fa-threads', bg: 'bg-black hover:bg-[#1a91da]' },
                     { href: 'https://www.instagram.com/avatar.india/', icon: 'fa-instagram', bg: 'bg-gradient-to-br from-purple-600 via-pink-500 to-rose-400 hover:opacity-90' },
                     { href: 'https://www.youtube.com/@AvatarIndia-g1i', icon: 'fa-youtube', bg: 'bg-[#ff0000] hover:bg-[#cc0000]' },
                   ].map(({ href, icon, bg }) => (

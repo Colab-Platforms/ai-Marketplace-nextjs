@@ -33,7 +33,7 @@ const robotoFlex = Roboto_Flex({
 });
 
 export const metadata: Metadata = {
-  title: "AVATAR — The Operating System for the AI Era",
+  title: "AVATAR — The One Ecosystem for the AI Era",
   description: "From AI education and automation to enterprise infrastructure — Avatar is the centralized platform powering AI transformation for individuals and businesses worldwide.",
 };
 
