@@ -123,7 +123,7 @@ function ProgressSection({ duration, pct }: { duration: number; pct: number }) {
   )
 }
 
-export default function AavtarPreloader({ onComplete, duration = 2200 }: AavtarPreloaderProps) {
+export default function AavtarPreloader({ onComplete, duration = 100 }: AavtarPreloaderProps) {
   const { pct, exiting, gone } = useLoaderProgress(duration, onComplete)
   const [isMobile, setIsMobile] = useState(false)
 

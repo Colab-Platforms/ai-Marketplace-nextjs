@@ -87,8 +87,17 @@ export default function Footer() {
       </div>
 
       <div className="relative border-t border-border/60">
-        <div className="mx-auto max-w-7xl px-6 py-6 flex flex-col sm:flex-row justify-between gap-2 text-xs text-muted-foreground">
+        <div className="mx-auto max-w-7xl px-6 py-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
           <div>© {new Date().getFullYear()} Avatar AI Ecosystem. All rights reserved.</div>
+          <div className="flex items-center gap-4">
+            <Link href="/terms-condition" className="hover:text-foreground transition">
+              Terms & Conditions
+            </Link>
+
+            <Link href="/privacy-policy" className="hover:text-foreground transition">
+              Privacy Policy
+            </Link>
+          </div>
           <div className="font-mono">AI Adoption for Everyone — Confidential</div>
         </div>
       </div>

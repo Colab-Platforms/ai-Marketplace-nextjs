@@ -243,7 +243,7 @@ export default function RegisterPage() {
           </div>
 
           {/* Vendor benefits */}
-          {role === 'Vendor' && (
+          {/* {role === 'Vendor' && (
             <div className="mb-5 bg-blue-50/60 border border-avatar-accent/15 rounded-2xl p-4">
               <p className="text-[11px] font-semibold text-avatar-dark mb-3">Why sell on Avatar?</p>
               <div className="grid grid-cols-2 gap-2">
@@ -260,7 +260,7 @@ export default function RegisterPage() {
                 ))}
               </div>
             </div>
-          )}
+          )} */}
 
           {/* Form */}
           <form className="space-y-3.5" onSubmit={handleSubmit}>
@@ -389,9 +389,9 @@ export default function RegisterPage() {
               <input type="checkbox" required className="w-4 h-4 mt-0.5 rounded border-avatar-light accent-avatar-navy cursor-pointer shrink-0" />
               <span className="text-sm text-avatar-slate leading-snug">
                 I agree to the{' '}
-                <Link href="#" className="font-medium text-avatar-accent hover:text-avatar-navy transition underline-offset-2 hover:underline">Terms of Service</Link>
+                <Link href="/terms-condition" className="font-medium text-avatar-accent hover:text-avatar-navy transition underline-offset-2 hover:underline">Terms of Service</Link>
                 {' '}and{' '}
-                <Link href="#" className="font-medium text-avatar-accent hover:text-avatar-navy transition underline-offset-2 hover:underline">Privacy Policy</Link>
+                <Link href="/privacy-policy" className="font-medium text-avatar-accent hover:text-avatar-navy transition underline-offset-2 hover:underline">Privacy Policy</Link>
               </span>
             </label>
 
