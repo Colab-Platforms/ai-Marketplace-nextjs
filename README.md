@@ -83,7 +83,7 @@ cd backend
 npm run dev  # http://localhost:5000
 
 # Terminal 2 - Frontend
-cd client
+cd frontend
 npm run dev  # http://localhost:3000
 ```
 
@@ -109,7 +109,7 @@ ai-Marketplace-nextjs/
 │   │   └── seeds/                   # Seed data
 │   └── API_DOCUMENTATION.md         # API reference
 │
-├── client/                           # Next.js Frontend
+├── frontend/                           # Next.js Frontend
 │   ├── app/
 │   │   ├── dashboard/               # Vendor Dashboard
 │   │   │   ├── page.tsx            # Main dashboard (stats)
@@ -479,7 +479,7 @@ npm run start
 
 ### Frontend
 ```bash
-cd client
+cd frontend
 npm run build
 npm run start
 ```
